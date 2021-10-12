@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\FilesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +25,8 @@ Route::post('/send_msg', function(Request $request){
 Route::post('/get_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
     return $msg_con->get($request);
+});
+Route::post('/file_send', function(Request $request){
+    $files_con = new App\Http\Controllers\FilesController();
+    return $files_con->save($request);
 });
