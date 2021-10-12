@@ -21,26 +21,62 @@
             }
         </style>
     </head>
-    <body class="antialiased">
-        @foreach ($messages as $msg)
-            <div class="w-full px-2 py-4 bg-gray-100 border-bottom border-gray-300 mb-1 flex flex-col flex-wrap" id="messagesList">
-                <div class="head bg-gray-200 flex flex-row"><div class="mr-4">{{ $msg->id }}</div><div>{{ $msg->nick }}</div></div>   
-                <p class="w-full"> {{ $msg->content }} </p> 
-            </div>
-        @endforeach
-
+    <body class="antialiased bg-gray-900">
+        <div id="messagesList" class="w-full flex flex-col text-gray-200">
+            @foreach ($messages as $msg)
+                <div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap">
+                    <div class="head bg-gray-800 flex flex-row"><div class="mr-4">{{ $msg->id }}</div><div>{{ $msg->nick }}</div></div>   
+                    <p class="w-full"> {{ $msg->content }} </p> 
+                </div>
+            @endforeach
+        </div>
         <!-- There would be form -->
-        <form class="w-full flex flex-row fixed bottom-0 left-0" action="/send_msg" method="POST">
+        <form class="w-full flex flex-row fixed bottom-0 left-0" id="msgForm">
             @csrf
-            <input class="form-input w-48" type="text" name="nick" placeholder="Nick"/>
-            <input class="form-input flex-grow" type="text" name="content" placeholder="Wiadomość"/>
-            <button class="w-24 bg-blue-300" type="submit">Wyślij</button>
+            <input class="form-input w-48 text-gray-200 bg-blue-900" type="text" name="nick" id="nick" placeholder="Nick"/>
+            <input class="form-input flex-grow text-gray-200 bg-blue-900" type="text" name="content" id="content" placeholder="Wiadomość"/>
+            <button class="w-24 bg-blue-700 text-gray-200" id="send">Wyślij</button>
         </form>
 
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
         <script>
-
+            $('#send').click(function(){
+                $.ajax({
+                    method: 'post',
+                    url: '/send_msg',
+                    data: $('#msgForm').serialize()
+                }).always(function(res){
+                    $('#content').val('');
+                    $.ajax({
+                        method: 'post',
+                        url:    '/get_msg',
+                        data:   {_token: '{{ csrf_token() }}'}
+                    }).always(function(res){
+                        var html = '';
+                        for(var i = 0; i < res.messages.length; i++){
+                            var msg = res.messages[i];
+                            html += '<div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap text-gray-200"><div class="head bg-gray-800 flex flex-row"><div class="mr-4">'+msg.id+'</div><div>'+msg.nick+'</div></div>   <p class="w-full"> '+msg.content+' </p> </div>';
+                        }
+                        $('#messagesList').html(html);
+                    });
+                });
+                return false;
+            });
+            setInterval(function(){
+                $.ajax({
+                    method: 'post',
+                    url:    '/get_msg',
+                    data:   {_token: '{{ csrf_token() }}'}
+                }).always(function(res){
+                    var html = '';
+                    for(var i = 0; i < res.messages.length; i++){
+                        var msg = res.messages[i];
+                        html += '<div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap text-gray-200"><div class="head bg-gray-800 flex flex-row"><div class="mr-4">'+msg.id+'</div><div>'+msg.nick+'</div></div>   <p class="w-full"> '+msg.content+' </p> </div>';
+                    }
+                    $('#messagesList').html(html);
+                });
+            }, 3000);
         </script>
     </body>
 </html>

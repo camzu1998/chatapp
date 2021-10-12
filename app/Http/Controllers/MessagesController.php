@@ -26,4 +26,13 @@ class MessagesController extends Controller
 
         return $this->show();
     }
+
+    public function get(){
+        $msg = new \App\Models\Messages;
+        $msgs = $msg->get(10);
+
+        return response()->json([
+            'messages' => $msgs
+        ]);
+    }
 }

@@ -16,7 +16,12 @@ use App\Http\Controllers\MessagesController;
 */
 
 Route::get('/', [MessagesController::class, 'show']);
+
 Route::post('/send_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
     return $msg_con->send($request);
+});
+Route::post('/get_msg', function(Request $request){
+    $msg_con = new App\Http\Controllers\MessagesController();
+    return $msg_con->get($request);
 });
