@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Controllers\MessagesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [MessagesController::class, 'show']);
+Route::post('/send_msg', function(Request $request){
+    $msg_con = new App\Http\Controllers\MessagesController();
+    return $msg_con->send($request);
 });
