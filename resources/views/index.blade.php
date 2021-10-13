@@ -80,7 +80,7 @@
                 });
 
                 $('#content').val('');
-                
+                $('#file').val('');
                 return false;
             });
             setInterval(function(){

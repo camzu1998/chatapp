@@ -31,9 +31,12 @@ class MessagesController extends Controller
     public function send(Request $request){
         $nick = $request->input('nick');
         $content = $request->input('content');
+        $file_id = 0;
 
-        $files_con = new FilesController();
-        $file_id = $files_con->save($request);
+        if(!empty($request->file('file'))){
+            $files_con = new FilesController();
+            $file_id = $files_con->save($request);
+        }
 
         $msg = new \App\Models\Messages;
 
