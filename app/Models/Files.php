@@ -14,19 +14,26 @@ class Files extends Model
 
     protected $table = 'files';
 
+    public function get($id = null){
+        if(empty($id))
+            return false;
+        
+        return DB::table($this->table)->select()->where('id', '=', $id)->get();
+    }
+
     public function save($name = '', $path = '', $ext = ''){
         if(empty($name) || empty($path) || empty($ext))
             return false;
 
         $Date = date('Y-m-d H:i:s');
         
-        DB::table($this->table)->insert([
+        $file_id = DB::table($this->table)->insertGetId([
             'filename'   => $name,
             'path'       => $path,
             'ext'        => $ext,
             'created_at' => $Date
         ]);
 
-        return true;
+        return $file_id;
     }
 }

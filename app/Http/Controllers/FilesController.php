@@ -21,7 +21,7 @@ class FilesController extends Controller
         $file = $request->file('file');
         $filename = $file->getClientOriginalName();
 
-        $path = $file->store('public/files');
+        $path = $file->store('files', 'public');
         
         $files = new \App\Models\Files;
 

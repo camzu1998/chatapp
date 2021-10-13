@@ -27,46 +27,60 @@
                 <div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap">
                     <div class="head bg-gray-800 flex flex-row"><div class="mr-4">{{ $msg->id }}</div><div>{{ $msg->nick }}</div><div class="text-center flex-grow">{{ $msg->created_at }}</div></div>   
                     <p class="w-full"> {{ $msg->content }} </p> 
+                    @if ($msg->file_id != 0)
+                       <p class="w-full"> <a href="{{ asset('storage/'.$files[$msg->file_id][0]->path) }}"> {{ $files[$msg->file_id][0]->filename }} </a> </p> 
+                    @endif
                 </div>
             @endforeach
         </div>
         <!-- There would be form -->
         <div class="w-full flex flex-row fixed bottom-0 left-0">
-            <form class="w-10/12 flex flex-row" id="msgForm">
+            <form class="w-10/12 flex flex-row" id="msgForm" enctype='multipart/form-data'>
                 @csrf
-                <input class="form-input w-36 text-gray-200 bg-indigo-900" type="text" name="nick" id="nick" placeholder="Nick"/>
+                <input class="form-input w-48 text-gray-200 bg-indigo-900" type="text" name="nick" id="nick" placeholder="Nick"/>
                 <input class="form-input flex-grow text-gray-200 bg-indigo-900" type="text" name="content" id="content" placeholder="Wiadomość"/>
-                <button class="w-24 bg-indigo-700 text-gray-200" id="send">Wyślij</button>
-            </form>
-            <form class="w-2/12 flex flex-row" action="/file_send" method="POST" enctype='multipart/form-data'>
-                @csrf
                 <input class="form-input w-auto bg-pink-900" type="file" name="file" id="file"/>
-                <button class="w-24 bg-indigo-700 text-gray-200" id="send" type="submit" >Dodaj</button>
+                <button class="w-36 bg-indigo-700 text-gray-200" id="send">Wyślij</button>
             </form>
         </div>
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
         <script>
             $('#send').click(function(){
+                var fd = new FormData();
+                var files = $('#file')[0].files;
+                
+                // Check file selected or not
+                if(files.length > 0 )
+                    fd.append('file',files[0]);
+
+                fd.append('_token', '{{ csrf_token() }}');
+                fd.append('nick', $('#nick').val());
+                fd.append('content', $('#content').val());
+
                 $.ajax({
                     method: 'post',
                     url: '/send_msg',
-                    data: $('#msgForm').serialize()
+                    data: fd,
+                    contentType: false,
+                    processData: false
                 }).always(function(res){
-                    $('#content').val('');
-                    $.ajax({
-                        method: 'post',
-                        url:    '/get_msg',
-                        data:   {_token: '{{ csrf_token() }}'}
-                    }).always(function(res){
-                        var html = '';
-                        for(var i = 0; i < res.messages.length; i++){
-                            var msg = res.messages[i];
-                            html += '<div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap text-gray-200"><div class="head bg-gray-800 flex flex-row"><div class="mr-4">'+msg.id+'</div><div>'+msg.nick+'</div><div class="text-center flex-grow">'+msg.created_at+'</div></div>   <p class="w-full"> '+msg.content+' </p> </div>';
+                    var html = '';
+                    for(var i = 0; i < res.messages.length; i++){
+                        var msg = res.messages[i];
+                        var file_html = '';
+                        if(msg.file_id != 0){
+                            var file = res.files[msg.file_id][0];
+                            file_html = '<p class="w-full"> <a href="/storage/'+file.path+'"> '+file.filename+' </a> </p> ';
                         }
-                        $('#messagesList').html(html);
-                    });
+
+                        html += '<div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap text-gray-200"><div class="head bg-gray-800 flex flex-row"><div class="mr-4">'+msg.id+'</div><div>'+msg.nick+'</div><div class="text-center flex-grow">'+msg.created_at+'</div></div>   <p class="w-full"> '+msg.content+' </p> '+file_html+'</div>';
+                    }
+                    $('#messagesList').html(html);
                 });
+
+                $('#content').val('');
+                
                 return false;
             });
             setInterval(function(){
@@ -78,10 +92,18 @@
                     var html = '';
                     for(var i = 0; i < res.messages.length; i++){
                         var msg = res.messages[i];
-                        html += '<div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap text-gray-200"><div class="head bg-gray-800 flex flex-row"><div class="mr-4">'+msg.id+'</div><div>'+msg.nick+'</div><div class="text-center flex-grow">'+msg.created_at+'</div></div>   <p class="w-full"> '+msg.content+' </p> </div>';
+                        var file_html = '';
+                        if(msg.file_id != 0){
+                            var file = res.files[msg.file_id][0];
+                            file_html = '<p class="w-full"> <a href="/storage/'+file.path+'"> '+file.filename+' </a> </p> ';
+                        }
+
+                        html += '<div class="w-full px-2 py-4 bg-black border-bottom border-gray-300 mb-1 flex flex-col flex-wrap text-gray-200"><div class="head bg-gray-800 flex flex-row"><div class="mr-4">'+msg.id+'</div><div>'+msg.nick+'</div><div class="text-center flex-grow">'+msg.created_at+'</div></div>   <p class="w-full"> '+msg.content+' </p> '+file_html+'</div>';
                     }
                     $('#messagesList').html(html);
                 });
+                
+                return false;
             }, 3000);
         </script>
     </body>

@@ -4,15 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Messages;
+use App\Models\Files;
+use App\Http\Controllers\FilesController;
 
 class MessagesController extends Controller
 {
     public function show(){
-        $msg = new \App\Models\Messages;
-        $msgs = $msg->get();
+        $file_array = array();
+        $msgM = new \App\Models\Messages;
+        $files_model = new \App\Models\Files;
+
+        $msgs = $msgM->get();
+
+        foreach($msgs as $k => $msg){
+            if($msg->file_id != 0){
+                $file_array[$msg->file_id] = $files_model->get($msg->file_id);
+            }
+        }
 
         return view('index', [
-            'messages' => $msgs
+            'messages' => $msgs,
+            'files'    => $file_array
         ]);
     }
 
@@ -20,19 +32,32 @@ class MessagesController extends Controller
         $nick = $request->input('nick');
         $content = $request->input('content');
 
+        $files_con = new FilesController();
+        $file_id = $files_con->save($request);
+
         $msg = new \App\Models\Messages;
 
-        $msg->save($nick, $content);
+        $msg->save($nick, $content, $file_id);
 
-        return $this->show();
+        return $this->get();
     }
 
     public function get(){
-        $msg = new \App\Models\Messages;
-        $msgs = $msg->get(10);
+        $file_array = array();
+        $msgM = new \App\Models\Messages;
+        $files_model = new \App\Models\Files;
+        
+        $msgs = $msgM->get(10);
+
+        foreach($msgs as $k => $msg){
+            if($msg->file_id != 0){
+                $file_array[$msg->file_id] = $files_model->get($msg->file_id);
+            }
+        }
 
         return response()->json([
-            'messages' => $msgs
+            'messages' => $msgs,
+            'files'    => $file_array
         ]);
     }
 }

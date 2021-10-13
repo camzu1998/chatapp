@@ -27,7 +27,7 @@ class Messages extends Model
         }
     }
 
-    public function save($Nick = '', $Content = ''){
+    public function save($Nick = '', $Content = '', $file_id = 0){
         if(empty($Nick) || empty($Content))
             return false;
 
@@ -35,6 +35,7 @@ class Messages extends Model
         DB::table($this->table)->insert([
             'nick'       => $Nick,
             'content'    => $Content,
+            'file_id'    => $file_id,
             'created_at' => $Date
         ]);
 
