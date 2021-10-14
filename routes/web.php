@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\Controller;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +17,20 @@ use App\Http\Controllers\FilesController;
 |
 */
 
-Route::get('/', [MessagesController::class, 'show']);
+Route::get('/', [Controller::class, 'show']);
+Route::get('/register_form', [Controller::class, 'register_form']);
 
+
+Route::get('/chat', [MessagesController::class, 'show']);
+
+Route::post('/register', function(Request $request){
+    $con = new App\Http\Controllers\Controller();
+    return $con->register($request);
+});
+Route::post('/login', function(Request $request){
+    $con = new App\Http\Controllers\Controller();
+    return $con->authenticate($request);
+});
 Route::post('/send_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
     return $msg_con->send($request);
