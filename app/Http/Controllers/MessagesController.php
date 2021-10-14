@@ -6,13 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\Messages;
 use App\Models\Files;
 use App\Http\Controllers\FilesController;
+use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
 {
     public function show(){
+        if (!Auth::check()) {
+            // The user is logged in...
+        }
+
         $file_array = array();
         $msgM = new \App\Models\Messages;
         $files_model = new \App\Models\Files;
+
+        $user = Auth::user();
 
         $msgs = $msgM->get();
 
@@ -24,7 +31,8 @@ class MessagesController extends Controller
 
         return view('index', [
             'messages' => $msgs,
-            'files'    => $file_array
+            'files'    => $file_array,
+            'user'     => $user,
         ]);
     }
 

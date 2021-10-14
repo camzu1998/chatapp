@@ -37,7 +37,7 @@
         <div class="w-full flex flex-row fixed bottom-0 left-0">
             <form class="w-10/12 flex flex-row" id="msgForm" enctype='multipart/form-data'>
                 @csrf
-                <input class="form-input w-48 text-gray-200 bg-indigo-900" type="text" name="nick" id="nick" placeholder="Nick"/>
+                <input class="form-input w-48 text-gray-200 bg-indigo-900" type="text" name="nick" id="nick" placeholder="Nick" value="{{ $user->nick }}" readonly/>
                 <input class="form-input flex-grow text-gray-200 bg-indigo-900" type="text" name="content" id="content" placeholder="Wiadomość"/>
                 <input class="form-input w-auto bg-pink-900" type="file" name="file" id="file"/>
                 <button class="w-36 bg-indigo-700 text-gray-200" id="send">Wyślij</button>
