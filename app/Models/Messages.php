@@ -27,8 +27,8 @@ class Messages extends Model
         }
     }
 
-    public function save($Nick = '', $Content = '', $file_id = 0){
-        if(empty($Nick) || empty($Content))
+    public function save($Nick = '', $Content = '', $file_id = 0, $user_id = 0){
+        if(empty($Nick) || empty($Content) || empty($user_id))
             return false;
 
         $Date = date('Y-m-d H:i:s');
@@ -36,7 +36,8 @@ class Messages extends Model
             'nick'       => $Nick,
             'content'    => $Content,
             'file_id'    => $file_id,
-            'created_at' => $Date
+            'created_at' => $Date,
+            'user_id'    => $user_id
         ]);
 
         return true;

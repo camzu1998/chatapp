@@ -1,3 +1,130 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background: #00031E;
+}
+
+.app-logo{
+    font-family: 'Rampart One', cursive;
+}
+.cta-btn{
+    background: #D00081;
+    color: #FEF8F9;
+}
+.startForm{
+    background: #0C113D;
+    width: 342px;
+}
+.form-text{ 
+    color: #F8F9FE;
+}
+.form-input {
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    border-bottom: 2px solid #1f2937;
+    color: #F8F9FE;
+  }
+  
+  .form-input:focus, .form-input:not([value=""]):not(:focus):invalid {
+    --tw-ring-opacity: 0;
+    border-bottom: 2px solid #F8F9FE;
+  }
+  .user-panel{
+    width: 430px;
+    color: #F8F9FE;
+    background: #0C113D;
+  }
+  .profile-image{
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+  }
+  #content{
+      background: #003759;
+      border: none;
+      color: #f8f9fe;
+      height: 100px;
+  }
+  #content:placeholder{
+      color: rgba(255, 255, 255, 0.55);
+  }
+  .msg-submit, .file-input{
+      height: 50px;
+      line-height: 50px;
+  }
+  .file-input{
+      background: #0070B6;
+  }
+    .msg {
+        border-radius: 16px;
+        background: #DDCBFA;
+        max-width: 300px;
+        min-width: 150px;
+        max-height: 250px;
+        word-break: break-all;
+    }
+  
+  .msg-image {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border-radius: 50%;
+    left: -35px;
+    top: -8px;
+  }
+  
+  .msg-content {
+    margin-left: 40px;
+    color: #220059;
+    font-size: 14px;
+  }
+  
+  .msg-user_name {
+    color: rgb(34, 0, 89, 0.50);
+    font-size: 12px;
+  }
+    .msg.msg-right {
+        align-self: end;
+        background: #A4F499;
+    }
+
+    .msg-right > .msg-image {
+        right: -45px !important;
+        left: auto !important;
+    }
+
+    .msg-right > .msg-content {
+        margin-left: auto;
+        margin-right: 40px;
+        text-align: right;
+        color: #094A00;
+    }
+    .msg-right > .msg-user_name {
+        color: rgb(9, 74, 0, 0.50);
+    }
+    .btn {
+        width: 280px;
+        height: 60px;
+        border: 1px solid #3DEBD6;
+        border-radius: 8px;
+        color: #C0F8F2;
+        line-height: 60px;
+        font-size: 24px;
+    }
+    .btn.logout {
+        border: 1px solid #F17C8A;
+        color: #FDE9EB;
+    }
+    .btn.disabled{
+        cursor: default;
+        border: 1px solid #86889c;
+        color: #ededf0;
+    }
+    .btns-box {
+        justify-content: end;
+    }
+  

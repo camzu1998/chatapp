@@ -48,7 +48,7 @@ class MessagesController extends Controller
 
         $msg = new \App\Models\Messages;
 
-        $msg->save($nick, $content, $file_id);
+        $msg->save($nick, $content, $file_id, Auth::id());
 
         return $this->get();
     }
