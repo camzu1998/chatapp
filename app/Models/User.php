@@ -57,4 +57,7 @@ class User extends Authenticatable
 
         return $user_id;
     }
+    public function get_users_id(){
+        return DB::table($this->table)->select('id')->get();
+    }
 }

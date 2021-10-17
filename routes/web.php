@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\UserSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +39,8 @@ Route::post('/send_msg', function(Request $request){
 Route::post('/get_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
     return $msg_con->get($request);
+});
+Route::post('/save_settings', function(Request $request){
+    $user_settings = new App\Http\Controllers\UserSettingsController();
+    return $user_settings->save_user_settings($request);
 });

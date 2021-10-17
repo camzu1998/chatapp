@@ -74,7 +74,8 @@ body{
     border-radius: 50%;
     border-radius: 50%;
     left: -35px;
-    top: -8px;
+    top: 50%;
+    transform: translateY(-50%);
   }
   
   .msg-content {
@@ -127,4 +128,88 @@ body{
     .btns-box {
         justify-content: end;
     }
+    .full-shadow{
+        z-index: 2;
+        background: #000;
+        opacity: 0.5;
+    }
+    #settingsModal{
+        z-index: 3;
+        width: 500px;
+        height: 500px;
+        background: #0C113D;
+        color: #F8F9FE;
+        transform: translate(-50%, -50%);
+    }
+    .close{
+        cursor: pointer;
+    }
+    .form-submit{
+        width: 140px;
+        height: 35px;
+    }
+    .setting-form-upload{
+        color: #F8F9FE;
+    }
+   /* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 10px;
+  }
   
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #FDE9EB;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    width: 20px;
+    height: 20px;
+    left: -10px;
+    bottom: -5px;
+    background-color: #ED5265;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #EEFDF4;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #EEFDF4;
+  }
+  
+  input:checked + .slider:before {
+    background-color: #59ED92;
+    -webkit-transform: translateX(30px);
+    -ms-transform: translateX(30px);
+    transform: translateX(30px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  } 
