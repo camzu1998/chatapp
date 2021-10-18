@@ -15,6 +15,7 @@ class UpdateMessagTable extends Migration
     {
         Schema::table('messages', function (Blueprint $table) {
             $table->integer('file_id')->after('content');
+            $table->integer('user_id')->after('file_id');
         });
     }
 
