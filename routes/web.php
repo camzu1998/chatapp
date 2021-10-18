@@ -44,3 +44,4 @@ Route::post('/save_settings', function(Request $request){
     $user_settings = new App\Http\Controllers\UserSettingsController();
     return $user_settings->save_user_settings($request);
 });
+Route::post('/get_newest_id', [MessagesController::class, 'get_newest_id']);

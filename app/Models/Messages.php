@@ -26,6 +26,9 @@ class Messages extends Model
             return  DB::table($this->table)->select()->latest()->get();   
         }
     }
+    public function get_last(){
+        return  DB::table($this->table)->select()->latest()->first(); 
+    }
 
     public function save($Nick = '', $Content = '', $file_id = 0, $user_id = 0){
         if(empty($Nick) || empty($Content) || empty($user_id))

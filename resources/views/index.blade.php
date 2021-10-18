@@ -19,7 +19,7 @@
         <div class="flex flex-row">
             <div class="user-panel flex flex-col h-screen text-center items-center">
                 <!-- Profile logo -->
-                <img src="{{ asset('storage/profiles_miniatures/no_image.jpg') }}" class="profile-image mt-8 mb-4"/>
+                <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
                 <div class="hello-user w-full text-center mb-8">
                     Witaj {{ $user->nick }}
                 </div>
@@ -39,7 +39,7 @@
                         @elseif ($msg->user_id == $user->id)
                             <div class="msg msg-right mb-12 relative p-2">
                         @endif
-                                <img src="{{ asset('storage/profiles_miniatures/no_image.jpg') }}" class="msg-image absolute"/>
+                                <img src="{{ asset('storage/profiles_miniatures/'.$msg_users[$msg->user_id]['profile_img']) }}" class="msg-image absolute"/>
                                 <div class="msg-content">
                                     <span class="msg-user_name">{{ $msg->nick }}</span>
                                     <p class="msg-content-p" >{{ $msg->content }}</p>
@@ -74,7 +74,7 @@
             </div>
             <form class="flex flex-row">
                 <div class="w-6/12 flex flex-col justify-center items-center">
-                    <img src="{{ asset('storage/profiles_miniatures/no_image.jpg') }}" class="profile-image mt-8 mb-4"/>
+                    <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
                     <label for="input_profile" class="file-input text-center box-content rounded-xl px-2">Wgraj nowe zdjęcie <i class="fas fa-upload"></i></label>
                     <input type="file" name="input_profile" id="input_profile" style="display: none;"/>
                 </div>
@@ -173,6 +173,7 @@
                     var html = '';
                     for(var i = 0; i < res.messages.length; i++){
                         var msg = res.messages[i];
+                        var user = res.msg_users;
                         var file_html = '';
                         if(msg.file_id != 0){
                             var file = res.files[msg.file_id][0];
@@ -183,7 +184,7 @@
                         }else{
                             html += '<div class="msg msg-left mb-12 relative p-2">';
                         }
-                        html += '<img src="http://localhost/storage/profiles_miniatures/no_image.jpg" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span>'+file_html+'</div></div>';
+                        html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span>'+file_html+'</div></div>';
                     }
                     $('#messagesList').html(html);
                 });
@@ -192,32 +193,45 @@
                 $('#file').val('');
                 return false;
             });
+            var newest_msg = {{ $newest_msg }};
             setInterval(function(){
                 var user_id = {{ $user->id }};
+                var msg_switch = false;
+
                 $.ajax({
                     method: 'post',
-                    url:    '/get_msg',
+                    url:    '/get_newest_id',
                     data:   {_token: '{{ csrf_token() }}'}
                 }).always(function(res){
-                    var html = '';
-                    for(var i = 0; i < res.messages.length; i++){
-                        var msg = res.messages[i];
-                        var file_html = '';
-                        if(msg.file_id != 0){
-                            var file = res.files[msg.file_id][0];
-                            file_html = '<p class="msg-file"> <a href="/storage/'+file.path+'"> <i class="far fa-file"></i>'+file.filename+' </a> </p> ';
-                        }
+                    if(parseInt(res) > parseInt(window.newest_msg)){
+                        window.newest_msg = parseInt(res);
+                        $.ajax({
+                            method: 'post',
+                            url:    '/get_msg',
+                            data:   {_token: '{{ csrf_token() }}'}
+                        }).always(function(res){
+                            var html = '';
+                            for(var i = 0; i < res.messages.length; i++){
+                                var msg = res.messages[i];
+                                var user = res.msg_users;
+                                var file_html = '';
+                                if(msg.file_id != 0){
+                                    var file = res.files[msg.file_id][0];
+                                    file_html = '<p class="msg-file"> <a href="/storage/'+file.path+'"> <i class="far fa-file"></i>'+file.filename+' </a> </p> ';
+                                }
 
-                        if(user_id == msg.user_id){
-                            html += '<div class="msg msg-right mb-12 relative p-2">';
-                        }else{
-                            html += '<div class="msg msg-left mb-12 relative p-2">';
-                        }
-                        html += '<img src="http://localhost/storage/profiles_miniatures/no_image.jpg" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span></div>'+file_html+'</div>';
+                                if(user_id == msg.user_id){
+                                    html += '<div class="msg msg-right mb-12 relative p-2">';
+                                }else{
+                                    html += '<div class="msg msg-left mb-12 relative p-2">';
+                                }
+                                html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span></div>'+file_html+'</div>';
+                            }
+                            $('#messagesList').html(html);
+                        });
                     }
-                    $('#messagesList').html(html);
                 });
-                
+
                 return false;
             }, 3000);
         </script>
