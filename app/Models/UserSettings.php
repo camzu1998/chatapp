@@ -19,12 +19,17 @@ class UserSettings extends Model
     }
 
     public function set($user_id = 0, $name = '', $value = ''){
-        if(empty($value) || empty($name) || empty($user_id))
+        if(empty($name) || empty($user_id))
             return false;
 
-        DB::table($this->table)->where('user_id', '=', $user_id)->where('name', 'LIKE', $name)->update([
-            'value' => $value
-        ]);
+        if(empty($value)){
+            $value = 0;
+        }
+
+        DB::table($this->table)->upsert([
+            ['user_id' => $user_id, 'name' => $name, 'value' => $value]
+        ],  ['user_id', 'name'], ['value']);
+        
         return true;
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Controllers\UserSettingsController;
 use Illuminate\Support\Facades\Hash;
 
 class Controller extends BaseController
@@ -35,6 +36,9 @@ class Controller extends BaseController
         $pass = Hash::make($request->input('pass'));
         $userModel = new \App\Models\User();
         $user_id = $userModel->save_user($request->input('nick'), $request->input('email'), $pass);
+
+        $user_settings_controller = new \App\Http\Controllers\UserSettingsController();
+        $user_settings_controller->set_init_settings($user_id);
 
         return redirect('/');
     }
