@@ -157,6 +157,7 @@ body{
     display: inline-block;
     width: 30px;
     height: 10px;
+    margin-top: 4px;
   }
   
   /* Hide default HTML checkbox */
@@ -213,3 +214,7 @@ body{
   .slider.round:before {
     border-radius: 50%;
   } 
+  .label{
+      font-size: 12px;
+      margin-left: 15px;
+  }

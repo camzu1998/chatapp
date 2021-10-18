@@ -22,6 +22,8 @@ class UserSettingsController extends Controller
         //Check for profile upload
         if ($request->hasFile('input_profile')) {
             //Run UserController store functions
+            $usrCon = new \App\Http\Controllers\UserController();
+            $usrCon->save_profile_image($request->input_profile);
         }
 
         foreach($this->inputs as $name => $init_val){

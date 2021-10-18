@@ -79,21 +79,21 @@
                     <input type="file" name="input_profile" id="input_profile" style="display: none;"/>
                 </div>
                 <div class="w-6/12 flex flex-col mt-8">
-                    <div class="form-group flex flex-row mb-4">
+                    <div class="form-group flex flex-row mb-3 ml-3">
                         <label class="switch">
                             <input type="checkbox" name="sounds" id="sounds" value="1">
                             <span class="slider round"></span>
                         </label>
                         <span class="label">Dźwięki są wyłączone</span>
                     </div>
-                    <div class="form-group flex flex-row mb-4">
+                    <div class="form-group flex flex-row mb-3 ml-3">
                         <label class="switch">
                             <input type="checkbox" name="notifications" id="notifications" value="1">
                             <span class="slider round"></span>
                         </label>
                         <span class="label">Powiadomienia są wyłączone</span>
                     </div>
-                    <div class="form-group flex flex-row mb-4">
+                    <div class="form-group flex flex-row mb-3 ml-3">
                         <label class="switch">
                             <input type="checkbox" name="press_on_enter" id="press_on_enter" value="1">
                             <span class="slider round"></span>
@@ -147,7 +147,7 @@
                     contentType: false,
                     processData: false
                 }).always(function(res){
-
+                    window.location.reload(true);
                 });
             });
             $('#send').click(function(){
