@@ -1,0 +1,26 @@
+{
+    "short_name": "Czatap",
+    "name": "Czatap",
+    "icons": [
+        {
+            "src": "/storage/images/apple-icon-120x120.png",
+            "type": "image/png",
+            "sizes": "120x120"
+        },
+        {
+            "src": "/storage/images/android-icon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "/storage/images/chat.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "#00031E",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#0C113D"
+}

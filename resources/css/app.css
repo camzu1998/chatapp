@@ -28,7 +28,9 @@ body{
     border-bottom: 2px solid #1f2937;
     color: #F8F9FE;
   }
-  
+  .formContainer{
+    width: calc( 100% - 430px );
+  }
   .form-input:focus, .form-input:not([value=""]):not(:focus):invalid {
     --tw-ring-opacity: 0;
     border-bottom: 2px solid #F8F9FE;
@@ -218,3 +220,12 @@ body{
       font-size: 12px;
       margin-left: 15px;
   }
+
+@media(max-width: 1000px){
+    .user-panel{
+        display: none;
+    }
+    .formContainer{
+        width: 100%;
+     }
+}

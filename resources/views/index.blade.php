@@ -7,6 +7,7 @@
         <title>Czatap</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="icon" type="image/png" sizes="192x192"  href="/storage/images/android-icon-192x192.png">
 
         <!-- Styles -->
         <link href="/css/app.css" rel="stylesheet">
@@ -14,6 +15,10 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&family=Rampart+One&display=swap" rel="stylesheet">  
         
         <script src="https://kit.fontawesome.com/309a8b3aa5.js" crossorigin="anonymous"></script>
+        <script>
+            navigator.serviceWorker.register('/sw.js').catch(e=>console.error('Ups!' + e))
+        </script>
+        <link rel="manifest" href="/manifest.json">
     </head>
     <body class="antialiased">
         <div class="flex flex-row">
@@ -32,7 +37,7 @@
             </div>
             <div class="content-panel flex flex-col flex-grow h-screen">
                 <!-- Messages -->
-                <div id="messagesList" class="w-full flex flex-col text-gray-200 px-12 pt-8" style="height: calc(100vh - 24px); overflow-y: auto;">
+                <div id="messagesList" class="w-full flex flex-col text-gray-200 px-12 pt-8" style="height: calc(100vh - 100px); overflow-y: auto;">
                     @foreach ($messages as $msg)
                         @if ($msg->user_id != $user->id)
                             <div class="msg msg-left mb-12 relative p-2">
@@ -53,9 +58,9 @@
                     @endforeach
                 </div>
                 <!-- Message Form -->
-                <div class="flex flex-row fixed bottom-0 right-0" style="width: calc( 100% - 430px );">
+                <div class="flex flex-row fixed bottom-0 right-0 formContainer">
                     <form class="w-full flex flex-row" id="msgForm" enctype='multipart/form-data'>
-                        @csrf
+                        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
                         <input type="hidden" name="nick" id="nick" placeholder="Nick" value="{{ $user->nick }}"/>
                         <textarea class="w-10/12" name="content" id="content" placeholder="Napisz wiadomość..."></textarea>
                         <div class="flex flex-col flex-grow">
@@ -105,135 +110,142 @@
             <div class="w-full h-full flex flex-row justify-end items-end">
                 <button class="cta-btn form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
             </div>
+            <audio style="display:none;" id="notifySound">
+                <source src="{{ asset('storage/sounds/mmm-2-tone-sexy.mp3') }}" type="audio/mpeg">
+            </audio> 
         </div>
+        <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}"/>
+        <input type="hidden" name="newest_id" id="newest_id" value="{{ $newest_msg }}"/>
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+        <script src="/js/app.js"></script> 
         <script>
-            $('#openSettings').click(function(){
-                $('.full-shadow').fadeIn();
-                $('#settingsModal').fadeIn();
-            });
-            $('.close').click(function(){
-                $('.full-shadow').fadeOut();
-                $('#settingsModal').fadeOut();
-            });
-            $('#save_settings').click(function(){
-                var fd = new FormData();
-                var files = $('#input_profile')[0].files;
+            // $('#openSettings').click(function(){
+            //     $('.full-shadow').fadeIn();
+            //     $('#settingsModal').fadeIn();
+            // });
+            // $('.close').click(function(){
+            //     $('.full-shadow').fadeOut();
+            //     $('#settingsModal').fadeOut();
+            // });
+            // $('#save_settings').click(function(){
+            //     var fd = new FormData();
+            //     var files = $('#input_profile')[0].files;
                 
-                // Check file selected or not
-                if(files.length > 0 )
-                    fd.append('input_profile',files[0]);
+            //     // Check file selected or not
+            //     if(files.length > 0 )
+            //         fd.append('input_profile',files[0]);
 
-                var sounds = 0;
-                if($('#sounds').prop('checked'))
-                    sounds = 1;
-                var notifications = 0;
-                if($('#notifications').prop('checked'))
-                    notifications = 1;
-                var press_on_enter = 0;
-                if($('#press_on_enter').prop('checked'))
-                    press_on_enter = 1;
+            //     var sounds = 0;
+            //     if($('#sounds').prop('checked'))
+            //         sounds = 1;
+            //     var notifications = 0;
+            //     if($('#notifications').prop('checked'))
+            //         notifications = 1;
+            //     var press_on_enter = 0;
+            //     if($('#press_on_enter').prop('checked'))
+            //         press_on_enter = 1;
 
-                fd.append('_token', '{{ csrf_token() }}');
-                fd.append('sounds', sounds);
-                fd.append('notifications', notifications);
-                fd.append('press_on_enter', press_on_enter);
+            //     fd.append('_token', '{{ csrf_token() }}');
+            //     fd.append('sounds', sounds);
+            //     fd.append('notifications', notifications);
+            //     fd.append('press_on_enter', press_on_enter);
 
-                $.ajax({
-                    method: 'post',
-                    url: '/save_settings',
-                    data: fd,
-                    contentType: false,
-                    processData: false
-                }).always(function(res){
-                    window.location.reload(true);
-                });
-            });
-            $('#send').click(function(){
-                var user_id = {{ $user->id }};
-                var fd = new FormData();
-                var files = $('#file')[0].files;
+            //     $.ajax({
+            //         method: 'post',
+            //         url: '/save_settings',
+            //         data: fd,
+            //         contentType: false,
+            //         processData: false
+            //     }).always(function(res){
+            //         window.location.reload(true);
+            //     });
+            // });
+            // $('#send').click(function(){
+            //     var user_id = {{ $user->id }};
+            //     var fd = new FormData();
+            //     var files = $('#file')[0].files;
                 
-                // Check file selected or not
-                if(files.length > 0 )
-                    fd.append('file',files[0]);
+            //     // Check file selected or not
+            //     if(files.length > 0 )
+            //         fd.append('file',files[0]);
 
-                fd.append('_token', '{{ csrf_token() }}');
-                fd.append('nick', $('#nick').val());
-                fd.append('content', $('#content').val());
+            //     fd.append('_token', '{{ csrf_token() }}');
+            //     fd.append('nick', $('#nick').val());
+            //     fd.append('content', $('#content').val());
 
-                $.ajax({
-                    method: 'post',
-                    url: '/send_msg',
-                    data: fd,
-                    contentType: false,
-                    processData: false
-                }).always(function(res){
-                    var html = '';
-                    for(var i = 0; i < res.messages.length; i++){
-                        var msg = res.messages[i];
-                        var user = res.msg_users;
-                        var file_html = '';
-                        if(msg.file_id != 0){
-                            var file = res.files[msg.file_id][0];
-                            file_html = '<p class="msg-file"> <a href="/storage/'+file.path+'"> <i class="far fa-file"></i>'+file.filename+' </a> </p> ';
-                        }
-                        if(user_id == msg.user_id){
-                            html += '<div class="msg msg-right mb-12 relative p-2">';
-                        }else{
-                            html += '<div class="msg msg-left mb-12 relative p-2">';
-                        }
-                        html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span>'+file_html+'</div></div>';
-                    }
-                    $('#messagesList').html(html);
-                });
+            //     $.ajax({
+            //         method: 'post',
+            //         url: '/send_msg',
+            //         data: fd,
+            //         contentType: false,
+            //         processData: false
+            //     }).always(function(res){
+            //         var html = '';
+            //         for(var i = 0; i < res.messages.length; i++){
+            //             var msg = res.messages[i];
+            //             var user = res.msg_users;
+            //             var file_html = '';
+            //             if(msg.file_id != 0){
+            //                 var file = res.files[msg.file_id][0];
+            //                 file_html = '<p class="msg-file"> <a href="/storage/'+file.path+'"> <i class="far fa-file"></i>'+file.filename+' </a> </p> ';
+            //             }
+            //             if(user_id == msg.user_id){
+            //                 html += '<div class="msg msg-right mb-12 relative p-2">';
+            //             }else{
+            //                 html += '<div class="msg msg-left mb-12 relative p-2">';
+            //             }
+            //             html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span>'+file_html+'</div></div>';
+            //         }
+            //         $('#messagesList').html(html);
+            //     });
 
-                $('#content').val('');
-                $('#file').val('');
-                return false;
-            });
-            var newest_msg = {{ $newest_msg }};
-            setInterval(function(){
-                var user_id = {{ $user->id }};
-                var msg_switch = false;
+            //     $('#content').val('');
+            //     $('#file').val('');
+            //     return false;
+            // });
+            // var newest_msg = {{ $newest_msg }};
+            // setInterval(function(){
+            //     var user_id = {{ $user->id }};
+            //     var msg_switch = false;
 
-                $.ajax({
-                    method: 'post',
-                    url:    '/get_newest_id',
-                    data:   {_token: '{{ csrf_token() }}'}
-                }).always(function(res){
-                    if(parseInt(res) > parseInt(window.newest_msg)){
-                        window.newest_msg = parseInt(res);
-                        $.ajax({
-                            method: 'post',
-                            url:    '/get_msg',
-                            data:   {_token: '{{ csrf_token() }}'}
-                        }).always(function(res){
-                            var html = '';
-                            for(var i = 0; i < res.messages.length; i++){
-                                var msg = res.messages[i];
-                                var user = res.msg_users;
-                                var file_html = '';
-                                if(msg.file_id != 0){
-                                    var file = res.files[msg.file_id][0];
-                                    file_html = '<p class="msg-file"> <a href="/storage/'+file.path+'"> <i class="far fa-file"></i>'+file.filename+' </a> </p> ';
-                                }
+            //     $.ajax({
+            //         method: 'post',
+            //         url:    '/get_newest_id',
+            //         data:   {_token: '{{ csrf_token() }}'}
+            //     }).always(function(res){
+            //         if(parseInt(res) > parseInt(window.newest_msg)){
+            //             window.newest_msg = parseInt(res);
+            //             $.ajax({
+            //                 method: 'post',
+            //                 url:    '/get_msg',
+            //                 data:   {_token: '{{ csrf_token() }}'}
+            //             }).always(function(res){
+            //                 var html = '';
+            //                 for(var i = 0; i < res.messages.length; i++){
+            //                     var msg = res.messages[i];
+            //                     var user = res.msg_users;
+            //                     var file_html = '';
+            //                     if(msg.file_id != 0){
+            //                         var file = res.files[msg.file_id][0];
+            //                         file_html = '<p class="msg-file"> <a href="/storage/'+file.path+'"> <i class="far fa-file"></i>'+file.filename+' </a> </p> ';
+            //                     }
 
-                                if(user_id == msg.user_id){
-                                    html += '<div class="msg msg-right mb-12 relative p-2">';
-                                }else{
-                                    html += '<div class="msg msg-left mb-12 relative p-2">';
-                                }
-                                html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span></div>'+file_html+'</div>';
-                            }
-                            $('#messagesList').html(html);
-                        });
-                    }
-                });
+            //                     if(user_id == msg.user_id){
+            //                         html += '<div class="msg msg-right mb-12 relative p-2">';
+            //                     }else{
+            //                         html += '<div class="msg msg-left mb-12 relative p-2">';
+            //                     }
+            //                     html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+msg.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span></div>'+file_html+'</div>';
+            //                 }
+            //                 $('#messagesList').html(html);
+            //                 $('#notifySound').get(0).play()
+            //             });
+            //         }
+            //     });
 
-                return false;
-            }, 3000);
+            //     return false;
+            // }, 3000);
         </script>
     </body>
 </html>
