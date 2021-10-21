@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+        
         <title>Czatap</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="icon" type="image/png" sizes="192x192"  href="/storage/images/android-icon-192x192.png">
 
         <!-- Styles -->
         <link href="/css/app.css" rel="stylesheet">
         
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&family=Rampart+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&family=Rampart+One&display=swap" rel="stylesheet">  
+        
         <script src="https://kit.fontawesome.com/309a8b3aa5.js" crossorigin="anonymous"></script>
+        <script>
+            navigator.serviceWorker.register('/sw.js').catch(e=>console.error('Ups!' + e))
+        </script>
+        <link rel="manifest" href="/manifest.json">
     </head>
     <body class="antialiased relative text-center w-full h-screen">
         <div class="app-logo w-full text-center text-white text-7xl mt-8">

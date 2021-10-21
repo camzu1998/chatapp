@@ -118,15 +118,6 @@ function load_messages(){
 
 var worker = new Worker('/js/worker.js');
 
-// rejestracja obsługi zdarzenia 'message' wysłanego przez 'worker'
-// worker.addEventListener('get_id', function(e) {
-//     var newest_id = e.data;
-//     if(newest_id > $('#newest_id').val()){
-//         $('#newest_id').val(newest_id);
-//         load_messages();
-//     }
-// }, false);
-
 worker.onmessage = function(e) {
     var newest_id = e.data;
     if(newest_id > $('#newest_id').val()){
