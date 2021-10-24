@@ -1,4 +1,13 @@
 require('./bootstrap');
+$('#toggle-menu').click(function(){
+    $('#user-dashboard')
+    .css("display", "flex")
+    .hide()
+    .fadeIn();
+});
+$('#close-menu').click(function(){
+    $('#user-dashboard').fadeOut();
+});
 $('#openSettings').click(function(){
     $('.full-shadow').fadeIn();
     $('#settingsModal').fadeIn();

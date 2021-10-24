@@ -2062,6 +2062,12 @@ module.exports = {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+$('#toggle-menu').click(function () {
+  $('#user-dashboard').css("display", "flex").hide().fadeIn();
+});
+$('#close-menu').click(function () {
+  $('#user-dashboard').fadeOut();
+});
 $('#openSettings').click(function () {
   $('.full-shadow').fadeIn();
   $('#settingsModal').fadeIn();
@@ -2176,14 +2182,7 @@ function load_messages() {
   return false;
 }
 
-var worker = new Worker('/js/worker.js'); // rejestracja obsługi zdarzenia 'message' wysłanego przez 'worker'
-// worker.addEventListener('get_id', function(e) {
-//     var newest_id = e.data;
-//     if(newest_id > $('#newest_id').val()){
-//         $('#newest_id').val(newest_id);
-//         load_messages();
-//     }
-// }, false);
+var worker = new Worker('/js/worker.js');
 
 worker.onmessage = function (e) {
   var newest_id = e.data;

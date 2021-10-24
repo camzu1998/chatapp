@@ -22,17 +22,26 @@
     </head>
     <body class="antialiased">
         <div class="flex flex-row">
-            <div class="user-panel flex flex-col h-screen text-center items-center">
-                <!-- Profile logo -->
-                <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
-                <div class="hello-user w-full text-center mb-8">
-                    Witaj {{ $user->nick }}
+            <div class="user-panel absolute inset-x-0 top-0 text-center">
+                <div class="relative h-full">
+                    <div class="app-logo-chat w-full text-center text-white text-5xl">
+                        Czatap
+                    </div>
+                    <i class="fas fa-bars" id="toggle-menu"></i>
                 </div>
-                <!-- Btns -->
-                <div class="btns-box flex-grow flex flex-col mb-8">
-                    <button class="btn my-4 disabled" id="openConversations" disabled><i class="far fa-comment"></i> Konwersacje</button>
-                    <button class="btn my-4" id="openSettings"><i class="fas fa-cogs"></i> Ustawienia</button>
-                    <a href="/logout" class="btn my-4 logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
+                <div class="flex flex-col h-screen text-center items-center" id="user-dashboard">
+                    <i class="fas fa-times" id="close-menu"></i>
+                    <!-- Profile logo -->
+                    <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
+                    <div class="hello-user w-full text-center mb-8">
+                        Witaj {{ $user->nick }}
+                    </div>
+                    <!-- Btns -->
+                    <div class="btns-box flex-grow flex flex-col mb-8">
+                        <button class="btn my-4 disabled" id="openConversations" disabled><i class="far fa-comment"></i> Konwersacje</button>
+                        <button class="btn my-4" id="openSettings"><i class="fas fa-cogs"></i> Ustawienia</button>
+                        <a href="/logout" class="btn my-4 logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
+                    </div>
                 </div>
             </div>
             <div class="content-panel flex flex-col flex-grow h-screen">
