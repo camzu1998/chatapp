@@ -38,7 +38,8 @@
                     </div>
                     <!-- Btns -->
                     <div class="btns-box flex-grow flex flex-col mb-8">
-                        <button class="btn my-4 disabled" id="openConversations" disabled><i class="far fa-comment"></i> Konwersacje</button>
+                        <button class="btn my-4" id="openFriends"><i class="fas fa-users"></i> Znajomi</button>
+                        <button class="btn my-4" id="openConversations"><i class="far fa-comment"></i> Konwersacje</button>
                         <button class="btn my-4" id="openSettings"><i class="fas fa-cogs"></i> Ustawienia</button>
                         <a href="/logout" class="btn my-4 logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
                     </div>

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateUserSettingsTable extends Migration
+class CreateTableUserRoom extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class UpdateUserSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('user_settings', function (Blueprint $table) {
-            $table->index(['user_id', 'name']);
+        Schema::create('user_room', function (Blueprint $table) {
+            $table->integer('room_id');
+            $table->integer('user_id');
+            $table->string('nickname');
+            $table->dateTime('created_at', $precision = 0);
         });
     }
 
@@ -25,6 +28,6 @@ class UpdateUserSettingsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('user_room');
     }
 }

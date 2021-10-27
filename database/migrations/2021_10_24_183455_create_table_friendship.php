@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateUserSettingsTable extends Migration
+class CreateTableFriendship extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class UpdateUserSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('user_settings', function (Blueprint $table) {
-            $table->index(['user_id', 'name']);
+        Schema::create('friendship', function (Blueprint $table) {
+            $table->integer('user_id');
+            $table->integer('user2_id');
+            $table->dateTime('created_at', $precision = 0);
         });
     }
 
@@ -25,6 +27,6 @@ class UpdateUserSettingsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('friendship');
     }
 }

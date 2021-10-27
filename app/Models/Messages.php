@@ -14,13 +14,15 @@ class Messages extends Model
     protected $table = 'messages';
 
     protected $form = [
-        'nick',
+        'user_id',
+        'room_id',
+        'file_id',
         'content',
-        'date'
+        'created_at'
     ];
 
     public function get($limiter = null){
-        if(empty($limiter) && is_numeric($limiter)){
+        if(!empty($limiter) && is_numeric($limiter)){
             return  DB::table($this->table)->select()->take($limiter)->latest()->get();
         }else{
             return  DB::table($this->table)->select()->latest()->get();   
@@ -30,17 +32,17 @@ class Messages extends Model
         return  DB::table($this->table)->select()->latest()->first(); 
     }
 
-    public function save($Nick = '', $Content = '', $file_id = 0, $user_id = 0){
-        if(empty($Nick) || empty($Content) || empty($user_id))
+    public function save($room_id = 0, $content = '', $file_id = 0, $user_id = 0){
+        if(empty($Nick) || empty($content) || empty($user_id))
             return false;
 
         $Date = date('Y-m-d H:i:s');
         DB::table($this->table)->insert([
-            'nick'       => $Nick,
-            'content'    => $Content,
+            'user_id'    => $user_id,
+            'room_id'    => $room_id,
             'file_id'    => $file_id,
+            'content'    => $content,
             'created_at' => $Date,
-            'user_id'    => $user_id
         ]);
 
         return true;

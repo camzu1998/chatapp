@@ -58,18 +58,20 @@ class MessagesController extends Controller
     }
 
     public function send(Request $request){
-        $nick = $request->input('nick');
         $content = $request->input('content');
         $file_id = 0;
+        $room_id = 0;
 
         if(!empty($request->file('file'))){
             $files_con = new FilesController();
             $file_id = $files_con->save($request);
         }
 
+        //Check if user is in the room
+
         $msg = new \App\Models\Messages;
 
-        $msg->save($nick, $content, $file_id, Auth::id());
+        $msg->save($room_id, $content, $file_id, Auth::id());
 
         return $this->get();
     }
