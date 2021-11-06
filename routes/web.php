@@ -6,6 +6,7 @@ use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserSettingsController;
+use App\Http\Controllers\FriendshipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +19,18 @@ use App\Http\Controllers\UserSettingsController;
 |
 */
 
-Route::get('/', [Controller::class, 'show']);
+Route::get('/', [Controller::class, 'login_form']);
 Route::get('/register_form', [Controller::class, 'register_form']);
+
+Route::get('/main', function(Request $request){
+    $con = new App\Http\Controllers\Controller();
+    $friendship = new App\Http\Controllers\FriendshipController();
+    
+    $data = $friendship->get_user_friends('array');
+    $data['content'] = 'main';
+
+    return $con->load('main', $data);
+});
 
 
 Route::get('/chat', [MessagesController::class, 'show']);
@@ -34,7 +45,7 @@ Route::post('/login', function(Request $request){
 });
 Route::post('/send_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
-    return $msg_con->send($request);
+    return $msg_con->send($request);  
 });
 Route::post('/get_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
@@ -45,3 +56,9 @@ Route::post('/save_settings', function(Request $request){
     return $user_settings->save_user_settings($request);
 });
 Route::post('/get_newest_id', [MessagesController::class, 'get_newest_id']);
+// Friendship
+Route::get('/friendship', [FriendshipController::class, 'get_user_friends']);
+Route::post('/friendship', function(Request $request){
+    $friendship = new App\Http\Controllers\FriendshipController();
+    return $friendship->save_friendship($request);
+});

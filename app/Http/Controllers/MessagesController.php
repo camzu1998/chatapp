@@ -14,6 +14,7 @@ class MessagesController extends Controller
     public function show(){
         if (!Auth::check()) {
             // The user is not logged in...
+            return back();
         }
 
         $users_array = array();

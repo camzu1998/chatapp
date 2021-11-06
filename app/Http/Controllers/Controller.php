@@ -7,22 +7,31 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\UserSettingsController;
-use Illuminate\Support\Facades\Hash;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function show(){
+    public function login_form(){
         return view('login');
     }
     public function register_form(){
         return view('register_form');
     }
+    public function load($content = 'main' ,$data = array()){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return back();
+        }
+        $data['user'] = Auth::user();
+        $data['content'] = view($content, $data);
 
+        return view('layout', $data);
+    }
     public function register(Request $request){
         if(empty($request->input('nick')) || empty($request->input('email')) || empty($request->input('pass')))
             return back()->withErrors([
@@ -53,7 +62,7 @@ class Controller extends BaseController
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect('chat');
+            return redirect('main');
         }
 
         return back()->withErrors([
