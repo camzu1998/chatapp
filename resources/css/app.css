@@ -227,6 +227,27 @@ input:checked + .slider:before {
 .app-logo-chat, #toggle-menu{
   display: none;
 }
+.profile_container{
+  width: 100px;
+  height: 100px;
+}
+.profile_container > img{
+  width: 75px;
+  height: 75px;
+}
+.waiting_friend{
+  color: #99A4FF;
+  position: absolute;
+  bottom: 0;
+  left: 5px;
+  font-size: 30px;
+}
+.friend_name{
+  line-height: 100px !important;
+}
+.fast_menu{
+  color: #99A4FF;
+}
 media(max-width: 1000px){
   .user-panel{
     width: 100%;

@@ -100,6 +100,27 @@
                 <input class="form-input mb-4 block w-3/6 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="nickname" id="nickname" placeholder="nickname"/>
                 <button class="cta-btn form-submit box-content rounded-xl" id="add_friend" type="button">Dodaj <i class="fas fa-paper-plane"></i></button>
             </form>
+            <div class="list flex flex-row">
+                @foreach ($friends as $friend)
+                    <div class="friend relative flex flex-row flex-wrap">
+                        <div class="profile_container relative flex flex-row justify-center align-center items-center">
+                            <img src="{{ asset('storage/profiles_miniatures/'.$friends_data[$friend['id']]['profile_img']) }}" class="profile-image"/>
+                            @if ($friends_data[$friend['id']]['status'] == 0)
+                                <i class="fas fa-user-clock waiting_friend"></i>
+                            @endif
+                        </div>
+                        <div class="friend_name ml-2">{{ $friends_data[$friend['id']]['nick'] }}</div>
+                        <i class="friend_name fas fa-ellipsis-v fast_menu ml-4" data="{{ $friend['id'] }}"></i>
+                        @if ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 1)
+                            <!-- Accept/Deceline menu -->
+                        @elseif ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 0)
+                            <!-- Cancel invite menu -->
+                        @elseif ($friends_data[$friend['id']]['status'] == 1)
+                            <!-- Friendship menu -->
+                        @endif
+                    </div>
+                @endforeach
+            </div>
         </div>
 
         <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}"/>

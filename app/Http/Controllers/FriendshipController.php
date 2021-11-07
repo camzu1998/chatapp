@@ -15,16 +15,26 @@ class FriendshipController extends Controller
         $friends_data = array();
         
         $friendsModel = new \App\Models\Friendship();
+        $userModel = new \App\Models\User();
 
         $friends = $friendsModel->get($user_id);
         foreach($friends as $friend){
+            $invite = 0;
             if($friend->user_id == $user_id){
-                $data = $this->save_user($friend->user2_id);
+                //Send Invite
+                $friend_id = $friend->user2_id;
             }else{
-                $data = $this->save_user($friend->user_id);
+                //Received invite
+                $friend_id = $friend->user_id;
+                $invite = 1;
             }
-            $user_friends[] = $data['user_friends'];
-            $friends_data[$data['user_friends']['id']] = $data['friends_data'];
+
+            $user_friends[]['id'] = $friend_id;
+            $friend_data = $userModel->get_user_data($friend_id);
+            $friends_data[$friend_id]['nick'] = $friend_data->nick;
+            $friends_data[$friend_id]['profile_img'] = $friend_data->profile_img; 
+            $friends_data[$friend_id]['status'] = $friend->status;
+            $friends_data[$friend_id]['invite'] = $invite;
         }
 
         if($switch_response == 'json'){
@@ -38,23 +48,6 @@ class FriendshipController extends Controller
                 'friends_data' => $friends_data,
             ];
         }
-    }
-
-    private function save_user($user_id){
-        $data = array();
-        $user_friends = array();
-        $friends_data = array();
-
-        $userModel = new \App\Models\User();
-
-        $user_friends['id'] = $user_id;
-        $friend_data = $userModel->get_user_data($user_id);
-        $friends_data['nick'] = $friend_data->nick;
-        $friends_data['profile_img'] = $friend_data->profile_img; 
-
-         $data['friends_data'] = $friends_data;
-         $data['user_friends'] = $user_friends;
-         return $data;
     }
 
     public function save_friendship(Request $request){
@@ -86,5 +79,30 @@ class FriendshipController extends Controller
         return response()->json([
             'msg' => 'Friend isnt added but not your fault :)'
         ]);
+    }
+
+    public function update_friendship_status(Request $request, $friend_id){
+        $friendsModel = new \App\Models\Friendship();
+        $userModel = new \App\Models\User();
+        $user_id = Auth::id();
+        $statuses = array(1,2); // 1 - Friendship confirmed 2 - Friendship blocked
+
+        //Valid status
+        if(!in_array($request->status, $statuses)){
+            return response()->json([
+                'msg' => 'Invalid status'
+            ]);
+        }
+        //Valid friendship
+        $res = $friendsModel->check($user_id, $friend_id);
+        if(empty($res[0])){
+            return response()->json([
+                'msg' => 'Friendship never exist'
+            ]); 
+        }
+
+        //Update friendship status
+        return $friendsModel->update($user_id, $friend_id, $request->status);
+
     }
 }
