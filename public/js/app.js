@@ -2072,9 +2072,17 @@ $('#openSettings').click(function () {
   $('.full-shadow').fadeIn();
   $('#settingsModal').fadeIn();
 });
+$('#openFriends').click(function () {
+  $('.full-shadow').fadeIn();
+  $('#friendsModal').fadeIn();
+});
 $('.close').click(function () {
   $('.full-shadow').fadeOut();
-  $('#settingsModal').fadeOut();
+  $('.modal').fadeOut();
+});
+$('.full-shadow').click(function () {
+  $('.full-shadow').fadeOut();
+  $('.modal').fadeOut();
 });
 $('#save_settings').click(function () {
   var fd = new FormData();
@@ -2099,6 +2107,14 @@ $('#save_settings').click(function () {
     processData: false
   }).always(function (res) {
     window.location.reload(true);
+  });
+});
+$('#add_friend').click(function () {
+  $.ajax({
+    method: 'post',
+    url: '/friendship',
+    data: $('#add_friend_form').serialize()
+  }).always(function (res) {// window.location.reload(true);
   });
 });
 $('#send').click(function () {

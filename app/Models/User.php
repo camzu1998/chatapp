@@ -66,6 +66,12 @@ class User extends Authenticatable
 
         return DB::table($this->table)->select('id', 'nick', 'profile_img')->where('id', '=', $user_id)->first();
     }
+    public function get_user_id($nickname = ''){
+        if(empty($nickname))
+            return false;
+
+        return DB::table($this->table)->select('id')->where('nick', 'LIKE', $nickname)->first();
+    }
     public function set_profile_image($user_id = null, $filename = 'no_image.jpg'){
         if(!$user_id)
             return false;

@@ -57,16 +57,17 @@ class FriendshipController extends Controller
 
     public function save_friendship(Request $request){
         $friendsModel = new \App\Models\Friendship();
+        $userModel = new \App\Models\User();
         $user_id = Auth::id();
 
-        if(empty($request->friend_id) || !is_numeric($request->friend_id)){
+        if(empty($request->nickname)){
             return response()->json([
                 'msg' => 'Friend id not defined'
             ]);
         }
-
-        $friend_id = $request->friend_id;
-        if($friendsModel->save($user_id, $friend_id)){
+        $friend_id = $userModel->get_user_id($request->nickname);
+        
+        if($friendsModel->save($user_id, $friend_id->id)){
             return response()->json([
                 'msg' => 'Friend added'
             ]); 

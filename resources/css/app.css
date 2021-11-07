@@ -133,7 +133,7 @@ h2{
   background: #000;
   opacity: 0.5;
 }
-#settingsModal{
+.modal{
   z-index: 9;
   width: 500px;
   height: 500px;

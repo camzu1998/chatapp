@@ -26,6 +26,7 @@ class Friendship extends Model
         DB::table($this->table)->insert([
             'user_id'    => $user_id,
             'user2_id'   => $user2_id,
+            'status'     => 0,
             'created_at' => $Date,
         ]);
         return true;

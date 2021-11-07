@@ -50,7 +50,8 @@
             </div>
         </div>
         <div class="full-shadow w-screen h-screen absolute top-0 left-0" style="display:none;"></div>
-        <div id="settingsModal" class="flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
+
+        <div id="settingsModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
             <div class="modal-title w-full text-center relative">Ustawienia
                 <span class="close absolute top-0 left-full">X</span>
             </div>
@@ -87,11 +88,25 @@
             <div class="w-full h-full flex flex-row justify-end items-end">
                 <button class="cta-btn form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
             </div>
-            <audio style="display:none;" id="notifySound">
-                <source src="{{ asset('storage/sounds/mmm-2-tone-sexy.mp3') }}" type="audio/mpeg">
-            </audio> 
         </div>
+
+        <div id="friendsModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
+            <div class="modal-title w-full text-center relative">Znajomi
+                <span class="close absolute top-0 left-full">X</span>
+            </div>
+            <div class="w-full text-center mt-6">Wpisz nick i dodaj znajomego</div>
+            <form class="flex flex-row justify-around mt-2" id="add_friend_form" method="POST">
+                @csrf
+                <input class="form-input mb-4 block w-3/6 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="nickname" id="nickname" placeholder="nickname"/>
+                <button class="cta-btn form-submit box-content rounded-xl" id="add_friend" type="button">Dodaj <i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+
         <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}"/>
+        
+        <audio style="display:none;" id="notifySound">
+            <source src="{{ asset('storage/sounds/mmm-2-tone-sexy.mp3') }}" type="audio/mpeg">
+        </audio> 
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
         <script src="/js/app.js"></script>
