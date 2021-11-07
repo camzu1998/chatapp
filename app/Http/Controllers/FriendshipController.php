@@ -17,14 +17,14 @@ class FriendshipController extends Controller
         $friendsModel = new \App\Models\Friendship();
 
         $friends = $friendsModel->get($user_id);
-        foreach($friends as $key => $friend){
-            if($key == $user_id){
-                $data = $this->save_user($friend);
+        foreach($friends as $friend){
+            if($friend->user_id == $user_id){
+                $data = $this->save_user($friend->user2_id);
             }else{
-                $data = $this->save_user($key);
+                $data = $this->save_user($friend->user_id);
             }
             $user_friends[] = $data['user_friends'];
-            $friends_data[$key] = $data['friends_data'];
+            $friends_data[$data['user_friends']['id']] = $data['friends_data'];
         }
 
         if($switch_response == 'json'){
@@ -42,13 +42,15 @@ class FriendshipController extends Controller
 
     private function save_user($user_id){
         $data = array();
+        $user_friends = array();
+        $friends_data = array();
 
         $userModel = new \App\Models\User();
 
         $user_friends['id'] = $user_id;
         $friend_data = $userModel->get_user_data($user_id);
-        $friends_data['nick'] = $friend_data['nick'];
-        $friends_data['profile_img'] = $friend_data['profile_img']; 
+        $friends_data['nick'] = $friend_data->nick;
+        $friends_data['profile_img'] = $friend_data->profile_img; 
 
          $data['friends_data'] = $friends_data;
          $data['user_friends'] = $user_friends;
@@ -66,7 +68,15 @@ class FriendshipController extends Controller
             ]);
         }
         $friend_id = $userModel->get_user_id($request->nickname);
-        
+
+        $res = $friendsModel->check($user_id, $friend_id->id);
+        if(!empty($res[0])){
+            return response()->json([
+                'msg' => 'Friend already exist'
+            ]); 
+        }
+
+
         if($friendsModel->save($user_id, $friend_id->id)){
             return response()->json([
                 'msg' => 'Friend added'

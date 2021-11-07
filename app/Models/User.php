@@ -57,7 +57,7 @@ class User extends Authenticatable
 
         return $user_id;
     }
-    public function get_users_id(){
+    public function get_users(){
         return DB::table($this->table)->select('id', 'nick', 'profile_img')->get();
     }
     public function get_user_data($user_id = null){

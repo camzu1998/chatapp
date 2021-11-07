@@ -31,4 +31,11 @@ class Friendship extends Model
         ]);
         return true;
     }
+
+    public function check($user_id  = null,$user2_id = null){
+        if(empty($user_id) || empty($user2_id))
+            return false;
+
+        return DB::table($this->table)->select()->where(DB::raw('(`user_id` = '.$user_id.' AND `user2_id` = '.$user2_id.') OR (`user_id` = '.$user2_id.' AND `user2_id` = '.$user_id.')'))->get();
+    }
 }
