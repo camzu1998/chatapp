@@ -245,8 +245,33 @@ input:checked + .slider:before {
 .friend_name{
   line-height: 100px !important;
 }
-.fast_menu{
+.open_fast_menu{
   color: #99A4FF;
+  cursor: pointer;
+}
+.fast_menu{
+  background: #333B80;
+  color: #FAF8FE;
+  border-radius: 8px;
+  width: 160px;
+  right: -170px;
+  bottom: 0;
+}
+.fast_menu_btn{
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 18px;color: #B2D1CA;
+}
+#acceptInvite{
+  color: #B2D1CA;
+}
+#decelineInvite, #cancelInvite{
+  color: #D1B2B5;
+}
+.cancel_fast_menu{
+  color: #979599;
 }
 media(max-width: 1000px){
   .user-panel{

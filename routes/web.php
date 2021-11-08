@@ -62,4 +62,4 @@ Route::post('/friendship', function(Request $request){
     $friendship = new App\Http\Controllers\FriendshipController();
     return $friendship->save_friendship($request);
 });
-Route::put('/friendship/{friend_id}', 'FriendshipController@update_friendship_status');
+Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);

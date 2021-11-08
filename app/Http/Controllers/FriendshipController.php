@@ -85,24 +85,40 @@ class FriendshipController extends Controller
         $friendsModel = new \App\Models\Friendship();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();
-        $statuses = array(1,2); // 1 - Friendship confirmed 2 - Friendship blocked
+        $actions = array('acceptInvite', 'decelineInvite', 'cancelInvite', 'deleteFriendship', 'blockFriendship');
 
         //Valid status
-        if(!in_array($request->status, $statuses)){
+        if(!in_array($request->button, $actions)){
             return response()->json([
-                'msg' => 'Invalid status'
+                'msg' => 'Invalid action'
             ]);
         }
         //Valid friendship
         $res = $friendsModel->check($user_id, $friend_id);
+        return var_dump($res);
         if(empty($res[0])){
             return response()->json([
                 'msg' => 'Friendship never exist'
             ]); 
         }
-
+        switch($request->button){
+            case 'acceptInvite':
+                $status = $friendsModel->update($user_id, $friend_id, 1);
+            break;
+            case 'decelineInvite':
+                $status = $friendsModel->update($user_id, $friend_id, 2);
+            break;
+            case 'cancelInvite':
+                $status = $friendsModel->delete($user_id, $friend_id);
+            break;
+            case 'deleteFriendship':
+                $status = $friendsModel->delete($user_id, $friend_id);
+            break;
+            case 'blockFriendship':
+                $status = $friendsModel->update($user_id, $friend_id, 2);
+            break;
+        }
         //Update friendship status
-        return $friendsModel->update($user_id, $friend_id, $request->status);
-
+        return $status;
     }
 }

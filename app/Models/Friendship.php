@@ -45,4 +45,8 @@ class Friendship extends Model
         
         return DB::table($this->table)->where(DB::raw('(`user_id` = '.$user_id.' AND `user2_id` = '.$friend_id.') OR (`user_id` = '.$friend_id.' AND `user2_id` = '.$user_id.')'))->update(['status' => $status]);
     }
+
+    public function delete($user_id  = null,$friend_id = null){
+        return DB::table($this->table)->where(DB::raw('(`user_id` = '.$user_id.' AND `user2_id` = '.$friend_id.') OR (`user_id` = '.$friend_id.' AND `user2_id` = '.$user_id.')'))->delete();
+    }
 }

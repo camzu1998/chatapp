@@ -1,9 +1,20 @@
 require('./bootstrap');
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 $('#toggle-menu').click(function(){
     $('#user-dashboard')
     .css("display", "flex")
     .hide()
     .fadeIn();
+});
+$('.open_fast_menu').click(function(){
+    $(this).siblings('.fast_menu').fadeIn();
+});
+$('.cancel_fast_menu').click(function(){
+    $('.fast_menu').fadeOut();
 });
 $('#close-menu').click(function(){
     $('#user-dashboard').fadeOut();
@@ -19,10 +30,12 @@ $('#openFriends').click(function(){
 $('.close').click(function(){
     $('.full-shadow').fadeOut();
     $('.modal').fadeOut();
+    $('.fast_menu').fadeOut();
 });
 $('.full-shadow').click(function(){
     $('.full-shadow').fadeOut();
     $('.modal').fadeOut();
+    $('.fast_menu').fadeOut();
 });
 $('#save_settings').click(function(){
     var fd = new FormData();
@@ -57,6 +70,7 @@ $('#save_settings').click(function(){
         window.location.reload(true);
     });
 });
+// FRIENDSHIP
 $('#add_friend').click(function(){
     $.ajax({
         method: 'post',
@@ -66,6 +80,22 @@ $('#add_friend').click(function(){
         // window.location.reload(true);
     });
 });
+$('.fast_menu_btn').click(function(){
+    if($(this).hasClass('cancel_fast_menu')){
+        return false;
+    }
+    var friend_id = $(this).attr('data');
+
+    $.ajax({
+        method: 'put',
+        url: '/friendship/'+friend_id,
+        data: 'button='+$(this).attr('id'),
+    }).always(function(res){
+        // window.location.reload(true);
+    });
+});
+
+//CHAT
 $('#send').click(function(){
     var user_id = $('#user_id').val();
     var fd = new FormData();

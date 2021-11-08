@@ -19,6 +19,7 @@
             navigator.serviceWorker.register('/sw.js').catch(e=>console.error('Ups!' + e))
         </script>
         <link rel="manifest" href="/manifest.json">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
     </head>
     <body class="antialiased">
         <div class="flex flex-row">
@@ -92,7 +93,7 @@
 
         <div id="friendsModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
             <div class="modal-title w-full text-center relative">Znajomi
-                <span class="close absolute top-0 left-full">X</span>
+                <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
             </div>
             <div class="w-full text-center mt-6">Wpisz nick i dodaj znajomego</div>
             <form class="flex flex-row justify-around mt-2" id="add_friend_form" method="POST">
@@ -110,21 +111,35 @@
                             @endif
                         </div>
                         <div class="friend_name ml-2">{{ $friends_data[$friend['id']]['nick'] }}</div>
-                        <i class="friend_name fas fa-ellipsis-v fast_menu ml-4" data="{{ $friend['id'] }}"></i>
-                        @if ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 1)
-                            <!-- Accept/Deceline menu -->
-                        @elseif ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 0)
-                            <!-- Cancel invite menu -->
-                        @elseif ($friends_data[$friend['id']]['status'] == 1)
-                            <!-- Friendship menu -->
-                        @endif
+                        <i class="friend_name fas fa-ellipsis-v open_fast_menu ml-4" data="{{ $friend['id'] }}"></i>
+                        <div class="fast_menu absolute flex flex-col" style="display: none;">
+                            @if ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 1)
+                                <!-- Accept/Deceline menu -->
+                                <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="far fa-envelope"></i> Zaproszenie</div>
+                                <button class="fast_menu_btn mb-2 w-full" id="acceptInvite" data="{{ $friend['id'] }}"><i class="fas fa-user-check"></i> Akceptuj</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="decelineInvite" data="{{ $friend['id'] }}"><i class="fas fa-user-minus"></i> Odrzuć</button>
+                                <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
+
+                            @elseif ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 0)
+                                <!-- Cancel invite menu -->
+                                <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="far fa-envelope"></i> Zaproszenie</div>
+                                <button class="fast_menu_btn mb-2 w-full" id="cancelInvite" data="{{ $friend['id'] }}"><i class="fas fa-user-slash"></i> Anuluj</button>
+                                <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
+                            @elseif ($friends_data[$friend['id']]['status'] == 1)
+                                <!-- Friendship menu -->
+                                <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="fas fa-user-friends"></i> Znajomość</div>
+                                <button class="fast_menu_btn mb-2 w-full" id="blockFriendship" data="{{ $friend['id'] }}"><i class="fas fa-comment-slash"></i> Zablokuj</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="deleteFriendship" data="{{ $friend['id'] }}"><i class="fas fa-user-slash"></i> Usuń</button>
+                                <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
             </div>
         </div>
 
         <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}"/>
-        
+        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
         <audio style="display:none;" id="notifySound">
             <source src="{{ asset('storage/sounds/mmm-2-tone-sexy.mp3') }}" type="audio/mpeg">
         </audio> 

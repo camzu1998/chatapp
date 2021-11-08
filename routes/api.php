@@ -21,3 +21,4 @@ Route::get('/send_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
     return $msg_con->save($request);
 });
+Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
