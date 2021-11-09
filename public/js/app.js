@@ -2141,7 +2141,8 @@ $('.fast_menu_btn').click(function () {
     method: 'put',
     url: '/friendship/' + friend_id,
     data: 'button=' + $(this).attr('id')
-  }).always(function (res) {// window.location.reload(true);
+  }).always(function (res) {
+    window.location.reload(true);
   });
 }); //CHAT
 

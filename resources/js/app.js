@@ -91,7 +91,7 @@ $('.fast_menu_btn').click(function(){
         url: '/friendship/'+friend_id,
         data: 'button='+$(this).attr('id'),
     }).always(function(res){
-        // window.location.reload(true);
+        window.location.reload(true);
     });
 });
 

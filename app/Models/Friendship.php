@@ -36,17 +36,17 @@ class Friendship extends Model
         if(empty($user_id) || empty($friend_id))
             return false;
 
-        return DB::table($this->table)->select()->where(DB::raw('(`user_id` = '.$user_id.' AND `user2_id` = '.$friend_id.') OR (`user_id` = '.$friend_id.' AND `user2_id` = '.$user_id.')'))->get();
+        return DB::select('select * from friendship where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)', [$user_id, $friend_id, $friend_id, $user_id]);
     }
 
     public function update($user_id = null, $friend_id = null, $status = 0){
         if(empty($user_id) || empty($friend_id))
             return false;
         
-        return DB::table($this->table)->where(DB::raw('(`user_id` = '.$user_id.' AND `user2_id` = '.$friend_id.') OR (`user_id` = '.$friend_id.' AND `user2_id` = '.$user_id.')'))->update(['status' => $status]);
+        return DB::update('update friendship set status = ? where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)',[$status, $user_id, $friend_id, $friend_id, $user_id]);
     }
 
     public function delete($user_id  = null,$friend_id = null){
-        return DB::table($this->table)->where(DB::raw('(`user_id` = '.$user_id.' AND `user2_id` = '.$friend_id.') OR (`user_id` = '.$friend_id.' AND `user2_id` = '.$user_id.')'))->delete();
+        return DB::delete('delete from friendship where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)', [$user_id, $friend_id, $friend_id, $user_id]);
     }
 }

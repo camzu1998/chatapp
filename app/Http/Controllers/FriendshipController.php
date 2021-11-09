@@ -95,7 +95,6 @@ class FriendshipController extends Controller
         }
         //Valid friendship
         $res = $friendsModel->check($user_id, $friend_id);
-        return var_dump($res);
         if(empty($res[0])){
             return response()->json([
                 'msg' => 'Friendship never exist'
