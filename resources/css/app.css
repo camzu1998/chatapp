@@ -15,8 +15,15 @@ h2{
     font-family: 'Rampart One', cursive;
 }
 .cta-btn{
-    background: #D00081;
-    color: #FEF8F9;
+  background: #D00081;
+  color: #FEF8F9;
+}
+.primary-btn{
+  background: #2939CC;
+  color: #CED2F2;
+}
+.cta-btn, .primary-btn{
+    height: 35px;
 }
 .startForm{
     background: #0C113D;
@@ -149,7 +156,6 @@ h2{
 }
 .form-submit{
   width: 140px;
-  height: 35px;
 }
 .setting-form-upload{
   color: #F8F9FE;
@@ -272,6 +278,13 @@ input:checked + .slider:before {
 }
 .cancel_fast_menu{
   color: #979599;
+}
+.btn_invite{
+  background: #2939CC;
+  border-radius: 8px;
+  font-size: 12px;
+  width: 140px;
+  height: 35px;
 }
 media(max-width: 1000px){
   .user-panel{

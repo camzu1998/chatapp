@@ -11,8 +11,8 @@ class FriendshipController extends Controller
 {
     public function get_user_friends($switch_response = 'json'){
         $user_id = Auth::id();
-        $user_friends = array();
         $friends_data = array();
+        $banned_friends_data = array();
         
         $friendsModel = new \App\Models\Friendship();
         $userModel = new \App\Models\User();
@@ -29,23 +29,21 @@ class FriendshipController extends Controller
                 $invite = 1;
             }
 
-            $user_friends[]['id'] = $friend_id;
             $friend_data = $userModel->get_user_data($friend_id);
             $friends_data[$friend_id]['nick'] = $friend_data->nick;
             $friends_data[$friend_id]['profile_img'] = $friend_data->profile_img; 
             $friends_data[$friend_id]['status'] = $friend->status;
+            $friends_data[$friend_id]['by_who'] = $friend->by_who;
             $friends_data[$friend_id]['invite'] = $invite;
         }
 
         if($switch_response == 'json'){
             return response()->json([
-                'friends' => $user_friends,
-                'friends_data' => $friends_data,
+                'friends_data' => $friends_data
             ]);
         }else if($switch_response == 'array'){
             return [
-                'friends' => $user_friends,
-                'friends_data' => $friends_data,
+                'friends_data' => $friends_data
             ];
         }
     }

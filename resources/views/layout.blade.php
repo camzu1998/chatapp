@@ -39,9 +39,9 @@
                     </div>
                     <!-- Btns -->
                     <div class="btns-box flex-grow flex flex-col mb-8">
-                        <button class="btn my-4" id="openFriends"><i class="fas fa-users"></i> Znajomi</button>
-                        <button class="btn my-4" id="openConversations"><i class="far fa-comment"></i> Konwersacje</button>
-                        <button class="btn my-4" id="openSettings"><i class="fas fa-cogs"></i> Ustawienia</button>
+                        <button class="btn my-4 modalToggle" data="friendsModal"><i class="fas fa-users"></i> Znajomi</button>
+                        <button class="btn my-4 modalToggle" data="roomsModal"><i class="far fa-comment"></i> Konwersacje</button>
+                        <button class="btn my-4 modalToggle" data="settingsModal"><i class="fas fa-cogs"></i> Ustawienia</button>
                         <a href="/logout" class="btn my-4 logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
                     </div>
                 </div>
@@ -102,39 +102,99 @@
                 <button class="cta-btn form-submit box-content rounded-xl" id="add_friend" type="button">Dodaj <i class="fas fa-paper-plane"></i></button>
             </form>
             <div class="list flex flex-row">
-                @foreach ($friends as $friend)
+                @foreach ($friends_data as $friend_id => $friend)
                     <div class="friend relative flex flex-row flex-wrap">
                         <div class="profile_container relative flex flex-row justify-center align-center items-center">
-                            <img src="{{ asset('storage/profiles_miniatures/'.$friends_data[$friend['id']]['profile_img']) }}" class="profile-image"/>
-                            @if ($friends_data[$friend['id']]['status'] == 0)
+                            <img src="{{ asset('storage/profiles_miniatures/'.$friend['profile_img']) }}" class="profile-image"/>
+                            @if ($friend['status'] == 0)
                                 <i class="fas fa-user-clock waiting_friend"></i>
                             @endif
                         </div>
-                        <div class="friend_name ml-2">{{ $friends_data[$friend['id']]['nick'] }}</div>
-                        <i class="friend_name fas fa-ellipsis-v open_fast_menu ml-4" data="{{ $friend['id'] }}"></i>
+                        <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
+                        <i class="friend_name fas fa-ellipsis-v open_fast_menu ml-4" data="{{ $friend_id }}"></i>
                         <div class="fast_menu absolute flex flex-col" style="display: none;">
-                            @if ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 1)
+                            @if ($friend['status'] == 0 && $friend['invite'] == 1)
                                 <!-- Accept/Deceline menu -->
                                 <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="far fa-envelope"></i> Zaproszenie</div>
-                                <button class="fast_menu_btn mb-2 w-full" id="acceptInvite" data="{{ $friend['id'] }}"><i class="fas fa-user-check"></i> Akceptuj</button>
-                                <button class="fast_menu_btn mb-2 w-full" id="decelineInvite" data="{{ $friend['id'] }}"><i class="fas fa-user-minus"></i> Odrzuć</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="acceptInvite" data="{{ $friend_id }}"><i class="fas fa-user-check"></i> Akceptuj</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="decelineInvite" data="{{ $friend_id }}"><i class="fas fa-user-minus"></i> Odrzuć</button>
                                 <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
-
-                            @elseif ($friends_data[$friend['id']]['status'] == 0 && $friends_data[$friend['id']]['invite'] == 0)
+                            @elseif ($friend['status'] == 0 && $friend['invite'] == 0)
                                 <!-- Cancel invite menu -->
                                 <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="far fa-envelope"></i> Zaproszenie</div>
-                                <button class="fast_menu_btn mb-2 w-full" id="cancelInvite" data="{{ $friend['id'] }}"><i class="fas fa-user-slash"></i> Anuluj</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="cancelInvite" data="{{ $friend_id }}"><i class="fas fa-user-slash"></i> Anuluj</button>
                                 <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
-                            @elseif ($friends_data[$friend['id']]['status'] == 1)
+                            @elseif ($friend['status'] == 1)
                                 <!-- Friendship menu -->
                                 <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="fas fa-user-friends"></i> Znajomość</div>
-                                <button class="fast_menu_btn mb-2 w-full" id="blockFriendship" data="{{ $friend['id'] }}"><i class="fas fa-comment-slash"></i> Zablokuj</button>
-                                <button class="fast_menu_btn mb-2 w-full" id="deleteFriendship" data="{{ $friend['id'] }}"><i class="fas fa-user-slash"></i> Usuń</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="blockFriendship" data="{{ $friend_id }}"><i class="fas fa-comment-slash"></i> Zablokuj</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="deleteFriendship" data="{{ $friend_id }}"><i class="fas fa-user-slash"></i> Usuń</button>
                                 <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
                             @endif
                         </div>
                     </div>
                 @endforeach
+            </div>
+        </div>
+
+        <div id="roomsModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
+            <div class="modal-title w-full text-center relative">Pokoje
+                <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
+            </div>
+
+            <div class="w-full flex flex-row justify-evenly mt-6">
+                <div class="w-1/3 flex flex-col">
+                    <span class="w-full text-center">Wyszukaj pokój</span>
+                    <input class="form-input mb-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="search_room" id="search_room" placeholder="Nazwa pokoju"/>
+                </div>
+                <div class="w-1/3 text-center">
+                    lub
+                </div>
+                <button class="w-1/3 cta-btn box-content rounded-xl modalToggle" data="addRoomModal" type="button">Utwórz pokój <i class="fas fa-users"></i></button>
+            </div>
+
+            <div class="list flex flex-row">
+                
+            </div>
+        </div>
+
+        <div id="addRoomModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
+            <div class="modal-title w-full text-center relative">Tworzenie pokoju
+                <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
+            </div>
+
+            <div class="w-full flex flex-col mt-6">
+                <span class="w-full text-sm text-center">Podaj nazwę pokoju lub pozostaw to pole puste ( {{ $user->nick }}_room)</span>
+                <input class="form-input mb-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="room_name" id="room_name" placeholder="Nazwa pokoju"/>
+            </div>
+
+            <div class="w-full flex flex-col mt-6">
+                <span class="w-full text-sm text-center">Wpisz nick i zaproś znajomego do pokoju</span>
+                <div class="w-full flex flex-row justify-evenly mt-4">
+                    <input class="form-input mb-4 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="user_nick" id="user_nick" placeholder="Nickname"/>
+                    <button class="w-1/3 btn_invite box-content rounded-xl" id="invite_by_text" type="button">Zaproś <i class="far fa-envelope"></i></button>
+                </div>
+                
+            </div>
+
+            <div class="list flex flex-row">
+                @foreach ($friends_data as $friend_id => $friend)
+                    @if ($friend['status'] != 2)
+                        <div class="friend relative flex flex-row flex-wrap">
+                            <div class="profile_container relative flex flex-row justify-center align-center items-center">
+                                <img src="{{ asset('storage/profiles_miniatures/'.$friend['profile_img']) }}" class="profile-image"/>
+                                @if ($friend['status'] == 0)
+                                    <i class="fas fa-user-clock waiting_friend"></i>
+                                @endif
+                            </div>
+                            <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
+                            <button class="btn_invite box-content rounded-xl" data="{{ $friend_id }}">Zaproś <i class="far fa-envelope"></i></button>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+            <div class="w-full h-full flex flex-row justify-end items-end">
+                <button class="cta-btn form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
             </div>
         </div>
 

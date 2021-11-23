@@ -2079,13 +2079,10 @@ $('.cancel_fast_menu').click(function () {
 $('#close-menu').click(function () {
   $('#user-dashboard').fadeOut();
 });
-$('#openSettings').click(function () {
+$('.modalToggle').click(function () {
+  $('.modal').fadeOut();
   $('.full-shadow').fadeIn();
-  $('#settingsModal').fadeIn();
-});
-$('#openFriends').click(function () {
-  $('.full-shadow').fadeIn();
-  $('#friendsModal').fadeIn();
+  $('#' + $(this).attr('data')).fadeIn();
 });
 $('.close').click(function () {
   $('.full-shadow').fadeOut();

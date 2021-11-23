@@ -11,6 +11,14 @@ class Friendship extends Model
     use HasFactory;
     protected $table = 'friendship';
 
+    /**
+     * Statuses = [
+     *  0 => 'invite',
+     *  1 => 'friendship',
+     *  2 => 'blocked'
+     * ]
+     */
+
     public function get($user_id = null){
         if(empty($user_id))
             return false;
@@ -43,7 +51,7 @@ class Friendship extends Model
         if(empty($user_id) || empty($friend_id))
             return false;
         
-        return DB::update('update friendship set status = ? where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)',[$status, $user_id, $friend_id, $friend_id, $user_id]);
+        return DB::update('update friendship set status = ?, by_who = ? where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)',[$status, $user_id, $user_id, $friend_id, $friend_id, $user_id]);
     }
 
     public function delete($user_id  = null,$friend_id = null){
