@@ -1,10 +1,10 @@
-<div class="w-full flex flex-col">
+<div class="w-full flex flex-row">
     <h2 class="heading">Twoje pokoje: </h2>
     <div class="list"></div>
 </div>
-<div class="w-full flex flex-col">
+<div class="w-full flex flex-row">
     <h2 class="heading">Twoi znajomi: </h2>
-    <div class="list">
+    <div class="list flex flex-row w-full flex-wrap">
         @foreach ($friends_data as $friend_id => $friend)
             @if($friend['status'] == 1)
                 <div class="friend flex flex-row">

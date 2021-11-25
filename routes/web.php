@@ -7,6 +7,7 @@ use App\Http\Controllers\FilesController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserSettingsController;
 use App\Http\Controllers\FriendshipController;
+use App\Http\Controllers\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,5 +62,13 @@ Route::get('/friendship', [FriendshipController::class, 'get_user_friends']);
 Route::post('/friendship', function(Request $request){
     $friendship = new App\Http\Controllers\FriendshipController();
     return $friendship->save_friendship($request);
+});
+Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
+Route::post('/get_newest_id', [MessagesController::class, 'get_newest_id']);
+// Room
+Route::get('/room', [FriendshipController::class, 'get_user_rooms']);
+Route::post('/room', function(Request $request){
+    $room = new App\Http\Controllers\RoomController();
+    return $room->save_room($request);
 });
 Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);

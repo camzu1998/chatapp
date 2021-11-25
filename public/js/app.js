@@ -2118,6 +2118,23 @@ $('#save_settings').click(function () {
   }).always(function (res) {
     window.location.reload(true);
   });
+}); // ROOMS
+
+$('#save_room').click(function () {
+  var fd = new FormData();
+  var friends = $('.add_friend_checkbox:checked'); // Check file selected or not
+
+  if (friends.length > 0) friends.each(function () {
+    fd.append('add_friend[]', $(this).val());
+  });
+  $.ajax({
+    method: 'post',
+    url: '/room',
+    data: fd,
+    contentType: false,
+    processData: false
+  }).always(function (res) {// window.location.reload(true);
+  });
 }); // FRIENDSHIP
 
 $('#add_friend').click(function () {
@@ -2125,7 +2142,8 @@ $('#add_friend').click(function () {
     method: 'post',
     url: '/friendship',
     data: $('#add_friend_form').serialize()
-  }).always(function (res) {// window.location.reload(true);
+  }).always(function (res) {
+    window.location.reload(true);
   });
 });
 $('.fast_menu_btn').click(function () {

@@ -286,6 +286,30 @@ input:checked + .slider:before {
   width: 140px;
   height: 35px;
 }
+.friend.border-b-2{
+  border-color: #4D5499;
+  padding-bottom: 5px;
+  margin-bottom: 5px; 
+}
+ /* width */
+ ::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f100;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #1F2B99;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3D4699;
+} 
 media(max-width: 1000px){
   .user-panel{
     width: 100%;

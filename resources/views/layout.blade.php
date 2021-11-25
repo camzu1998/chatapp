@@ -112,7 +112,7 @@
                         </div>
                         <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
                         <i class="friend_name fas fa-ellipsis-v open_fast_menu ml-4" data="{{ $friend_id }}"></i>
-                        <div class="fast_menu absolute flex flex-col" style="display: none;">
+                        <div class="fast_menu absolute flex flex-col z-10" style="display: none;">
                             @if ($friend['status'] == 0 && $friend['invite'] == 1)
                                 <!-- Accept/Deceline menu -->
                                 <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="far fa-envelope"></i> Zaproszenie</div>
@@ -168,34 +168,32 @@
                 <input class="form-input mb-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="room_name" id="room_name" placeholder="Nazwa pokoju"/>
             </div>
 
-            <div class="w-full flex flex-col mt-6">
+            <div class="w-3/4 flex flex-col mt-6 mx-auto">
                 <span class="w-full text-sm text-center">Wpisz nick i zaproś znajomego do pokoju</span>
                 <div class="w-full flex flex-row justify-evenly mt-4">
-                    <input class="form-input mb-4 block w-1/3 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="user_nick" id="user_nick" placeholder="Nickname"/>
-                    <button class="w-1/3 btn_invite box-content rounded-xl" id="invite_by_text" type="button">Zaproś <i class="far fa-envelope"></i></button>
+                    <input class="form-input mb-4 block w-3/4 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" id="search_user" placeholder="Nickname"/>
                 </div>
-                
             </div>
 
-            <div class="list flex flex-row">
+            <div class="list flex flex-col overflow-y-auto pr-2 overflow-x-hidden">
                 @foreach ($friends_data as $friend_id => $friend)
-                    @if ($friend['status'] != 2)
-                        <div class="friend relative flex flex-row flex-wrap">
+                    @if ($friend['status'] == 1)
+                        <div class="friend relative w-full flex flex-row flex-wrap border-b-2">
                             <div class="profile_container relative flex flex-row justify-center align-center items-center">
                                 <img src="{{ asset('storage/profiles_miniatures/'.$friend['profile_img']) }}" class="profile-image"/>
-                                @if ($friend['status'] == 0)
-                                    <i class="fas fa-user-clock waiting_friend"></i>
-                                @endif
                             </div>
                             <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
-                            <button class="btn_invite box-content rounded-xl" data="{{ $friend_id }}">Zaproś <i class="far fa-envelope"></i></button>
+                            <div class="box_switch absolute inset-y-2/4  right-2">
+                                <label class="switch">
+                                    <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
                         </div>
                     @endif
                 @endforeach
             </div>
-            <div class="w-full h-full flex flex-row justify-end items-end">
-                <button class="cta-btn form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
-            </div>
+            <button class="cta-btn absolute bottom-2 right-2 form-submit box-content rounded-xl" id="save_room">Zapisz <i class="far fa-save"></i></button>
         </div>
 
         <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}"/>
