@@ -50,12 +50,22 @@ class MessagesController extends Controller
         ]);
     }
 
-    public function get_newest_id(){
+    public function get_newest_id($room_id = null){
+        // Check if isset room_id
+        if(empty($room_id))
+            return false;
+
+        $room = new \App\Models\Room;
+        $room_status = $room->check(Auth::id(), $room_id);
+        if(empty($room_status->created_at) && $room_status->status != 1)
+            return false;
+
         $msgM = new \App\Models\Messages;
-        $msgs = $msgM->get_last();
+        $msgs = $msgM->get_last($room_id);
         if(empty($msgs->id)){
-            return 0;
+            return false;
         }
+
         return $msgs->id;
     }
 
@@ -93,7 +103,12 @@ class MessagesController extends Controller
         $msgM = new \App\Models\Messages;
         $files_model = new \App\Models\Files;
         $user_model = new \App\Models\User;
+        $room_model = new \App\Models\Room;
         
+        $tmp = $room_model->check(Auth::id(), $room_id);
+        if(empty($tmp) || $tmp->status != 1)
+            return false;
+
         $msgs = $msgM->get($room_id, 10);
 
         foreach($msgs as $k => $msg){
@@ -112,7 +127,7 @@ class MessagesController extends Controller
         return response()->json([
             'messages'   => $msgs,
             'msg_users'  => $users_array,
-            'newest_msg' => $this->get_newest_id(),
+            'newest_msg' => $this->get_newest_id($room_id),
             'files'      => $file_array,
         ]);
     }
@@ -124,6 +139,11 @@ class MessagesController extends Controller
         $msgM = new \App\Models\Messages;
         $files_model = new \App\Models\Files;
         $user_model = new \App\Models\User;
+        $room_model = new \App\Models\Room;
+        
+        $tmp = $room_model->check(Auth::id(), $room_id);
+        if(empty($tmp) || $tmp->status != 1)
+            return false;
         
         $msgs = $msgM->get($room_id, 10);
 
@@ -143,6 +163,7 @@ class MessagesController extends Controller
         return [
             'messages'   => $msgs,
             'msg_users'  => $users_array,
+            'newest_msg' => $this->get_newest_id($room_id),
             'files'      => $file_array,
         ];
     }

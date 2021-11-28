@@ -23,6 +23,7 @@
     <form class="w-full flex flex-row" id="msgForm" enctype='multipart/form-data'>
         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
         <input type="hidden" name="room_id" id="room_id" value="{{ $room_id }}">
+        <input type="hidden" name="newest_id" id="newest_id" value="{{ $newest_msg }}">
         <input type="hidden" name="nick" id="nick" placeholder="Nick" value="{{ $user->nick }}"/>
         <textarea class="w-10/12" name="content" id="content" placeholder="Napisz wiadomość..."></textarea>
         <div class="flex flex-col flex-grow">

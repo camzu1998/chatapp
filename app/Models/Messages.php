@@ -29,6 +29,9 @@ class Messages extends Model
         }
     }
     public function get_last($room_id = null){
+        if(empty($room_id))
+            return false;
+
         return  DB::table($this->table)->select()->where('room_id', '=', $room_id)->latest()->first(); 
     }
 

@@ -43,14 +43,6 @@ Route::post('/login', function(Request $request){
     $con = new App\Http\Controllers\Controller();
     return $con->authenticate($request);
 });
-Route::post('/send_msg', function(Request $request){
-    $msg_con = new App\Http\Controllers\MessagesController();
-    return $msg_con->send($request);  
-});
-Route::post('/get_msg', function(Request $request){
-    $msg_con = new App\Http\Controllers\MessagesController();
-    return $msg_con->get($request);
-});
 Route::post('/save_settings', function(Request $request){
     $user_settings = new App\Http\Controllers\UserSettingsController();
     return $user_settings->save_user_settings($request);
@@ -62,7 +54,6 @@ Route::post('/friendship', function(Request $request){
     return $friendship->save_friendship($request);
 });
 Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
-Route::post('/get_newest_id', [MessagesController::class, 'get_newest_id']);
 // Room
 Route::get('/room', [RoomController::class, 'get_user_rooms']);
 Route::get('/room/{room_id}', function($room_id, Request $request){
@@ -78,6 +69,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     $data['messages'] = $tmp['messages'];
     $data['msg_users'] = $tmp['msg_users'];
     $data['files'] = $tmp['files'];
+    $data['newest_msg'] = $tmp['newest_msg'];
     $data['room_id'] = $room_id;
     $data['content'] = 'chat';
 
@@ -88,3 +80,10 @@ Route::post('/room', function(Request $request){
     return $room->save_room($request);
 });
 Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);
+// Messages
+Route::post('/send_msg', function(Request $request){
+    $msg_con = new App\Http\Controllers\MessagesController();
+    return $msg_con->send($request);  
+});
+Route::get('/get_msg/{room_id}', [MessagesController::class, 'get']);
+Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_id']);

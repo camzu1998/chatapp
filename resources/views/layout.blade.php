@@ -40,7 +40,7 @@
                     <!-- Btns -->
                     <div class="btns-box flex-grow flex flex-col mb-8">
                         <button class="btn my-4 modalToggle" data="friendsModal"><i class="fas fa-users"></i> Znajomi</button>
-                        <button class="btn my-4 modalToggle" data="roomsModal"><i class="far fa-comment"></i> Konwersacje</button>
+                        <button class="btn my-4 modalToggle" data="roomsModal"><i class="far fa-comment"></i> Pokoje</button>
                         <button class="btn my-4 modalToggle" data="settingsModal"><i class="fas fa-cogs"></i> Ustawienia</button>
                         <a href="/logout" class="btn my-4 logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
                     </div>

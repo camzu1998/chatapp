@@ -2221,10 +2221,11 @@ $('#send').click(function () {
 
 function load_messages() {
   var user_id = $('#user_id').val();
+  var room_id = $('#room_id').val();
   var msg_switch = false;
   $.ajax({
-    method: 'post',
-    url: '/get_msg',
+    method: 'GET',
+    url: '/get_msg/' + room_id,
     data: {
       _token: $('#token').val()
     }
@@ -2273,7 +2274,7 @@ worker.addEventListener('error', function (e) {
   alert('wystapil blad w linii: ' + e.lineno + ' w pliku: ' + e.filename + '.' + 'Tresc bledu: ' + e.message);
 }, false);
 setInterval(function () {
-  worker.postMessage($('#token').val());
+  worker.postMessage([$('#token').val(), $('#room_id').val()]);
   return false;
 }, 3000);
 
