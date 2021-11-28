@@ -26,8 +26,10 @@ Route::get('/register_form', [Controller::class, 'register_form']);
 Route::get('/main', function(Request $request){
     $con = new App\Http\Controllers\Controller();
     $friendship = new App\Http\Controllers\FriendshipController();
+    $room = new App\Http\Controllers\RoomController();
     
-    $data = $friendship->get_user_friends('array');
+    $data['friends_data'] = $friendship->get_user_friends('array');
+    $data['rooms_data'] = $room->get_user_rooms('array');
     $data['content'] = 'main';
 
     return $con->load('main', $data);

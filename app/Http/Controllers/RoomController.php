@@ -19,13 +19,16 @@ class RoomController extends Controller
 
         $user_rooms = $roomModel->get_user_rooms($user_id);
         if(empty($user_rooms[0])){
+            //User has no rooms
             return false;
         }
         foreach($user_rooms as $user_room){
             //Get info aboout room & save to array
-            $rooms_data[$user_room['room_id']] = $roomModel->get($user_room['room_id']);
-            $user_data = $userModel->get_user_data($rooms_data[$user_room['room_id']]['admin_id']);
-            $rooms_data['admin_img'] = $user_data['profile_img'];
+            $rooms_data[$user_room->room_id] = $roomModel->get($user_room->room_id);
+            $user_data = $userModel->get_user_data($rooms_data[$user_room->room_id]->admin_id);
+            $rooms_data[$user_room->room_id]->admin_img = $user_data->profile_img;
+            $rooms_data[$user_room->room_id]->status = $user_room->status;
+            $rooms_data[$user_room->room_id]->nickname = $user_room->nickname;
         }
 
         if($switch_response == 'json'){
@@ -33,9 +36,7 @@ class RoomController extends Controller
                 'rooms_data' => $rooms_data
             ]);
         }else if($switch_response == 'array'){
-            return [
-                'rooms_data' => $rooms_data
-            ];
+            return $rooms_data;
         }
     }
 

@@ -154,7 +154,38 @@
             </div>
 
             <div class="list flex flex-row">
-                
+                @foreach ($rooms_data as $room_id => $room)
+                    <div class="friend relative flex flex-row flex-wrap">
+                        <div class="profile_container relative flex flex-row justify-center align-center items-center">
+                            <img src="{{ asset('storage/profiles_miniatures/'.$room->room_img) }}" class="profile-image"/>
+                            @if ($friend['status'] == 0)
+                                <i class="fas fa-user-clock waiting_friend"></i>
+                            @endif
+                        </div>
+                        <div class="friend_name ml-2">{{ $room->room_name }}</div>
+                        <i class="friend_name fas fa-ellipsis-v open_fast_menu ml-4" data="{{ $room_id }}"></i>
+                        <div class="fast_menu absolute flex flex-col z-10" style="display: none;">
+                            @if ($room->status == 0 && $room->admin_id != $user->id)
+                                <!-- Accept/Deceline menu -->
+                                <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="far fa-envelope"></i> Zaproszenie</div>
+                                <button class="fast_menu_btn mb-2 w-full" id="acceptInvite" data="{{ $friend_id }}"><i class="fas fa-user-check"></i> Akceptuj</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="decelineInvite" data="{{ $friend_id }}"><i class="fas fa-user-minus"></i> Odrzuć</button>
+                                <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
+                            @elseif ($room->status == 0 && $room->admin_id == $user->id)
+                                <!-- Cancel invite menu -->
+                                <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="far fa-envelope"></i> Zaproszenie</div>
+                                <button class="fast_menu_btn mb-2 w-full" id="cancelInvite" data="{{ $friend_id }}"><i class="fas fa-user-slash"></i> Anuluj</button>
+                                <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
+                            @elseif ($room->status == 1)
+                                <!-- Friendship menu -->
+                                <div class="heading mt-4 border-b pb-2 mb-2 text-center"><i class="fas fa-user-friends"></i> Znajomość</div>
+                                <button class="fast_menu_btn mb-2 w-full" id="blockFriendship" data="{{ $friend_id }}"><i class="fas fa-comment-slash"></i> Zablokuj</button>
+                                <button class="fast_menu_btn mb-2 w-full" id="deleteFriendship" data="{{ $friend_id }}"><i class="fas fa-user-slash"></i> Usuń</button>
+                                <button class="fast_menu_btn mb-4 w-full cancel_fast_menu"><i class="fas fa-times"></i> Zamknij menu</button>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
 

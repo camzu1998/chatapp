@@ -42,9 +42,7 @@ class FriendshipController extends Controller
                 'friends_data' => $friends_data
             ]);
         }else if($switch_response == 'array'){
-            return [
-                'friends_data' => $friends_data
-            ];
+            return $friends_data;
         }
     }
 
