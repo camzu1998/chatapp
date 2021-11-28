@@ -67,24 +67,39 @@ class Room extends Model
         return true;
     }
 
-    public function check($user_id  = null,$friend_id = null){
-        if(empty($user_id) || empty($friend_id))
+    public function check($user_id  = null, $room_id = null){
+        if(empty($user_id) || empty($room_id))
             return false;
 
-        return DB::select('select * from friendship where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)', [$user_id, $friend_id, $friend_id, $user_id]);
+            return DB::table($this->table[1])->where('user_id', '=', $user_id)->where('room_id', '=', $room_id)->first();
     }
 
-    public function update($user_id = null, $friend_id = null, $status = 0){
-        if(empty($user_id) || empty($friend_id))
+    public function check_admin($admin_id  = null, $room_id = null){
+        if(empty($admin_id) || empty($room_id))
+            return false;
+
+            return DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('room_id', '=', $room_id)->first();
+    }
+
+    public function update($user_id = null, $room_id = null, $status = 0){
+        if(empty($user_id) || empty($room_id))
             return false;
         
-        return DB::update('update friendship set status = ?, by_who = ? where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)',[$status, $user_id, $user_id, $friend_id, $friend_id, $user_id]);
+        return DB::table($this->table[1])->where('room_id', '=', $room_id)->where('user_id', '=', $user_id)->update(['status' => $status]);
     }
 
-    public function delete($user_id  = null,$friend_id = null){
-        if(empty($user_id) || empty($friend_id))
+    public function delete($admin_id = null, $room_id = null){
+        if(empty($admin_id) || empty($room_id))
             return false;
 
-        return DB::delete('delete from friendship where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)', [$user_id, $friend_id, $friend_id, $user_id]);
+        $tmp = $this->check_admin($admin_id, $room_id);
+        if(empty($tmp[0]))
+            return false;
+
+        DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('id', '=', $room_id)->delete();
+        DB::table($this->table[1])->where('room_id', '=', $room_id)->delete();
+        DB::table('messages')->where('room_id', '=', $room_id)->delete();
+
+        return true;
     }
 }

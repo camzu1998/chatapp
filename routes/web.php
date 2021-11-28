@@ -35,9 +35,6 @@ Route::get('/main', function(Request $request){
     return $con->load('main', $data);
 });
 
-
-Route::get('/chat', [MessagesController::class, 'show']);
-
 Route::post('/register', function(Request $request){
     $con = new App\Http\Controllers\Controller();
     return $con->register($request);
@@ -58,7 +55,6 @@ Route::post('/save_settings', function(Request $request){
     $user_settings = new App\Http\Controllers\UserSettingsController();
     return $user_settings->save_user_settings($request);
 });
-Route::post('/get_newest_id', [MessagesController::class, 'get_newest_id']);
 // Friendship
 Route::get('/friendship', [FriendshipController::class, 'get_user_friends']);
 Route::post('/friendship', function(Request $request){
@@ -68,9 +64,27 @@ Route::post('/friendship', function(Request $request){
 Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
 Route::post('/get_newest_id', [MessagesController::class, 'get_newest_id']);
 // Room
-Route::get('/room', [FriendshipController::class, 'get_user_rooms']);
+Route::get('/room', [RoomController::class, 'get_user_rooms']);
+Route::get('/room/{room_id}', function($room_id, Request $request){
+    $con = new App\Http\Controllers\Controller();
+    $friendship = new App\Http\Controllers\FriendshipController();
+    $room = new App\Http\Controllers\RoomController();
+    $messages = new App\Http\Controllers\MessagesController();
+
+    $tmp = $messages->get_array($room_id);
+    
+    $data['friends_data'] = $friendship->get_user_friends('array');
+    $data['rooms_data'] = $room->get_user_rooms('array');
+    $data['messages'] = $tmp['messages'];
+    $data['msg_users'] = $tmp['msg_users'];
+    $data['files'] = $tmp['files'];
+    $data['room_id'] = $room_id;
+    $data['content'] = 'chat';
+
+    return $con->load('chat', $data);
+});
 Route::post('/room', function(Request $request){
     $room = new App\Http\Controllers\RoomController();
     return $room->save_room($request);
 });
-Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
+Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);

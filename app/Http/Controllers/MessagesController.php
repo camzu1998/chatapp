@@ -7,6 +7,7 @@ use App\Models\Messages;
 use App\Models\Files;
 use App\Models\User;
 use App\Http\Controllers\FilesController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
@@ -61,23 +62,31 @@ class MessagesController extends Controller
     public function send(Request $request){
         $content = $request->input('content');
         $file_id = 0;
-        $room_id = 0;
+        $room_id = $request->input('room_id');
 
         if(!empty($request->file('file'))){
             $files_con = new FilesController();
             $file_id = $files_con->save($request);
         }
 
+        // Check if isset room_id
+        if(!empty($room_id)){
+            $room = new \App\Models\Room;
+            $room_status = $room->check(Auth::id(), $room_id);
+            if(empty($room_status->created_at) && $room_status->status != 1){
+                return false;
+            }
+        }
         //Check if user is in the room
 
         $msg = new \App\Models\Messages;
 
         $msg->save($room_id, $content, $file_id, Auth::id());
 
-        return $this->get();
+        return $this->get($room_id);
     }
 
-    public function get(){
+    public function get($room_id = null){
         $users_array = array();
         $file_array = array();
         
@@ -85,7 +94,7 @@ class MessagesController extends Controller
         $files_model = new \App\Models\Files;
         $user_model = new \App\Models\User;
         
-        $msgs = $msgM->get(10);
+        $msgs = $msgM->get($room_id, 10);
 
         foreach($msgs as $k => $msg){
             //Check file data
@@ -106,5 +115,35 @@ class MessagesController extends Controller
             'newest_msg' => $this->get_newest_id(),
             'files'      => $file_array,
         ]);
+    }
+
+    public function get_array($room_id = null){
+        $users_array = array();
+        $file_array = array();
+        
+        $msgM = new \App\Models\Messages;
+        $files_model = new \App\Models\Files;
+        $user_model = new \App\Models\User;
+        
+        $msgs = $msgM->get($room_id, 10);
+
+        foreach($msgs as $k => $msg){
+            //Check file data
+            if($msg->file_id != 0){
+                $file_array[$msg->file_id] = $files_model->get($msg->file_id);
+            }
+            //Check user data
+            $msg_user = $user_model->get_user_data($msg->user_id);
+            $users_array[$msg->user_id] = [
+                'nick' => $msg_user->nick,
+                'profile_img' => $msg_user->profile_img
+            ];
+        }
+
+        return [
+            'messages'   => $msgs,
+            'msg_users'  => $users_array,
+            'files'      => $file_array,
+        ];
     }
 }

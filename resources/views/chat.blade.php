@@ -8,7 +8,7 @@
         @endif
                 <img src="{{ asset('storage/profiles_miniatures/'.$msg_users[$msg->user_id]['profile_img']) }}" class="msg-image absolute"/>
                 <div class="msg-content">
-                    <span class="msg-user_name">{{ $msg->nick }}</span>
+                    <span class="msg-user_name">{{ $msg_users[$msg->user_id]['nick'] }}</span>
                     <p class="msg-content-p" >{{ $msg->content }}</p>
                     <span class="msg-date"></span>
                         @if ($msg->file_id != 0)
@@ -22,6 +22,7 @@
 <div class="flex flex-row fixed bottom-0 right-0 formContainer">
     <form class="w-full flex flex-row" id="msgForm" enctype='multipart/form-data'>
         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
+        <input type="hidden" name="room_id" id="room_id" value="{{ $room_id }}">
         <input type="hidden" name="nick" id="nick" placeholder="Nick" value="{{ $user->nick }}"/>
         <textarea class="w-10/12" name="content" id="content" placeholder="Napisz wiadomość..."></textarea>
         <div class="flex flex-col flex-grow">

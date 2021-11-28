@@ -72,43 +72,43 @@ class RoomController extends Controller
         return true;
     }
 
-    public function update_friendship_status(Request $request, $friend_id){
-        $friendsModel = new \App\Models\Friendship();
+    public function update_room_status(Request $request, $room_id){
+        $roomModel = new \App\Models\Room();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();
-        $actions = array('acceptInvite', 'decelineInvite', 'cancelInvite', 'deleteFriendship', 'blockFriendship');
+        $actions = array('acceptInvite', 'decelineInvite', 'outRoom', 'blockRoom', 'deleteRoom');
 
-        //Valid status
+        //Valid action
         if(!in_array($request->button, $actions)){
             return response()->json([
                 'msg' => 'Invalid action'
             ]);
         }
-        //Valid friendship
-        $res = $friendsModel->check($user_id, $friend_id);
-        if(empty($res[0])){
+        //Valid status
+        $res = $roomModel->check($user_id, $room_id);
+        if(empty($res->created_at)){
             return response()->json([
                 'msg' => 'Friendship never exist'
             ]); 
         }
         switch($request->button){
             case 'acceptInvite':
-                $status = $friendsModel->update($user_id, $friend_id, 1);
+                $status = $roomModel->update($user_id, $room_id, 1);
             break;
             case 'decelineInvite':
-                $status = $friendsModel->update($user_id, $friend_id, 2);
+                $status = $roomModel->update($user_id, $room_id, 2);
             break;
-            case 'cancelInvite':
-                $status = $friendsModel->delete($user_id, $friend_id);
+            case 'outRoom':
+                $status = $roomModel->delete_user($user_id, $room_id);
             break;
-            case 'deleteFriendship':
-                $status = $friendsModel->delete($user_id, $friend_id);
+            case 'blockRoom':
+                $status = $roomModel->update($user_id, $room_id, 2);
             break;
-            case 'blockFriendship':
-                $status = $friendsModel->update($user_id, $friend_id, 2);
+            case 'deleteRoom':
+                $status = $roomModel->delete($user_id, $room_id);
             break;
         }
-        //Update friendship status
+        //Update room status
         return $status;
     }
 }
