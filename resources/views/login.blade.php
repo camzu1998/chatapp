@@ -19,12 +19,12 @@
         </script>
         <link rel="manifest" href="/manifest.json">
     </head>
-    <body class="antialiased relative text-center w-full h-screen">
+    <body class="antialiased relative text-center w-full h-screen overflow-x-hidden">
         <div class="app-logo w-full text-center text-white text-7xl mt-8">
             Czatap
         </div>
 
-        <div class="w-screen mt-12 relative flex flex-col justify-center content-center items-center">
+        <div class="w-screen mt-12 relative flex flex-col justify-center content-center items-center overflow-x-hidden">
             <form class="flex flex-col items-center text-gray-800 py-4 startForm rounded-lg px-2" action="/login" method="POST">
                 <div class="w-full text-center text-lg form-text mb-8 mt-4">Zaloguj się</div>
                 @csrf

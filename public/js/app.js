@@ -2067,6 +2067,20 @@ $.ajaxSetup({
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   }
 });
+FilePond.registerPlugin(FilePondPluginImagePreview);
+$('.file_input').filepond({
+  allowMultiple: false,
+  labelIdle: "Przeci\u0105gnij i upu\u015B\u0107 lub przegl\u0105daj zdj\u0119cie pokoju",
+  imagePreviewHeight: 120,
+  imageCropAspectRatio: '1:1',
+  imageResizeTargetWidth: 170,
+  imageResizeTargetHeight: 170,
+  stylePanelLayout: 'compact circle',
+  styleLoadIndicatorPosition: 'center bottom',
+  styleProgressIndicatorPosition: 'right bottom',
+  styleButtonRemoveItemPosition: 'left bottom',
+  styleButtonProcessItemPosition: 'right bottom'
+});
 $('#toggle-menu').click(function () {
   $('#user-dashboard').css("display", "flex").hide().fadeIn();
 });

@@ -10,6 +10,7 @@
         <link rel="icon" type="image/png" sizes="192x192"  href="/storage/images/android-icon-192x192.png">
 
         <!-- Styles -->
+        <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
         <link href="/css/app.css" rel="stylesheet">
         
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400&family=Rampart+One&display=swap" rel="stylesheet">  
@@ -21,7 +22,7 @@
         <link rel="manifest" href="/manifest.json">
         <meta name="csrf-token" content="{{ csrf_token() }}" />
     </head>
-    <body class="antialiased">
+    <body class="antialiased overflow-x-hidden">
         <div class="flex flex-row">
             <div class="user-panel absolute inset-x-0 top-0 text-center">
                 <div class="relative h-full">
@@ -39,6 +40,9 @@
                     </div>
                     <!-- Btns -->
                     <div class="btns-box flex-grow flex flex-col mb-8">
+                        @if($room_id != 0)
+                            <button class="btn mt-4 mb-8 modalToggle" data="roomSettingsModal"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</button>
+                        @endif
                         <button class="btn my-4 modalToggle" data="friendsModal"><i class="fas fa-users"></i> Znajomi</button>
                         <button class="btn my-4 modalToggle" data="roomsModal"><i class="far fa-comment"></i> Pokoje</button>
                         <button class="btn my-4 modalToggle" data="settingsModal"><i class="fas fa-cogs"></i> Ustawienia</button>
@@ -190,6 +194,45 @@
             </div>
         </div>
 
+        @if( $room_id != 0 && $rooms_data[$room_id]->admin_id == $user->id )
+            <div id="roomSettingsModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
+                <div class="modal-title w-full text-center relative">Ustawienia pokoju
+                    <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
+                </div>
+
+                <div class="flex flex-row h-full w-full">
+                    <!-- Left column -->
+                    <div class="flex flex-col flex-wrap"> 
+                        <input type="file" name="room_profile" class="file_input rounded-full" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
+                        <input class="form-input mb-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="update_room_name" id="update_room_name" placeholder="Nazwa pokoju" value="{{ $rooms_data[$room_id]->room_name }}"/>
+                        <button class="btn my-4 logout justify-self-end" id="deleteRoom" data="{{ $room_id }}">Usuń pokój <i class="far fa-trash-alt"></i></button>
+                    </div>
+                    <!-- Right column -->
+                    <div class="flex flex-col"> 
+                        <div class="w-full text-center">Znajomi</div>
+                        <div class="list flex flex-col overflow-y-auto pr-2 overflow-x-hidden">
+                            @foreach ($friends_data as $friend_id => $friend)
+                                @if ($friend['status'] == 1)
+                                    <div class="friend relative w-full flex flex-row flex-wrap border-b-2">
+                                        <div class="profile_container relative flex flex-row justify-center align-center items-center">
+                                            <img src="{{ asset('storage/profiles_miniatures/'.$friend['profile_img']) }}" class="profile-image"/>
+                                        </div>
+                                        <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
+                                        <div class="box_switch absolute inset-y-2/4  right-2">
+                                            <label class="switch">
+                                                <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div id="addRoomModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
             <div class="modal-title w-full text-center relative">Tworzenie pokoju
                 <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
@@ -235,6 +278,9 @@
         </audio> 
         <!-- Scripts -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+        <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+        <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+        <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
         <script src="/js/app.js"></script>
     </body>
 </html>

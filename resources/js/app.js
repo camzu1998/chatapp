@@ -4,6 +4,22 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 });
+FilePond.registerPlugin(
+    FilePondPluginImagePreview
+);
+$('.file_input').filepond({
+    allowMultiple: false,
+    labelIdle: `Przeciągnij i upuść lub przeglądaj zdjęcie pokoju`,
+    imagePreviewHeight: 120,
+    imageCropAspectRatio: '1:1',
+    imageResizeTargetWidth: 170,
+    imageResizeTargetHeight: 170,
+    stylePanelLayout: 'compact circle',
+    styleLoadIndicatorPosition: 'center bottom',
+    styleProgressIndicatorPosition: 'right bottom',
+    styleButtonRemoveItemPosition: 'left bottom',
+    styleButtonProcessItemPosition: 'right bottom',
+});
 $('#toggle-menu').click(function(){
     $('#user-dashboard')
     .css("display", "flex")

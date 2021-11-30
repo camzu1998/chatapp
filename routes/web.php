@@ -30,6 +30,7 @@ Route::get('/main', function(Request $request){
     
     $data['friends_data'] = $friendship->get_user_friends('array');
     $data['rooms_data'] = $room->get_user_rooms('array');
+    $data['room_id'] = 0;
     $data['content'] = 'main';
 
     return $con->load('main', $data);
@@ -73,6 +74,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     $data['files'] = $tmp['files'];
     $data['newest_msg'] = $tmp['newest_msg'];
     $data['room_id'] = $room_id;
+    $data['admin_room_id'] = $room_id;
     $data['content'] = 'chat';
 
     return $con->load('chat', $data);
