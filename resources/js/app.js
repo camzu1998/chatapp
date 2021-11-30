@@ -72,7 +72,9 @@ $('#save_room').click(function(){
     var fd = new FormData();
     var friends = $('.add_friend_checkbox:checked');
     
-    // Check file selected or not
+    // Room name
+    fd.append('room_name', $('#room_name').val());
+    // Check friends selected or not
     if(friends.length > 0 )
         friends.each(function(){
             fd.append('add_friend[]', $(this).val());
@@ -85,7 +87,7 @@ $('#save_room').click(function(){
         contentType: false,
         processData: false
     }).always(function(res){
-        // window.location.reload(true);
+        window.location.reload(true);
     });
 });
 $('.room_menu').click(function(){
@@ -99,7 +101,7 @@ $('.room_menu').click(function(){
         url: '/room/'+friend_id,
         data: 'button='+$(this).attr('id'),
     }).always(function(res){
-        // window.location.reload(true);
+        window.location.reload(true);
     });
 });
 // FRIENDSHIP
@@ -224,7 +226,9 @@ worker.addEventListener('error', function(e) {
 }, false);
 
 setInterval(function(){
-    worker.postMessage([$('#token').val(), $('#room_id').val()]);
+    if($('#room_id').val() !== undefined){
+        worker.postMessage([$('#token').val(), $('#room_id').val()]);
+    }
 
     return false;
 }, 3000);

@@ -158,7 +158,7 @@
                     <div class="friend relative flex flex-row flex-wrap">
                         <div class="profile_container relative flex flex-row justify-center align-center items-center">
                             <img src="{{ asset('storage/profiles_miniatures/'.$room->room_img) }}" class="profile-image"/>
-                            @if ($friend['status'] == 0)
+                            @if ($room->status == 0)
                                 <i class="fas fa-user-clock waiting_friend"></i>
                             @endif
                         </div>

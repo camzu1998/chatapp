@@ -52,7 +52,7 @@ class MessagesController extends Controller
 
     public function get_newest_id($room_id = null){
         // Check if isset room_id
-        if(empty($room_id))
+        if(empty($room_id) || !is_numeric($room_id))
             return false;
 
         $room = new \App\Models\Room;

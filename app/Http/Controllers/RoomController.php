@@ -20,7 +20,13 @@ class RoomController extends Controller
         $user_rooms = $roomModel->get_user_rooms($user_id);
         if(empty($user_rooms[0])){
             //User has no rooms
-            return false;
+            if($switch_response == 'json'){
+                return response()->json([
+                    'rooms_data' => []
+                ]);
+            }else if($switch_response == 'array'){
+                return [];
+            }
         }
         foreach($user_rooms as $user_room){
             //Get info aboout room & save to array

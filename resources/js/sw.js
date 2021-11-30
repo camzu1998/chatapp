@@ -56,7 +56,7 @@ var CACHE_NAME = 'init_cache';
     });
     self.addEventListener('activate', function(event) {
 
-        var cacheAllowlist = ['init_cache', 'init_cache-v2'];
+        var cacheAllowlist = ['init_cache'];
       
         event.waitUntil(
           caches.keys().then(function(cacheNames) {

@@ -46,7 +46,7 @@ self.addEventListener('fetch', function (event) {
   }));
 });
 self.addEventListener('activate', function (event) {
-  var cacheAllowlist = ['init_cache', 'init_cache-v2'];
+  var cacheAllowlist = ['init_cache'];
   event.waitUntil(caches.keys().then(function (cacheNames) {
     return Promise.all(cacheNames.map(function (cacheName) {
       if (cacheAllowlist.indexOf(cacheName) === -1) {

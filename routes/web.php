@@ -63,6 +63,8 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     $messages = new App\Http\Controllers\MessagesController();
 
     $tmp = $messages->get_array($room_id);
+
+
     
     $data['friends_data'] = $friendship->get_user_friends('array');
     $data['rooms_data'] = $room->get_user_rooms('array');
