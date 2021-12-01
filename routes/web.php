@@ -91,3 +91,8 @@ Route::post('/send_msg', function(Request $request){
 });
 Route::get('/get_msg/{room_id}', [MessagesController::class, 'get']);
 Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_id']);
+
+
+Route::post('/room/{room_id}/upload', [RoomController::class, 'upload_room_profile']);
+Route::get('/room/{room_id}/get_image', [RoomController::class, 'get_room_profile']);
+Route::put('/room/{room_id}/revert', [RoomController::class, 'revert_room_profile']);

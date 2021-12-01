@@ -310,6 +310,12 @@ input:checked + .slider:before {
 ::-webkit-scrollbar-thumb:hover {
   background: #3D4699;
 } 
+/* Filepond */
+.filepond--root{
+  width: 170px !important;
+  height: 170px !important;
+  margin: 0 auto !important;
+}
 media(max-width: 1000px){
   .user-panel{
     width: 100%;

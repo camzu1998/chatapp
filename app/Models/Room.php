@@ -78,7 +78,7 @@ class Room extends Model
         if(empty($admin_id) || empty($room_id))
             return false;
 
-            return DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('room_id', '=', $room_id)->first();
+            return DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('id', '=', $room_id)->first();
     }
 
     public function update($user_id = null, $room_id = null, $status = 0){
@@ -101,5 +101,12 @@ class Room extends Model
         DB::table('messages')->where('room_id', '=', $room_id)->delete();
 
         return true;
+    }
+
+    public function update_img($room_id = null, $filename = null){
+        if(empty($room_id) || empty($filename))
+            return false;
+
+        return DB::table($this->table[0])->where('id', '=', $room_id)->update(['room_img' => $filename]);
     }
 }

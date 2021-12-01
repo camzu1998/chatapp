@@ -2070,16 +2070,35 @@ $.ajaxSetup({
 FilePond.registerPlugin(FilePondPluginImagePreview);
 $('.file_input').filepond({
   allowMultiple: false,
-  labelIdle: "Przeci\u0105gnij i upu\u015B\u0107 lub przegl\u0105daj zdj\u0119cie pokoju",
-  imagePreviewHeight: 120,
-  imageCropAspectRatio: '1:1',
-  imageResizeTargetWidth: 170,
-  imageResizeTargetHeight: 170,
   stylePanelLayout: 'compact circle',
+  imagePreviewHeight: 170,
+  imageCropAspectRatio: '1:1',
   styleLoadIndicatorPosition: 'center bottom',
   styleProgressIndicatorPosition: 'right bottom',
   styleButtonRemoveItemPosition: 'left bottom',
   styleButtonProcessItemPosition: 'right bottom'
+});
+FilePond.setOptions({
+  server: {
+    url: '/room/' + $('#room_id').val(),
+    process: '/upload',
+    revert: {
+      url: '/revert?id=' + window.id,
+      method: 'POST',
+      withCredentials: false,
+      headers: {},
+      timeout: 7000,
+      onload: null,
+      onerror: null,
+      ondata: null
+    },
+    restore: '/get_image?name=',
+    load: '/get_image?name=',
+    fetch: '/',
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  }
 });
 $('#toggle-menu').click(function () {
   $('#user-dashboard').css("display", "flex").hide().fadeIn();
@@ -2158,10 +2177,10 @@ $('.room_menu').click(function () {
     return false;
   }
 
-  var friend_id = $(this).attr('data');
+  var room_id = $(this).attr('data');
   $.ajax({
     method: 'put',
-    url: '/room/' + friend_id,
+    url: '/room/' + room_id,
     data: 'button=' + $(this).attr('id')
   }).always(function (res) {
     window.location.reload(true);

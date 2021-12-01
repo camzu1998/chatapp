@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\Friendship;
 use App\Models\Room;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class RoomController extends Controller
 {
+    protected $profile_ext = array('png', 'jpeg', 'jpg');
+
     public function get_user_rooms($switch_response = 'json'){
         $user_id = Auth::id();
         $rooms_data = array();
@@ -116,5 +120,52 @@ class RoomController extends Controller
         }
         //Update room status
         return $status;
+    }
+    /**
+     * Upload room profile image
+     */
+    public function upload_room_profile($room_id = null, Request $request){
+        if(empty($room_id) || !$request->hasFile('room_profile'))
+            return response()->json([
+                'err' => '1',
+            ]);
+
+        $user_id = Auth::id();
+
+        $file = $request->room_profile;
+        $filename = $file->getClientOriginalName();
+
+        $roomModel = new \App\Models\Room();
+        //Compare user and admin ids
+        $tmp = $roomModel->check_admin($user_id, $room_id);
+        if(empty($tmp))
+            return response()->json([
+                'err' => '2',
+            ]);
+        
+        //Check extension & weight
+        if(!in_array($file->extension(), $this->profile_ext)){
+            //Extension didn't pass
+            return response()->json([
+                'err' => '3',
+            ]);
+        }
+        if($file->getSize() > (1024 * (1024 * 25))){
+            //File is oversized
+            return response()->json([
+                'err' => '4',
+            ]);
+        }
+        //Check if need to delete previous image
+        if($tmp->room_img != 'no_image.jpg'){
+            //Delete old profile image
+            Storage::delete('room_miniatures/'.$tmp->room_img);
+        }
+        //Store image
+        $path = $file->storeAs('room_miniatures', $filename);
+        //Change img in db
+        $roomModel->update_img($room_id, $filename);
+
+        return $path;
     }
 }
