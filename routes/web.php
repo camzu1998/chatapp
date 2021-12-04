@@ -69,6 +69,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     
     $data['friends_data'] = $friendship->get_user_friends('array');
     $data['rooms_data'] = $room->get_user_rooms('array');
+    $data['roommates_data'] = $room->get_roommates($room_id);
     $data['messages'] = $tmp['messages'];
     $data['msg_users'] = $tmp['msg_users'];
     $data['files'] = $tmp['files'];
@@ -84,6 +85,7 @@ Route::post('/room', function(Request $request){
     return $room->save_room($request);
 });
 Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);
+Route::put('/room/{room_id}/update', [RoomController::class, 'update']);
 // Messages
 Route::post('/send_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();

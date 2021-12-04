@@ -109,4 +109,10 @@ class Room extends Model
 
         return DB::table($this->table[0])->where('id', '=', $room_id)->update(['room_img' => $filename]);
     }
+    public function update_room($room_id = null, $room_name = null){
+        if(empty($room_id) || empty($room_name))
+            return false;
+
+        return DB::table($this->table[0])->where('id', '=', $room_id)->update(['room_name' => $room_name]);
+    }
 }

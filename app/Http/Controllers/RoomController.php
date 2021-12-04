@@ -124,7 +124,7 @@ class RoomController extends Controller
     /**
      * Upload room profile image
      */
-    public function upload_room_profile($room_id = null, Request $request){
+    public function upload_room_profile(int $room_id, Request $request){
         if(empty($room_id) || !$request->hasFile('room_profile'))
             return response()->json([
                 'err' => '1',
@@ -167,5 +167,57 @@ class RoomController extends Controller
         $roomModel->update_img($room_id, $filename);
 
         return $path;
+    }
+    /**
+     *  Update room data
+     */
+    public function update(Request $request, $room_id){
+        if(empty($room_id) || empty($request->input('update_room_name')))
+            return response()->json([
+                'err' => '1',
+            ]);
+
+        $user_id = Auth::id();
+        $userRoomModel = new \App\Models\UserRoom();
+        $roomModel = new \App\Models\Room();
+        //Check user admin
+        $tmp = $roomModel->check_admin($user_id, $room_id);
+        if(empty($tmp))
+            return response()->json([
+                'err' => '2',
+            ]);
+
+        //Delete retrieved roommates
+        if(!empty($request->roommate)){
+            foreach($request->roommate as $roommate){
+                $userRoomModel->delete($roommate, $room_id);
+            }
+        }
+        //Update name
+        $roomModel->update_room($room_id, $request->input('update_room_name'));
+
+        return true;
+    }
+
+    public function get_roommates(int $room_id){
+        $roommates_data = array();
+        if(empty($room_id))
+            return false;
+
+        $userRoomModel = new \App\Models\UserRoom();
+        $userModel = new \App\Models\User();
+        $roommates = $userRoomModel->get_roommates($room_id);
+
+        foreach($roommates as $roommate){
+            //Retrieve user data
+            $user = $userModel->get_user_data($roommate->user_id);
+            $roommates_data[$roommate->user_id]['nick'] = $user->nick;
+            $roommates_data[$roommate->user_id]['status'] = $roommate->status;
+            $roommates_data[$roommate->user_id]['room_id'] = $roommate->room_id;
+            $roommates_data[$roommate->user_id]['nickname'] = $roommate->nickname;
+            $roommates_data[$roommate->user_id]['profile_img'] = $user->profile_img;
+        }
+
+        return $roommates_data;
     }
 }

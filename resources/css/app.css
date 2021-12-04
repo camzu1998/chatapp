@@ -148,6 +148,10 @@ h2{
   color: #F8F9FE;
   transform: translate(-50%, -50%);
 }
+.modal-xl{
+  width: 650px;
+  height: 550px;
+}
 #close-menu{
   display: none;
 }
@@ -169,8 +173,8 @@ h2{
 .switch {
   position: relative;
   display: inline-block;
-  width: 30px;
-  height: 10px;
+  width: 25px;
+  height: 5px;
   margin-top: 4px;
 }  
 /* Hide default HTML checkbox */
@@ -194,12 +198,11 @@ h2{
 .slider:before {
   position: absolute;
   content: "";
-  width: 20px;
-  height: 20px;
-  left: -10px;
-  bottom: -5px;
+  width: 14px;
+  height: 14px;
+  left: -7px;
+  bottom: -4px;
   background-color: #ED5265;
-  -webkit-transition: .4s;
   transition: .4s;
 }
 
@@ -213,9 +216,9 @@ input:focus + .slider {
 
 input:checked + .slider:before {
   background-color: #59ED92;
-  -webkit-transform: translateX(30px);
-  -ms-transform: translateX(30px);
-  transform: translateX(30px);
+  -webkit-transform: translateX(25px);
+  -ms-transform: translateX(25px);
+  transform: translateX(25px);
 }
 
 /* Rounded sliders */
@@ -315,6 +318,12 @@ input:checked + .slider:before {
   width: 170px !important;
   height: 170px !important;
   margin: 0 auto !important;
+}
+#deleteRoom {
+  width: 180px;
+  height: 35px;
+  font-size: 14px;
+  line-height: 35px;
 }
 media(max-width: 1000px){
   .user-panel{

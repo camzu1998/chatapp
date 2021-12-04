@@ -125,6 +125,15 @@ $('#save_room').click(function(){
         window.location.reload(true);
     });
 });
+$('#update_room').click(function(){
+    $.ajax({
+        method: 'put',
+        url: '/room/'+$('#room_id').val()+'/update',
+        data: $('#roomSettingsModal').serialize(),
+    }).always(function(res){
+        window.location.reload(true);
+    });
+});
 $('.room_menu').click(function(){
     if($(this).hasClass('cancel_fast_menu')){
         return false;
