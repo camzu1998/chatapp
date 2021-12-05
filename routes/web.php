@@ -70,6 +70,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     
     $data['friends_data'] = $friendship->get_user_friends('array');
     $data['rooms_data'] = $room->get_user_rooms('array');
+    $data['room'] = $room->get_room($room_id);
     $data['roommates_data'] = $room->get_roommates($room_id);
     $data['messages'] = $tmp['messages'];
     $data['msg_users'] = $tmp['msg_users'];

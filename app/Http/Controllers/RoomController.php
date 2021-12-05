@@ -265,4 +265,13 @@ class RoomController extends Controller
 
         return true;
     }
+    /**
+     *  Get room data
+     */
+    public function get_room(int $room_id){
+        $roomModel = new \App\Models\Room();
+        $user_id = Auth::id();
+
+        return $roomModel->get($room_id);
+    }
 }

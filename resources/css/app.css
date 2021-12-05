@@ -41,7 +41,7 @@ h2{
   font-size:18px;
   padding:10px 10px 10px 5px;
   display:block;
-  width:300px;
+  width:100%;
   border:none;
   border-bottom:1px solid #757575;
   background-color: transparent;
@@ -67,7 +67,7 @@ input:focus ~ label, input:valid ~ label{
   font-size:14px;
   color:#808DFF;
 }
-.bar 	{ position:relative; display:block; width:300px; }
+.bar 	{ position:relative; display:block; width:100%; }
 .bar:before, .bar:after 	{
   content:'';
   height:2px; 
@@ -192,16 +192,34 @@ input:focus ~ .highlight {
   color: rgb(9, 74, 0, 0.50);
 }
 .btn {
-  width: 280px;
   height: 60px;
-  border: 1px solid #3DEBD6;
-  border-radius: 8px;
-  color: #C0F8F2;
+  border: none;
+  border-radius: 0;
+  color: #F4FAFE;
+  background: rgba(2, 113, 178, 0.5);
   line-height: 60px;
   font-size: 24px;
 }
+.btn-modal {
+  height: 60px;
+  border: none;
+  border-radius: 16px;
+  line-height: 60px;
+  font-size: 24px;
+}
+.btn-modal.btn-danger{
+  border: 2px solid #F17C8A;
+  box-sizing: border-box;
+}
+.btn-gray{
+  background: rgba(125, 139, 148, 0.5);
+}
+.btn-secondary{
+  background: rgba(1, 122, 106, 0.5);
+  color: #ECFDFB;
+}
 .btn.logout {
-  border: 1px solid #F17C8A;
+  background: rgba(132, 1, 19, 0.5);
   color: #FDE9EB;
 }
 .btn.disabled{
@@ -427,6 +445,10 @@ input:checked + .slider:before {
   border: 2px solid #59ED92;
   color: #EEFDF4;
   transform: translateX(-50%);
+}
+.box_switch_modal{
+  transform: translateY(-50%);
+  height: 35px;
 }
 media(max-width: 1000px){
   .user-panel{

@@ -18,10 +18,7 @@ class Room extends Model
      * ]
      */
 
-    public function get($room_id = null){
-        if(empty($room_id))
-            return false;
-
+    public function get(int $room_id){
         return DB::table($this->table[0])->where('id', '=', $room_id)->first();
     }
     public function get_user_rooms($user_id = null){

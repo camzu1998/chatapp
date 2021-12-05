@@ -1,5 +1,5 @@
 <!-- Messages -->
-<div id="messagesList" class="w-full flex flex-col text-gray-200 px-12 pt-8" style="height: calc(100vh - 100px); overflow-y: auto;">
+<div id="messagesList" class="w-full flex flex-col-reverse text-gray-200 px-12 pt-8" style="height: calc(100vh - 100px); overflow-y: auto;">
     @foreach ($messages as $msg)
         @if ($msg->user_id != $user->id)
             <div class="msg msg-left mb-12 relative p-2">

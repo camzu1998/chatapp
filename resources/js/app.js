@@ -16,8 +16,6 @@ $('.file_input').filepond({
     styleProgressIndicatorPosition: 'right bottom',
     styleButtonRemoveItemPosition: 'left bottom',
     styleButtonProcessItemPosition: 'right bottom',
-});
-FilePond.setOptions({
     server: {
         url: '/room/'+$('#room_id').val(),
         process: '/upload',
@@ -37,8 +35,9 @@ FilePond.setOptions({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    }
+    },
 });
+$('.msg_file_input').filepond();
 $('#toggle-menu').click(function(){
     $('#user-dashboard')
     .css("display", "flex")

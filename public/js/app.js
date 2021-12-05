@@ -2076,9 +2076,7 @@ $('.file_input').filepond({
   styleLoadIndicatorPosition: 'center bottom',
   styleProgressIndicatorPosition: 'right bottom',
   styleButtonRemoveItemPosition: 'left bottom',
-  styleButtonProcessItemPosition: 'right bottom'
-});
-FilePond.setOptions({
+  styleButtonProcessItemPosition: 'right bottom',
   server: {
     url: '/room/' + $('#room_id').val(),
     process: '/upload',
@@ -2100,6 +2098,7 @@ FilePond.setOptions({
     }
   }
 });
+$('.msg_file_input').filepond();
 $('#toggle-menu').click(function () {
   $('#user-dashboard').css("display", "flex").hide().fadeIn();
 });

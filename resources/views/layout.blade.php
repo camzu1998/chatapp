@@ -37,17 +37,23 @@
                     <!-- Profile logo -->
                     <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
                     <div class="hello-user w-full text-center mb-8">
-                        Witaj {{ $user->nick }}
+                    Witaj {{ $user->nick }}
+                        @if($room_id != 0)
+                            w pokoju {{ $room->room_name }}
+                        @endif
                     </div>
                     <!-- Btns -->
-                    <div class="btns-box flex-grow flex flex-col mb-8">
+                    <div class="btns-box flex-grow flex flex-col w-full">
                         @if($room_id != 0)
-                            <button class="btn mt-4 mb-8 modalToggle" data="roomSettingsModal"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</button>
+                            <button class="btn my-8 modalToggle btn-secondary" data="roomSettingsModal"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</button>
                         @endif
-                        <button class="btn my-4 modalToggle" data="friendsModal"><i class="fas fa-users"></i> Znajomi</button>
-                        <button class="btn my-4 modalToggle" data="roomsModal"><i class="far fa-comment"></i> Pokoje</button>
-                        <button class="btn my-4 modalToggle" data="settingsModal"><i class="fas fa-cogs"></i> Ustawienia</button>
-                        <a href="/logout" class="btn my-4 logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
+                        <button class="btn my-4 w-full modalToggle" data="friendsModal"><i class="fas fa-users"></i> Znajomi</button>
+                        <button class="btn my-4 w-full modalToggle" data="roomsModal"><i class="far fa-comment"></i> Pokoje</button>
+                        <button class="btn my-4 w-full modalToggle" data="settingsModal"><i class="fas fa-cogs"></i> Ustawienia</button>
+                        @if($room_id != 0)
+                            <a href="/" class="btn btn-gray my-8 w-full"><i class="fas fa-arrow-left"></i> Wróc na stronę główną</a>
+                        @endif
+                        <a href="/logout" class="btn mt-4 w-full logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
                     </div>
                 </div>
             </div>
@@ -221,7 +227,6 @@
                             <span class="bar"></span>
                             <label>Nazwa pokoju</label>
                         </div>
-                        <button type="button" class="btn add-friends settings-btn modalToggle absolute bottom-2 left-1/2" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
                     </div>
                     <!-- Right column -->
                     <div class="w-full flex flex-col"> 
@@ -246,7 +251,8 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn logout absolute bottom-2 left-2 deleteRoom settings-btn" data="{{ $room_id }}">Usuń pokój <i class="far fa-trash-alt"></i></button>
+                <button type="button" class="deleteRoom settings-btn btn-danger btn-modal absolute bottom-2 left-2" data="{{ $room_id }}">Usuń pokój <i class="far fa-trash-alt"></i></button>
+                <button type="button" class="add-friends settings-btn btn-modal modalToggle absolute bottom-2 left-1/2" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
                 <button type="button" class="cta-btn absolute bottom-2 right-2 form-submit box-content rounded-xl" id="update_room">Zapisz <i class="far fa-save"></i></button>
             </form>
 
@@ -258,20 +264,20 @@
                 <div class="flex flex-row flex-wrap w-full">
                     @foreach ($friends_data as $friend_id => $friend)
                         @if ($friend['status'] == 1)
-                            <div class="friend relative w-1/2 flex flex-row flex-wrap border-b-2">
+                            <div class="friend relative w-full flex flex-row flex-wrap border-b-2">
                                 <div class="profile_container relative flex flex-row justify-center align-center items-center">
                                     <img src="{{ asset('storage/profiles_miniatures/'.$friend['profile_img']) }}" class="profile-image"/>
                                 </div>
                                 <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
-                                <div class="box_switch absolute inset-y-2/4  right-2">
-                                    <button type="button" class="btn btn_invite text-center">Zaproś <i class="far fa-envelope"></i></button>
+                                <div class="box_switch_modal absolute inset-y-2/4  right-2">
+                                    <button type="button" class="btn_invite btn-modal text-center">Zaproś <i class="far fa-envelope"></i></button>
                                     <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}" style="display: none;">
                                 </div>
                             </div>
                         @endif
                     @endforeach
                 </div>
-                <button type="button" class="btn logout absolute bottom-2 left-2 back settings-btn modalToggle" data="roomSettingsModal">Wróć <i class="fas fa-chevron-left"></i></button>
+                <button type="button" class="back settings-btn btn-modal btn-danger absolute bottom-2 left-2 modalToggle" data="roomSettingsModal">Wróć <i class="fas fa-chevron-left"></i></button>
                 <button type="button" class="cta-btn absolute bottom-2 right-2 form-submit box-content rounded-xl" id="send_invites">Zaproś <i class="fas fa-user-plus"></i></button>
             </form>
         @endif
@@ -311,8 +317,8 @@
                                 <img src="{{ asset('storage/profiles_miniatures/'.$friend['profile_img']) }}" class="profile-image"/>
                             </div>
                             <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
-                            <div class="box_switch absolute inset-y-2/4  right-2">
-                                <button type="button" class="btn btn_invite text-center">Zaproś <i class="far fa-envelope"></i></button>
+                            <div class="box_switch_modal absolute inset-y-2/4  right-2">
+                                <button type="button" class="btn-modal btn_invite text-center">Zaproś <i class="far fa-envelope"></i></button>
                                 <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}" style="display: none;">
                             </div>
                         </div>
