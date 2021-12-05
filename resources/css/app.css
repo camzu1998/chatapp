@@ -319,11 +319,23 @@ input:checked + .slider:before {
   height: 170px !important;
   margin: 0 auto !important;
 }
-#deleteRoom {
+.settings-btn {
   width: 180px;
   height: 35px;
   font-size: 14px;
   line-height: 35px;
+}
+.settings-btn.delete_room{
+  border: 2px solid #F17C8A;
+  color: #FDE9EB;
+}
+.settings-btn.back{
+  border: 2px solid #D9B8BC;
+  color: #D9B8BC;
+}
+.add-friends{
+  border: 2px solid #59ED92;
+  color: #EEFDF4;
 }
 media(max-width: 1000px){
   .user-panel{

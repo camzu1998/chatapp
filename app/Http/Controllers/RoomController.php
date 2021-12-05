@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Friendship;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Messages;
 
 class RoomController extends Controller
 {
@@ -82,7 +83,7 @@ class RoomController extends Controller
         return true;
     }
 
-    public function update_room_status(Request $request, $room_id){
+    public function update_room_status(Request $request, int $room_id){
         $roomModel = new \App\Models\Room();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();
@@ -171,7 +172,7 @@ class RoomController extends Controller
     /**
      *  Update room data
      */
-    public function update(Request $request, $room_id){
+    public function update(Request $request, int $room_id){
         if(empty($room_id) || empty($request->input('update_room_name')))
             return response()->json([
                 'err' => '1',
@@ -190,7 +191,7 @@ class RoomController extends Controller
         //Delete retrieved roommates
         if(!empty($request->roommate)){
             foreach($request->roommate as $roommate){
-                $userRoomModel->delete($roommate, $room_id);
+                $userRoomModel->delete_user($roommate, $room_id);
             }
         }
         //Update name
@@ -198,7 +199,9 @@ class RoomController extends Controller
 
         return true;
     }
-
+    /**
+     *  Get room roommates
+     */
     public function get_roommates(int $room_id){
         $roommates_data = array();
         if(empty($room_id))
@@ -219,5 +222,47 @@ class RoomController extends Controller
         }
 
         return $roommates_data;
+    }
+    /**
+     * Delete room and connected data
+     */
+    public function delete_room(int $room_id){
+        if(empty($room_id))
+            return false;
+        
+        $user_id = Auth::id();
+        //Delete room image
+        $roomModel = new Room();
+        $tmp = $roomModel->check_admin($user_id, $room_id);
+        Storage::delete('room_miniatures/'.$tmp->room_img);
+        //Delete room
+        $roomModel->delete_room($user_id, $room_id);
+        return true;
+    }
+    /**
+     * Send invites to friends
+     */
+    public function invite(int $room_id, Request $request){
+        $roomModel = new \App\Models\Room();
+        $friendsModel = new \App\Models\Friendship();
+        $user_id = Auth::id();
+
+        if(empty($request->add_friend)){
+            return response()->json([
+                'msg' => 'Please add some friends to room'
+            ]);
+        }
+
+        //Add invited friends to room
+        foreach($request->add_friend as $friend_id){
+            //Check friendship
+            $res = $friendsModel->check($user_id, $friend_id);
+            if(empty($res[0])){
+                continue; 
+            }
+            $roomModel->add_user($room_id, $friend_id);
+        }
+
+        return true;
     }
 }

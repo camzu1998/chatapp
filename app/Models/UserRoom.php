@@ -12,7 +12,7 @@ class UserRoom extends Model
 
     protected $table = 'user_room';
 
-    public function delete(int $user_id, int $room_id){
+    public function delete_user(int $user_id, int $room_id){
         if(empty($user_id) || empty($room_id))
             return false;
 

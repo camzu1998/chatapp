@@ -30,6 +30,7 @@ Route::get('/main', function(Request $request){
     
     $data['friends_data'] = $friendship->get_user_friends('array');
     $data['rooms_data'] = $room->get_user_rooms('array');
+    $data['roommates_data'] = [];
     $data['room_id'] = 0;
     $data['content'] = 'main';
 
@@ -85,7 +86,14 @@ Route::post('/room', function(Request $request){
     return $room->save_room($request);
 });
 Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);
+//Room settings
+Route::delete('/room/{room_id}', [RoomController::class, 'delete_room']);
 Route::put('/room/{room_id}/update', [RoomController::class, 'update']);
+Route::post('/room/{room_id}/invite', [RoomController::class, 'invite']);
+//Room image
+Route::post('/room/{room_id}/upload', [RoomController::class, 'upload_room_profile']);
+Route::get('/room/{room_id}/get_image', [RoomController::class, 'get_room_profile']);
+Route::put('/room/{room_id}/revert', [RoomController::class, 'revert_room_profile']);
 // Messages
 Route::post('/send_msg', function(Request $request){
     $msg_con = new App\Http\Controllers\MessagesController();
@@ -94,7 +102,3 @@ Route::post('/send_msg', function(Request $request){
 Route::get('/get_msg/{room_id}', [MessagesController::class, 'get']);
 Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_id']);
 
-
-Route::post('/room/{room_id}/upload', [RoomController::class, 'upload_room_profile']);
-Route::get('/room/{room_id}/get_image', [RoomController::class, 'get_room_profile']);
-Route::put('/room/{room_id}/revert', [RoomController::class, 'revert_room_profile']);

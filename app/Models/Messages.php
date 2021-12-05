@@ -50,4 +50,13 @@ class Messages extends Model
 
         return true;
     }
+
+    public function delete_room(int $room_id){
+        if(empty($room_id))
+            return false;
+
+        DB::table($this->table)->where('room_id', '=', $room_id)->delete(); 
+
+        return true;
+    }
 }

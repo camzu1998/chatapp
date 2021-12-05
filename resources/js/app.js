@@ -134,6 +134,23 @@ $('#update_room').click(function(){
         window.location.reload(true);
     });
 });
+$('#send_invites').click(function(){
+    $.ajax({
+        method: 'post',
+        url: '/room/'+$('#room_id').val()+'/invite',
+        data: $('#inviteFriendsModal').serialize(),
+    }).always(function(res){
+        window.location.reload(true);
+    });
+});
+$('.deleteRoom').click(function(){
+    $.ajax({
+        type: 'DELETE',
+        url: '/room/'+$('#room_id').val(),
+    }).always(function(res){
+        // window.location.reload(true);
+    });
+});
 $('.room_menu').click(function(){
     if($(this).hasClass('cancel_fast_menu')){
         return false;

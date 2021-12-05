@@ -88,12 +88,12 @@ class Room extends Model
         return DB::table($this->table[1])->where('room_id', '=', $room_id)->where('user_id', '=', $user_id)->update(['status' => $status]);
     }
 
-    public function delete($admin_id = null, $room_id = null){
+    public function delete_room($admin_id = null, $room_id = null){
         if(empty($admin_id) || empty($room_id))
             return false;
 
         $tmp = $this->check_admin($admin_id, $room_id);
-        if(empty($tmp[0]))
+        if(empty($tmp))
             return false;
 
         DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('id', '=', $room_id)->delete();
