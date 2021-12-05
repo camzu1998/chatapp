@@ -32,19 +32,96 @@ h2{
 .form-text{ 
     color: #F8F9FE;
 }
-.form-input {
-    border: none;
-    background: transparent;
-    border-radius: 0;
-    border-bottom: 2px solid #1f2937;
-    color: #F8F9FE;
+/* Input */
+.input-group{
+  margin-bottom: 45px;
+  margin-top: 21px;
 }
+.form-input{
+  font-size:18px;
+  padding:10px 10px 10px 5px;
+  display:block;
+  width:300px;
+  border:none;
+  border-bottom:1px solid #757575;
+  background-color: transparent;
+}
+input:focus{
+  outline:none;
+}
+.input-group > label{
+  color:#999; 
+  font-size:18px;
+  font-weight:normal;
+  position:absolute;
+  pointer-events:none;
+  left:5px;
+  top:10px;
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+/* active state */
+input:focus ~ label, input:valid ~ label{
+  top:-20px;
+  font-size:14px;
+  color:#808DFF;
+}
+.bar 	{ position:relative; display:block; width:300px; }
+.bar:before, .bar:after 	{
+  content:'';
+  height:2px; 
+  width:0;
+  bottom:1px; 
+  position:absolute;
+  background:#808DFF; 
+  transition:0.2s ease all; 
+  -moz-transition:0.2s ease all; 
+  -webkit-transition:0.2s ease all;
+}
+.bar:before {
+  left:50%;
+}
+.bar:after {
+  right:50%; 
+}
+/* active state */
+input:focus ~ .bar:before, input:focus ~ .bar:after {
+  width:50%;
+}
+/* HIGHLIGHTER ================================== */
+.highlight {
+  position:absolute;
+  height:60%; 
+  width:100px; 
+  top:25%; 
+  left:0;
+  pointer-events:none;
+  opacity:0.5;
+}
+/* active state */
+input:focus ~ .highlight {
+  -webkit-animation:inputHighlighter 0.3s ease;
+  -moz-animation:inputHighlighter 0.3s ease;
+  animation:inputHighlighter 0.3s ease;
+}
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+	from { background:#808DFF; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+	from { background:#808DFF; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+	from { background:#808DFF; }
+  to 	{ width:0; background:transparent; }
+}
+
+
 .formContainer{
   width: calc( 100% - 430px );
-}
-.form-input:focus, .form-input:not([value=""]):not(:focus):invalid {
-  --tw-ring-opacity: 0;
-  border-bottom: 2px solid #F8F9FE;
 }
 .user-panel{
   width: 430px;
@@ -336,6 +413,7 @@ input:checked + .slider:before {
 .add-friends{
   border: 2px solid #59ED92;
   color: #EEFDF4;
+  transform: translateX(-50%);
 }
 media(max-width: 1000px){
   .user-panel{

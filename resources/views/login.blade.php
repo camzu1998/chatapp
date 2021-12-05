@@ -28,8 +28,18 @@
             <form class="flex flex-col items-center text-gray-800 py-4 startForm rounded-lg px-2" action="/login" method="POST">
                 <div class="w-full text-center text-lg form-text mb-8 mt-4">Zaloguj się</div>
                 @csrf
-                <input class="form-input mb-4 block w-9/12 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="email" name="email" id="email" placeholder="Email" onchange="this.setAttribute('value', this.value);"/>
-                <input class="form-input mb-4 block w-9/12 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="password" name="password" id="password" placeholder="Hasło" onchange="this.setAttribute('value', this.value);"/>
+                <div class="input-group relative">
+                    <input class="form-input" type="email" name="email" id="email" required onchange="this.setAttribute('value', this.value);"/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Email</label>
+                </div>
+                <div class="input-group relative">
+                    <input class="form-input" type="password" name="password" id="password" required onchange="this.setAttribute('value', this.value);"/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Hasło</label>
+                </div>
                 <button class="w-36 cta-btn text-gray-800 my-4 px-4 py-2 rounded-md" id="send" type="submit">Wyślij <i class="far fa-paper-plane"></i></button>
                 <p class="form-text text-base mt-8 mb-4">Nie masz konta? </br> <a href="/register_form" class="text-blue-400">Zarejestruj się!</a> </p>
             </form>

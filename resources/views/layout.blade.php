@@ -103,7 +103,12 @@
             <div class="w-full text-center mt-6">Wpisz nick i dodaj znajomego</div>
             <form class="flex flex-row justify-around mt-2" id="add_friend_form" method="POST">
                 @csrf
-                <input class="form-input mb-4 block w-3/6 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="nickname" id="nickname" placeholder="nickname"/>
+                <div class="input-group relative">
+                    <input class="form-input" type="text" name="nickname" id="nickname" required/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Nickname</label>
+                </div>
                 <button class="cta-btn form-submit box-content rounded-xl" id="add_friend" type="button">Dodaj <i class="fas fa-paper-plane"></i></button>
             </form>
             <div class="list flex flex-row flex-wrap flex-around">
@@ -150,7 +155,12 @@
             <div class="w-full flex flex-row justify-evenly mt-6">
                 <div class="w-1/3 flex flex-col">
                     <span class="w-full text-center">Wyszukaj pokój</span>
-                    <input class="form-input mb-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="search_room" id="search_room" placeholder="Nazwa pokoju"/>
+                    <div class="input-group relative">
+                        <input class="form-input" type="text" name="search_room" id="search_room" required/>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Nazwa pokoju</label>
+                    </div>
                 </div>
                 <div class="w-1/3 text-center">
                     lub
@@ -205,8 +215,13 @@
                     <!-- Left column -->
                     <div class="flex flex-col flex-wrap"> 
                         <input type="file" name="room_profile" class="file_input rounded-full" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
-                        <input class="form-input mb-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="update_room_name" id="update_room_name" placeholder="Nazwa pokoju" value="{{ $rooms_data[$room_id]->room_name }}"/>
-                        <button type="button" class="btn add_friends settings-btn modalToggle" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
+                        <div class="input-group relative">
+                            <input class="form-input" type="text" name="update_room_name" id="update_room_name" value="{{ $rooms_data[$room_id]->room_name }}" required/>
+                            <span class="highlight"></span>
+                            <span class="bar"></span>
+                            <label>Nazwa pokoju</label>
+                        </div>
+                        <button type="button" class="btn add-friends settings-btn modalToggle absolute bottom-2 left-1/2" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
                     </div>
                     <!-- Right column -->
                     <div class="w-full flex flex-col"> 
@@ -270,13 +285,23 @@
 
             <div class="w-full flex flex-col mt-6">
                 <span class="w-full text-sm text-center">Podaj nazwę pokoju lub pozostaw to pole puste ( {{ $user->nick }}_room)</span>
-                <input class="form-input mb-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" name="room_name" id="room_name" placeholder="Nazwa pokoju"/>
+                <div class="input-group relative">
+                    <input class="form-input" type="text" name="room_name" id="room_name" required/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Nazwa pokoju</label>
+                </div>
             </div>
 
             <div class="w-3/4 flex flex-col mt-6 mx-auto">
                 <span class="w-full text-sm text-center">Wpisz nick i zaproś znajomego do pokoju</span>
                 <div class="w-full flex flex-row justify-evenly mt-4">
-                    <input class="form-input mb-4 block w-3/4 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" type="text" id="search_user" placeholder="Nickname"/>
+                    <div class="input-group relative">
+                        <input class="form-input" type="text" name="search_user" id="search_user" required/>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Nickname</label>
+                    </div>
                 </div>
             </div>
 
