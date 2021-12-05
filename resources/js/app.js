@@ -37,7 +37,29 @@ $('.file_input').filepond({
         }
     },
 });
-$('.msg_file_input').filepond();
+$('#file').filepond({
+    allowMultiple: false,
+    server: {
+        url: '/room/'+$('#room_id').val(),
+        process: '/upload',
+        revert: {
+            url: '/revert?id='+window.id,
+            method: 'POST',
+            withCredentials: false,
+            headers: {},
+            timeout: 7000,
+            onload: null,
+            onerror: null,
+            ondata: null
+        },
+        restore: '/get_image?name=',
+        load: '/get_image?name=',
+        fetch: '/',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    },
+});
 $('#toggle-menu').click(function(){
     $('#user-dashboard')
     .css("display", "flex")
@@ -203,11 +225,6 @@ $('.friendship_menu').click(function(){
 $('#send').click(function(){
     var user_id = $('#user_id').val();
     var fd = new FormData();
-    var files = $('#file')[0].files;
-    
-    // Check file selected or not
-    if(files.length > 0 )
-        fd.append('file',files[0]);
 
     fd.append('_token', $('#token').val());
     fd.append('room_id', $('#room_id').val());
@@ -235,7 +252,7 @@ $('#send').click(function(){
             }else{
                 html += '<div class="msg msg-left mb-12 relative p-2">';
             }
-            html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span>'+file_html+'</div></div>';
+            html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span>'+file_html+'</div></div>';
         }
         $('#messagesList').html(html);
     });
@@ -269,7 +286,7 @@ function load_messages(){
             }else{
                 html += '<div class="msg msg-left mb-12 relative p-2">';
             }
-            html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user.nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span></div>'+file_html+'</div>';
+            html += '<img src="http://localhost/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+msg.content+'</p><span class="msg-date"></span></div>'+file_html+'</div>';
         }
         $('#messagesList').html(html);
         $('#notifySound').get(0).play()

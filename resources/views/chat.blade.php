@@ -1,5 +1,5 @@
 <!-- Messages -->
-<div id="messagesList" class="w-full flex flex-col-reverse text-gray-200 px-12 pt-8" style="height: calc(100vh - 100px); overflow-y: auto;">
+<div id="messagesList" class="w-full flex flex-col-reverse text-gray-200 px-12 pt-8" style="height: calc(100vh - 200px); overflow-y: auto;">
     @foreach ($messages as $msg)
         @if ($msg->user_id != $user->id)
             <div class="msg msg-left mb-12 relative p-2">
@@ -19,17 +19,16 @@
     @endforeach
 </div>
 <!-- Message Form -->
-<div class="flex flex-row fixed bottom-0 right-0 formContainer">
-    <form class="w-full flex flex-row" id="msgForm" enctype='multipart/form-data'>
+<div class="flex flex-col fixed bottom-2 right-2 formContainer">
+    <form class="w-full h-full flex flex-col relative" id="msgForm" enctype='multipart/form-data'>
         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
         <input type="hidden" name="room_id" id="room_id" value="{{ $room_id }}">
         <input type="hidden" name="newest_id" id="newest_id" value="{{ $newest_msg }}">
         <input type="hidden" name="nick" id="nick" placeholder="Nick" value="{{ $user->nick }}"/>
-        <textarea class="w-10/12" name="content" id="content" placeholder="Napisz wiadomość..."></textarea>
-        <div class="flex flex-col flex-grow">
-            <button class="cta-btn msg-submit" id="send">Wyślij <i class="far fa-save"></i></button>
-            <label for="file" class="form-input file-input text-center">Wgraj plik <i class="fas fa-upload"></i></label>
-            <input type="file" name="file" id="file" style="display: none;"/>
+        <textarea class="w-full" name="content" id="content" placeholder="Napisz wiadomość..."></textarea>
+        <div class="w-full flex flex-row justify-between flex-grow msg-bar">
+            <input type="file" name="file" id="file"/>
+            <button class="msg-submit" id="send" type="button"><i class="far fa-paper-plane"></i></button>
         </div>
     </form>
 </div>

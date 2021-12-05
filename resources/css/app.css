@@ -118,11 +118,6 @@ input:focus ~ .highlight {
 	from { background:#808DFF; }
   to 	{ width:0; background:transparent; }
 }
-
-
-.formContainer{
-  width: calc( 100% - 430px );
-}
 .user-panel{
   width: 430px;
   color: #F8F9FE;
@@ -133,22 +128,32 @@ input:focus ~ .highlight {
   height: 100px;
   border-radius: 50%;
 }
+.formContainer{
+  width: 375px;
+  height: 200px;
+  background: #A4F499;
+  border-radius: 16px;
+}
 #content{
-  background: #003759;
+  height: 150px;
+  background-color: #A4F499;
   border: none;
-  color: #f8f9fe;
-  height: 100px;
+  color: #094A00;
+  border-radius: 16px;
 }
- #content:placeholder{
-  color: rgba(255, 255, 255, 0.55);
+#content:placeholder{
+  color: rgba(9, 74, 0, 0.55);
 }
-.msg-submit, .file-input{
+.msg-submit{
+  font-size: 24px;
+  text-align: center;
+  color: #CF0284;
+  text-shadow: 2px 2px 6px #CF0284;
   height: 50px;
-  line-height: 50px;
+  width: 100%;
+  max-width: 75px;
 }
-.file-input{
-  background: #0070B6;
-}
+
 .msg {
   border-radius: 16px;
   background: #DDCBFA;
@@ -449,6 +454,26 @@ input:checked + .slider:before {
 .box_switch_modal{
   transform: translateY(-50%);
   height: 35px;
+}
+#file{
+  height: 50px !important;
+  background: rgba(0, 0, 0, 0.75);
+  border-radius: 16px;
+  width: 100% !important;
+  max-width: 300px;
+}
+#file > .filepond--panel-root{
+  background: rgba(0, 0, 0, 0.75) !important;
+  border-radius: 16px !important;
+}
+#file > .filepond--drop-label{
+  color: #FFFFFF;
+  min-height: auto;
+  height: 50px;
+}
+#file > .filepond--drop-label label{
+  line-height: 50px;
+  padding: 0;
 }
 media(max-width: 1000px){
   .user-panel{
