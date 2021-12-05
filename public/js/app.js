@@ -2210,6 +2210,16 @@ $('.room_menu').click(function () {
   }).always(function (res) {
     window.location.reload(true);
   });
+});
+$('body').on('click', '.btn_invite', function () {
+  $(this).siblings('.add_friend_checkbox').prop('checked', true);
+  $(this).html('Anuluj <i class="fas fa-times"></i>');
+  $(this).addClass('cancel_invite').removeClass('btn_invite');
+});
+$('body').on('click', '.cancel_invite', function () {
+  $(this).siblings('.add_friend_checkbox').prop('checked', false);
+  $(this).html('Zaproś <i class="far fa-envelope"></i>');
+  $(this).addClass('btn_invite').removeClass('cancel_invite');
 }); // FRIENDSHIP
 
 $('#add_friend').click(function () {

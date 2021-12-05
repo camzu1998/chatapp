@@ -34,7 +34,7 @@ h2{
 }
 /* Input */
 .input-group{
-  margin-bottom: 45px;
+  margin-bottom: 21px;
   margin-top: 21px;
 }
 .form-input{
@@ -361,10 +361,23 @@ input:checked + .slider:before {
 }
 .btn_invite{
   background: #2939CC;
+  color: #CED2F2;
   border-radius: 8px;
   font-size: 12px;
   width: 140px;
   height: 35px;
+  line-height: 35px;
+  border: none;
+}
+.cancel_invite{
+  border-radius: 8px;
+  font-size: 12px;
+  width: 140px;
+  height: 35px;
+  background: #ED5265;
+  color: #FDE9EB;
+  line-height: 35px;
+  border: none;
 }
 .friend.border-b-2{
   border-color: #4D5499;

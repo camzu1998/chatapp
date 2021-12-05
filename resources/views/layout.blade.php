@@ -264,10 +264,8 @@
                                 </div>
                                 <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
                                 <div class="box_switch absolute inset-y-2/4  right-2">
-                                    <label class="switch">
-                                        <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}">
-                                        <span class="slider round"></span>
-                                    </label>
+                                    <button type="button" class="btn btn_invite text-center">Zaproś <i class="far fa-envelope"></i></button>
+                                    <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}" style="display: none;">
                                 </div>
                             </div>
                         @endif
@@ -314,10 +312,8 @@
                             </div>
                             <div class="friend_name ml-2">{{ $friend['nick'] }}</div>
                             <div class="box_switch absolute inset-y-2/4  right-2">
-                                <label class="switch">
-                                    <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}">
-                                    <span class="slider round"></span>
-                                </label>
+                                <button type="button" class="btn btn_invite text-center">Zaproś <i class="far fa-envelope"></i></button>
+                                <input type="checkbox" name="add_friend[]" class="add_friend_checkbox" value="{{ $friend_id }}" style="display: none;">
                             </div>
                         </div>
                     @endif
