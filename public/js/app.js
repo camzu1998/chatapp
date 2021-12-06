@@ -2098,24 +2098,16 @@ $('.file_input').filepond({
     }
   }
 });
-$('#file').filepond({
-  allowMultiple: false,
+var chat_file = FilePond.create(document.getElementById('file'));
+chat_file.setOptions({
   server: {
-    url: '/room/' + $('#room_id').val(),
-    process: '/upload',
-    revert: {
-      url: '/revert?id=' + window.id,
-      method: 'POST',
-      withCredentials: false,
-      headers: {},
-      timeout: 7000,
-      onload: null,
-      onerror: null,
-      ondata: null
+    url: '/chat/file/' + $('#room_id').val(),
+    process: {
+      url: '/',
+      onload: function onload(response) {
+        chat_file.removeFile();
+      }
     },
-    restore: '/get_image?name=',
-    load: '/get_image?name=',
-    fetch: '/',
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
@@ -2271,12 +2263,10 @@ $('#send').click(function () {
   var user_id = $('#user_id').val();
   var fd = new FormData();
   fd.append('_token', $('#token').val());
-  fd.append('room_id', $('#room_id').val());
-  fd.append('nick', $('#nick').val());
   fd.append('content', $('#content').val());
   $.ajax({
     method: 'post',
-    url: '/send_msg',
+    url: '/chat/message/' + $('#room_id').val(),
     data: fd,
     contentType: false,
     processData: false
@@ -2286,11 +2276,18 @@ $('#send').click(function () {
     for (var i = 0; i < res.messages.length; i++) {
       var msg = res.messages[i];
       var user = res.msg_users;
-      var file_html = '';
+      var content = '';
 
       if (msg.file_id != 0) {
         var file = res.files[msg.file_id][0];
-        file_html = '<p class="msg-file"> <a href="/storage/' + file.path + '"> <i class="far fa-file"></i>' + file.filename + ' </a> </p> ';
+
+        if (file.ext == 'png' || file.ext == 'jpg' || file.ext == 'jpeg' || file.ext == 'webp') {
+          content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" width="300px">';
+        } else {
+          content = '<p class="msg-file"> <a href="/storage/' + file.path + '"> <i class="far fa-file"></i>' + file.filename + ' </a> </p> ';
+        }
+      } else {
+        content = msg.content;
       }
 
       if (user_id == msg.user_id) {
@@ -2299,13 +2296,12 @@ $('#send').click(function () {
         html += '<div class="msg msg-left mb-12 relative p-2">';
       }
 
-      html += '<img src="http://localhost/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + msg.content + '</p><span class="msg-date"></span>' + file_html + '</div></div>';
+      html += '<img src="http://localhost/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
     }
 
     $('#messagesList').html(html);
   });
   $('#content').val('');
-  $('#file').val('');
   return false;
 });
 
@@ -2325,11 +2321,18 @@ function load_messages() {
     for (var i = 0; i < res.messages.length; i++) {
       var msg = res.messages[i];
       var user = res.msg_users;
-      var file_html = '';
+      var content = '';
 
       if (msg.file_id != 0) {
         var file = res.files[msg.file_id][0];
-        file_html = '<p class="msg-file"> <a href="/storage/' + file.path + '"> <i class="far fa-file"></i>' + file.filename + ' </a> </p> ';
+
+        if (file.ext == 'png' || file.ext == 'jpg' || file.ext == 'jpeg' || file.ext == 'webp') {
+          content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" width="300px">';
+        } else {
+          content = '<p class="msg-file"> <a href="/storage/' + file.path + '"> <i class="far fa-file"></i>' + file.filename + ' </a> </p> ';
+        }
+      } else {
+        content = msg.content;
       }
 
       if (user_id == msg.user_id) {
@@ -2338,7 +2341,7 @@ function load_messages() {
         html += '<div class="msg msg-left mb-12 relative p-2">';
       }
 
-      html += '<img src="http://localhost/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + msg.content + '</p><span class="msg-date"></span></div>' + file_html + '</div>';
+      html += '<img src="http://localhost/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
     }
 
     $('#messagesList').html(html);

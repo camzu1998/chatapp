@@ -21,17 +21,17 @@ class Files extends Model
         return DB::table($this->table)->select()->where('id', '=', $id)->get();
     }
 
-    public function save($name = '', $path = '', $ext = ''){
+    public function create(string $name,string $path,string $ext){
         if(empty($name) || empty($path) || empty($ext))
             return false;
 
-        $Date = date('Y-m-d H:i:s');
+        $date = date('Y-m-d H:i:s');
         
         $file_id = DB::table($this->table)->insertGetId([
             'filename'   => $name,
             'path'       => $path,
             'ext'        => $ext,
-            'created_at' => $Date
+            'created_at' => $date
         ]);
 
         return $file_id;

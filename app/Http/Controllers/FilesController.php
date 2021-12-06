@@ -16,15 +16,18 @@ class FilesController extends Controller
     ];
 
 
-    public function save(Request $request){
+    public function store(Request $request){
+        $files = new Files();
+        $file_data = array();
 
         $file = $request->file('file');
         $filename = $file->getClientOriginalName();
-
+        //Store on disk
         $path = $file->store('files', 'public');
-        
-        $files = new \App\Models\Files;
+        //Fill array
+        $files_data = pathinfo($path);
+        $file_data['file_id'] = $files->create($filename, $path, $file->extension());
 
-        return $files->save($filename, $path, $file->extension());
+        return $file_data;
     }
 }

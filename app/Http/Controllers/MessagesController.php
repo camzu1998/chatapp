@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Messages;
 use App\Models\Files;
+use App\Models\Room;
 use App\Models\User;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\RoomController;
@@ -12,44 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
 {
-    public function show(){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return back();
-        }
-
-        $users_array = array();
-        $file_array = array();
-        $msgM = new \App\Models\Messages;
-        $files_model = new \App\Models\Files;
-        $user_model = new \App\Models\User;
-
-        $user = Auth::user();
-
-        $msgs = $msgM->get();
-
-        foreach($msgs as $k => $msg){
-            //Check file data
-            if($msg->file_id != 0){
-                $file_array[$msg->file_id] = $files_model->get($msg->file_id);
-            }
-            //Check user data
-            $msg_user = $user_model->get_user_data($msg->user_id);
-            $users_array[$msg->user_id] = [
-                'nick' => $msg_user->nick,
-                'profile_img' => $msg_user->profile_img
-            ];
-        }
-
-        return view('index', [
-            'messages'   => $msgs,
-            'msg_users'  => $users_array,
-            'newest_msg' => $this->get_newest_id(),
-            'files'      => $file_array,
-            'user'       => $user,
-        ]);
-    }
-
     public function get_newest_id($room_id = null){
         // Check if isset room_id
         if(empty($room_id) || !is_numeric($room_id))
@@ -69,15 +32,10 @@ class MessagesController extends Controller
         return $msgs->id;
     }
 
-    public function send(Request $request){
+    public function send(int $room_id, Request $request){
         $content = $request->input('content');
-        $file_id = 0;
-        $room_id = $request->input('room_id');
-
-        if(!empty($request->file('file'))){
-            $files_con = new FilesController();
-            $file_id = $files_con->save($request);
-        }
+        if(empty($content))
+            return false;
 
         // Check if isset room_id
         if(!empty($room_id)){
@@ -88,10 +46,31 @@ class MessagesController extends Controller
             }
         }
         //Check if user is in the room
+        $msg = new Messages();
 
-        $msg = new \App\Models\Messages;
+        $msg->create($room_id, $content, 0, Auth::id());
 
-        $msg->save($room_id, $content, $file_id, Auth::id());
+        return $this->get($room_id);
+    }
+    public function upload(int $room_id, Request $request){
+        if(!$request->hasFile('file'))
+            return false;
+
+        // Check if isset room_id
+        if(!empty($room_id)){
+            $room = new Room();
+            //Check if user is in the room
+            $room_status = $room->check(Auth::id(), $room_id);
+            if(empty($room_status->created_at) && $room_status->status != 1){
+                return false;
+            }
+        }
+        $files_con = new FilesController();
+        $msg = new Messages();
+        //Store file
+        $file = $files_con->store($request);
+        //Add message
+        $msg->create($room_id, '', $file['file_id'], Auth::id());
 
         return $this->get($room_id);
     }
