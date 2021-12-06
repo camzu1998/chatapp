@@ -196,15 +196,6 @@ input:focus ~ .highlight {
 .msg-right > .msg-user_name {
   color: rgb(9, 74, 0, 0.50);
 }
-.btn {
-  height: 60px;
-  border: none;
-  border-radius: 0;
-  color: #F4FAFE;
-  background: rgba(2, 113, 178, 0.5);
-  line-height: 60px;
-  font-size: 24px;
-}
 .btn-modal {
   height: 60px;
   border: none;
@@ -215,17 +206,6 @@ input:focus ~ .highlight {
 .btn-modal.btn-danger{
   border: 2px solid #F17C8A;
   box-sizing: border-box;
-}
-.btn-gray{
-  background: rgba(125, 139, 148, 0.5);
-}
-.btn-secondary{
-  background: rgba(1, 122, 106, 0.5);
-  color: #ECFDFB;
-}
-.btn.logout {
-  background: rgba(132, 1, 19, 0.5);
-  color: #FDE9EB;
 }
 .btn.disabled{
   cursor: default;
@@ -474,6 +454,101 @@ input:checked + .slider:before {
 #file > .filepond--drop-label label{
   line-height: 50px;
   padding: 0;
+}
+/* New buttons */
+.btn {
+  height: 60px;
+  border: none;
+  border-radius: 0;
+  color: #F4FAFE;
+  line-height: 60px;
+  font-size: 24px;
+}
+.btn-secondary{
+  color: #ECFDFB;
+}
+.btn.logout {
+  color: #FDE9EB;
+}
+.btn.animated-button{
+	position: relative;
+	display: block;
+	border-radius: 0;
+	font-weight: bold;
+	text-align: center;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	transition: all 1s ease;
+}
+.btn.animated-button:after, .btn.animated-button:before{
+	content: "";
+	position: absolute;
+	height: 1px;
+	left: 0;
+	width: 100%;
+	z-index: 0;
+	-webkit-transition: all 0.75s ease 0s;
+	-moz-transition: all 0.75s ease 0s;
+	-o-transition: all 0.75s ease 0s;
+	transition: all 0.75s ease 0s;
+}
+.btn.animated-button:after{
+	top: 0;
+}
+.btn.animated-button:before{
+  bottom: 0;
+}
+.btn.animated-button:hover:after{
+	height: 100%;
+}
+/* Victoria Buttons */
+.btn.animated-button.victoria-three:after, .btn.animated-button.victoria-three:before {
+	background: rgba(2, 113, 178, 1);
+  box-shadow: 0px 0px 10px 1px #074178;
+	opacity: .5;
+  height: 1px;
+}
+.btn.animated-button.victoria-three:hover:after {
+	height: 100%;
+  background: rgba(2, 113, 178, 1);
+	opacity: 1;
+}
+/* Secondary Button */
+.btn.animated-button.btn-secondary:after, .btn.animated-button.btn-secondary:before {
+	background: rgba(1, 122, 106, 1);
+  box-shadow: 0px 0px 10px 1px rgba(1, 122, 106, 1);
+	opacity: .5;
+  height: 1px;
+}
+.btn.animated-button.btn-secondary:hover:after {
+	height: 100%;
+  background: rgba(1, 122, 106, 1);
+	opacity: 1;
+}
+/* Gray Button */
+.btn.animated-button.btn-gray:after, .btn.animated-button.btn-gray:before {
+  background: rgba(125, 139, 148, 1);
+  box-shadow: 0px 0px 10px 1px rgba(125, 139, 148, 1);
+	opacity: .5;
+  height: 1px;
+}
+.btn.animated-button.btn-gray:hover:after {
+	height: 100%;
+  background: rgba(125, 139, 148, 1);
+	opacity: 1;
+}
+/* Logout Button */
+.btn.animated-button.logout:after, .btn.animated-button.logout:before {
+  background: rgba(132, 1, 19, 1);
+  box-shadow: 0px 0px 10px 1px rgba(132, 1, 19, 1);
+	opacity: .5;
+  height: 1px;
+}
+.btn.animated-button.logout:hover:after {
+	height: 100%;
+  background: rgba(132, 1, 19, 1);
+	opacity: 1;
 }
 media(max-width: 1000px){
   .user-panel{

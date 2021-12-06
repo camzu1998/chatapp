@@ -45,15 +45,15 @@
                     <!-- Btns -->
                     <div class="btns-box flex-grow flex flex-col w-full">
                         @if($room_id != 0)
-                            <button class="btn my-8 modalToggle btn-secondary" data="roomSettingsModal"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</button>
+                            <button class="btn animated-button my-8 modalToggle btn-secondary" data="roomSettingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</span></button>
                         @endif
-                        <button class="btn my-4 w-full modalToggle" data="friendsModal"><i class="fas fa-users"></i> Znajomi</button>
-                        <button class="btn my-4 w-full modalToggle" data="roomsModal"><i class="far fa-comment"></i> Pokoje</button>
-                        <button class="btn my-4 w-full modalToggle" data="settingsModal"><i class="fas fa-cogs"></i> Ustawienia</button>
+                        <button class="btn animated-button victoria-three my-4 w-full modalToggle" data="friendsModal"><span class="relative w-full text-center z-10"><i class="fas fa-users"></i> Znajomi</span></button>
+                        <button class="btn animated-button victoria-three my-4 w-full modalToggle" data="roomsModal"><span class="relative w-full text-center z-10"><i class="far fa-comment"></i> Pokoje</span></button>
+                        <button class="btn animated-button victoria-three my-4 w-full modalToggle" data="settingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-cogs"></i> Ustawienia</span></button>
                         @if($room_id != 0)
-                            <a href="/" class="btn btn-gray my-8 w-full"><i class="fas fa-arrow-left"></i> Wróc na stronę główną</a>
+                            <a href="/" class="btn animated-button btn-gray my-8 w-full"><span class="relative w-full text-center z-10"><i class="fas fa-arrow-left"></i> Wróc na stronę główną</span></a>
                         @endif
-                        <a href="/logout" class="btn mt-4 w-full logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
+                        <a href="/logout" class="btn animated-button mt-4 w-full logout"><span class="relative w-full text-center z-10"><i class="fas fa-sign-out-alt"></i> Wyloguj się</span></a>
                     </div>
                 </div>
             </div>
