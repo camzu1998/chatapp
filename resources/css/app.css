@@ -170,6 +170,11 @@ input:focus ~ .highlight {
   top: 50%;
   transform: translateY(-50%);
 }
+.content-image{
+  min-width: 150px;
+  max-width: 240px;
+  max-height: 200px;
+}
 .msg-content {
   margin-left: 40px;
   color: #220059;

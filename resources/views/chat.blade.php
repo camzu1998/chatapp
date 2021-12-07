@@ -9,11 +9,16 @@
                 <img src="{{ asset('storage/profiles_miniatures/'.$msg_users[$msg->user_id]['profile_img']) }}" class="msg-image absolute"/>
                 <div class="msg-content">
                     <span class="msg-user_name">{{ $msg_users[$msg->user_id]['nick'] }}</span>
-                    <p class="msg-content-p" >{{ $msg->content }}</p>
-                    <span class="msg-date"></span>
-                        @if ($msg->file_id != 0)
-                            <p class="msg-file"> <a href="{{ asset('storage/'.$files[$msg->file_id][0]->path) }}"><i class="far fa-file"></i> {{ $files[$msg->file_id][0]->filename }} </a> </p> 
+                    <p class="msg-content-p" >
+                        @if ($msg->content != '')
+                            {{ $msg->content }}
+                        @elseif ($msg->file_id != 0 && !in_array($files[$msg->file_id][0]->ext, $img_ext) )
+                            <a href="{{ asset('storage/'.$files[$msg->file_id][0]->path) }}"><i class="far fa-file"></i> {{ $files[$msg->file_id][0]->filename }} </a> 
+                        @else
+                            <img src="{{ asset('storage/'.$files[$msg->file_id][0]->path) }}" alt="{{ $files[$msg->file_id][0]->filename }}" class="content-image">
                         @endif
+                    </p>
+                    <span class="msg-date"></span>
                 </div>
             </div>
     @endforeach

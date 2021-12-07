@@ -78,6 +78,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     $data['newest_msg'] = $tmp['newest_msg'];
     $data['room_id'] = $room_id;
     $data['admin_room_id'] = $room_id;
+    $data['img_ext'] = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
     $data['content'] = 'chat';
 
     return $con->load('chat', $data);

@@ -2261,6 +2261,7 @@ $('.friendship_menu').click(function () {
 
 $('#send').click(function () {
   var user_id = $('#user_id').val();
+  var img_ext = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
   var fd = new FormData();
   fd.append('_token', $('#token').val());
   fd.append('content', $('#content').val());
@@ -2281,8 +2282,8 @@ $('#send').click(function () {
       if (msg.file_id != 0) {
         var file = res.files[msg.file_id][0];
 
-        if (file.ext == 'png' || file.ext == 'jpg' || file.ext == 'jpeg' || file.ext == 'webp') {
-          content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" width="300px">';
+        if ($.inArray(file.ext, img_ext) != -1) {
+          content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" class="content-image">';
         } else {
           content = '<p class="msg-file"> <a href="/storage/' + file.path + '"> <i class="far fa-file"></i>' + file.filename + ' </a> </p> ';
         }
@@ -2308,6 +2309,7 @@ $('#send').click(function () {
 function load_messages() {
   var user_id = $('#user_id').val();
   var room_id = $('#room_id').val();
+  var img_ext = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
   var msg_switch = false;
   $.ajax({
     method: 'GET',
@@ -2326,8 +2328,8 @@ function load_messages() {
       if (msg.file_id != 0) {
         var file = res.files[msg.file_id][0];
 
-        if (file.ext == 'png' || file.ext == 'jpg' || file.ext == 'jpeg' || file.ext == 'webp') {
-          content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" width="300px">';
+        if ($.inArray(file.ext, img_ext) != -1) {
+          content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" class="content-image">';
         } else {
           content = '<p class="msg-file"> <a href="/storage/' + file.path + '"> <i class="far fa-file"></i>' + file.filename + ' </a> </p> ';
         }

@@ -17,6 +17,11 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     public function login_form(){
+        if (Auth::check()) {
+            // The user is not logged in...
+            return redirect('/main');
+        }
+
         return view('login');
     }
     public function register_form(){
@@ -42,11 +47,20 @@ class Controller extends BaseController
             return back()->withErrors([
                 'pass_2' => 'Paswwords do not match each other.',
             ]);
+
         $pass = Hash::make($request->input('pass'));
-        $userModel = new \App\Models\User();
+        $userModel = new User();
+
+        $tmp = $userModel->check_names($request->input('nick'), $request->input('email'));
+        if(empty($tmp)){
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ]);
+        }
+
         $user_id = $userModel->save_user($request->input('nick'), $request->input('email'), $pass);
 
-        $user_settings_controller = new \App\Http\Controllers\UserSettingsController();
+        $user_settings_controller = new UserSettingsController();
         $user_settings_controller->set_init_settings($user_id);
 
         return redirect('/');

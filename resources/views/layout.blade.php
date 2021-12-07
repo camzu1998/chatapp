@@ -44,7 +44,7 @@
                     </div>
                     <!-- Btns -->
                     <div class="btns-box flex-grow flex flex-col w-full">
-                        @if($room_id != 0)
+                        @if( $room_id != 0 && $rooms_data[$room_id]->admin_id == $user->id )
                             <button class="btn animated-button my-8 modalToggle btn-secondary" data="roomSettingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</span></button>
                         @endif
                         <button class="btn animated-button victoria-three my-4 w-full modalToggle" data="friendsModal"><span class="relative w-full text-center z-10"><i class="fas fa-users"></i> Znajomi</span></button>

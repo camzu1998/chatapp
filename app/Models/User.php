@@ -57,6 +57,9 @@ class User extends Authenticatable
 
         return $user_id;
     }
+    public function check_names( string $nick, string $email){
+        return DB::table($this->table)->where('nick', '=', $nick)->orWhere('email', '=', $email)->first();
+    }
     public function get_users(){
         return DB::table($this->table)->select('id', 'nick', 'profile_img')->get();
     }
