@@ -27,12 +27,33 @@
 
         <div class="w-screen mt-12 relative flex flex-col justify-center content-center items-center">
             <form class="flex flex-col items-center text-gray-800 py-4 startForm rounded-lg px-2" action="/register" method="POST">
-            <div class="w-full text-center text-lg form-text mb-8">Zarejestruj się</div>
+                <div class="w-full text-center text-lg form-text mb-8">Zarejestruj się</div>
                 @csrf
-                <input class="form-input my-2 mb-4 block w-9/12" type="text" name="nick" id="nick" placeholder="Nick" onchange="this.setAttribute('value', this.value);"/>
-                <input class="form-input my-2 mb-4 block w-9/12" type="email" name="email" id="email" placeholder="Email" onchange="this.setAttribute('value', this.value);"/>
-                <input class="form-input my-2 mb-4 block w-9/12" type="password" name="pass" id="pass" placeholder="Hasło"/>
-                <input class="form-input my-2 mb-4 block w-9/12" type="password" name="pass_2" id="pass_2" placeholder="Powtórz hasło"/>
+                <div class="input-group relative">
+                    <input class="form-input" type="text" name="nick" id="nick" required onchange="this.setAttribute('value', this.value);"/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Nick</label>
+                </div>
+                <div class="input-group relative">
+                    <input class="form-input" type="email" name="email" id="email" required onchange="this.setAttribute('value', this.value);"/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Email</label>
+                </div>
+                <div class="input-group relative">
+                    <input class="form-input" type="password" name="pass" id="pass" required onchange="this.setAttribute('value', this.value);"/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Hasło</label>
+                </div>
+                <div class="input-group relative">
+                    <input class="form-input" type="password" name="pass_2" id="pass_2" required onchange="this.setAttribute('value', this.value);"/>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label>Powtórz hasło</label>
+                </div>
+                
                 <button class="w-36 cta-btn text-gray-800 my-4 px-4 py-2 rounded-md" id="send" type="submit">Załóż konto <i class="fas fa-plus"></i></button>
                 <p class="form-text text-base mt-8">Wszedłeś tu przez przypadek? </br> <a href="/" class="text-blue-400">Wróć na strone główną.</a> </p>
             </form>

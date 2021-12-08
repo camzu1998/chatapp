@@ -52,7 +52,7 @@ class Controller extends BaseController
         $userModel = new User();
 
         $tmp = $userModel->check_names($request->input('nick'), $request->input('email'));
-        if(empty($tmp)){
+        if(!empty($tmp)){
             return back()->withErrors([
                 'email' => 'The provided credentials do not match our records.',
             ]);
@@ -82,5 +82,14 @@ class Controller extends BaseController
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

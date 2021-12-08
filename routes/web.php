@@ -22,6 +22,7 @@ use App\Http\Controllers\RoomController;
 
 Route::get('/', [Controller::class, 'login_form']);
 Route::get('/register_form', [Controller::class, 'register_form']);
+Route::get('/logout', [Controller::class, 'logout']);
 
 Route::get('/main', function(Request $request){
     $con = new App\Http\Controllers\Controller();
