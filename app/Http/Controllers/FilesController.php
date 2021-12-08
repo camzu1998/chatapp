@@ -16,12 +16,7 @@ class FilesController extends Controller
     ];
 
 
-    public function store(Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-        
+    public function store(Request $request){        
         $files = new Files();
         $file_data = array();
 

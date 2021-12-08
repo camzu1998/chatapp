@@ -14,9 +14,9 @@ class UserController extends Controller
     public function save_profile_image($file){
         if (!Auth::check()) {
             // The user is not logged in...
-            return redirect('/');
+            return false;
         }
-        
+
         //Check extension & weight
         if(!in_array($file->extension(), $this->profile_ext)){
             //Extension didn't pass

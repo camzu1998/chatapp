@@ -16,11 +16,6 @@ class UserSettingsController extends Controller
     ];
 
     public function save_user_settings(Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-        
         $user_id = Auth::id();
         $userSettingsModel = new \App\Models\UserSettings();
 

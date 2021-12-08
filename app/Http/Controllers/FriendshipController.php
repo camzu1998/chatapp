@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Auth;
 class FriendshipController extends Controller
 {
     public function get_user_friends($switch_response = 'json'){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-        
         $user_id = Auth::id();
         $friends_data = array();
         $banned_friends_data = array();
@@ -52,11 +47,6 @@ class FriendshipController extends Controller
     }
 
     public function save_friendship(Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $friendsModel = new \App\Models\Friendship();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();
@@ -88,11 +78,6 @@ class FriendshipController extends Controller
     }
 
     public function update_friendship_status(Request $request, $friend_id){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $friendsModel = new \App\Models\Friendship();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();

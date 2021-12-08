@@ -13,12 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
 {
-    public function get_newest_id($room_id = null){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-        
+    public function get_newest_id($room_id = null){        
         // Check if isset room_id
         if(empty($room_id) || !is_numeric($room_id))
             return false;
@@ -38,6 +33,11 @@ class MessagesController extends Controller
     }
 
     public function send(int $room_id, Request $request){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return redirect('/');
+        }
+
         $content = $request->input('content');
         if(empty($content))
             return false;
@@ -58,11 +58,6 @@ class MessagesController extends Controller
         return $this->get($room_id);
     }
     public function upload(int $room_id, Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         if(!$request->hasFile('file'))
             return false;
 
@@ -86,11 +81,6 @@ class MessagesController extends Controller
     }
 
     public function get($room_id = null){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $users_array = array();
         $file_array = array();
         
@@ -127,11 +117,6 @@ class MessagesController extends Controller
     }
 
     public function get_array($room_id = null){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $users_array = array();
         $file_array = array();
         

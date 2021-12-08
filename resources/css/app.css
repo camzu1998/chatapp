@@ -49,6 +49,7 @@ h2{
 }
 input:focus{
   outline:none;
+  box-shadow: none !important;
 }
 .input-group > label{
   color:#999; 
@@ -212,6 +213,11 @@ input:focus ~ .highlight {
 .btn-modal.btn-danger{
   border: 2px solid #F17C8A;
   box-sizing: border-box;
+  transition: box-shadow .5s ease-in-out;
+}
+.btn-danger:hover{
+  box-shadow: 0px 0px 10px 4px #F17C8A;
+  transition: box-shadow .5s ease-in-out;
 }
 .btn.disabled{
   cursor: default;
@@ -436,6 +442,11 @@ input:checked + .slider:before {
   border: 2px solid #59ED92;
   color: #EEFDF4;
   transform: translateX(-50%);
+  transition: box-shadow .5s ease-in-out;
+}
+.add-friends:hover{
+  box-shadow: 0px 0px 10px 4px #59ED92;
+  transition: box-shadow .5s ease-in-out;
 }
 .box_switch_modal{
   transform: translateY(-50%);
@@ -555,6 +566,32 @@ input:checked + .slider:before {
 	height: 100%;
   background: rgba(132, 1, 19, 1);
 	opacity: 1;
+}
+
+.cta-btn.btn-modal {
+  height: 35px;
+  width: 180px;
+  border: 2px solid #D00081;
+  line-height: 35px;
+  font-size: 15px;
+  background: transparent;
+  transition: box-shadow .5s ease-in-out;
+}
+
+.cta-btn.btn-modal:hover {
+  box-shadow: 0px 0px 10px 4px #D00081;
+  transition: box-shadow .5s ease-in-out;
+}
+#image-full-screen {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: auto;
+  max-width: calc(100vw - 30%);
+  max-height: 100%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
 }
 media(max-width: 1000px){
   .user-panel{

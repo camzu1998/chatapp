@@ -253,7 +253,7 @@
                 </div>
                 <button type="button" class="deleteRoom settings-btn btn-danger btn-modal absolute bottom-2 left-2" data="{{ $room_id }}">Usuń pokój <i class="far fa-trash-alt"></i></button>
                 <button type="button" class="add-friends settings-btn btn-modal modalToggle absolute bottom-2 left-1/2" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
-                <button type="button" class="cta-btn absolute bottom-2 right-2 form-submit box-content rounded-xl" id="update_room">Zapisz <i class="far fa-save"></i></button>
+                <button type="button" class="cta-btn btn-modal absolute bottom-2 right-2 form-submit box-content rounded-xl" id="update_room">Zapisz <i class="far fa-save"></i></button>
             </form>
 
             <form id="inviteFriendsModal" class="modal-xl modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">

@@ -1,3 +1,4 @@
+<img id="image-full-screen" src="" style="display:none;"/>
 <!-- Messages -->
 <div id="messagesList" class="w-full flex flex-col-reverse text-gray-200 px-12 pt-8" style="height: calc(100vh - 200px); overflow-y: auto;">
     @foreach ($messages as $msg)

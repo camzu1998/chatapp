@@ -81,6 +81,7 @@ $('.full-shadow').click(function(){
     $('.full-shadow').fadeOut();
     $('.modal').fadeOut();
     $('.fast_menu').fadeOut();
+    $('#image-full-screen').fadeOut();
 });
 $('#save_settings').click(function(){
     var fd = new FormData();
@@ -214,6 +215,14 @@ $('.friendship_menu').click(function(){
 });
 
 //CHAT
+$('.content-image').click(function(){
+    var src = $(this).prop('src');
+    $('#image-full-screen').prop('src', src);
+    $('#image-full-screen').fadeIn();
+    $('.full-shadow').fadeIn();
+
+    return false;
+});
 $('#send').click(function(){
     var user_id = $('#user_id').val();
     var img_ext = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];

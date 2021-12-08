@@ -16,11 +16,6 @@ class RoomController extends Controller
     protected $profile_ext = array('png', 'jpeg', 'jpg');
 
     public function get_user_rooms($switch_response = 'json'){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $user_id = Auth::id();
         $rooms_data = array();
         
@@ -57,11 +52,6 @@ class RoomController extends Controller
     }
 
     public function save_room(Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $roomModel = new \App\Models\Room();
         $userModel = new \App\Models\User();
         $friendsModel = new \App\Models\Friendship();
@@ -94,11 +84,6 @@ class RoomController extends Controller
     }
 
     public function update_room_status(Request $request, int $room_id){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $roomModel = new \App\Models\Room();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();
@@ -141,11 +126,6 @@ class RoomController extends Controller
      * Upload room profile image
      */
     public function upload_room_profile(int $room_id, Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         if(empty($room_id) || !$request->hasFile('room_profile'))
             return response()->json([
                 'err' => '1',
@@ -193,11 +173,6 @@ class RoomController extends Controller
      *  Update room data
      */
     public function update(Request $request, int $room_id){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         if(empty($room_id) || empty($request->input('update_room_name')))
             return response()->json([
                 'err' => '1',
@@ -228,11 +203,6 @@ class RoomController extends Controller
      *  Get room roommates
      */
     public function get_roommates(int $room_id){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $roommates_data = array();
         if(empty($room_id))
             return false;
@@ -257,11 +227,6 @@ class RoomController extends Controller
      * Delete room and connected data
      */
     public function delete_room(int $room_id){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         if(empty($room_id))
             return false;
         
@@ -278,11 +243,6 @@ class RoomController extends Controller
      * Send invites to friends
      */
     public function invite(int $room_id, Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $roomModel = new \App\Models\Room();
         $friendsModel = new \App\Models\Friendship();
         $user_id = Auth::id();
@@ -308,14 +268,11 @@ class RoomController extends Controller
     /**
      *  Get room data
      */
-    public function get_room(int $room_id){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-        
+    public function get_room(int $room_id){        
         $roomModel = new \App\Models\Room();
         $user_id = Auth::id();
+
+        //Check if user is in room
 
         return $roomModel->get($room_id);
     }

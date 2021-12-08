@@ -21,6 +21,9 @@ use App\Http\Controllers\RoomController;
 */
 
 Route::get('/', [Controller::class, 'login_form']);
+Route::get('/.well-known/acme-challenge/nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o', function(){
+    return 'nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o.U_4xLF8dgJ1k8O7LJc-iDhIvoxBMmlL84C3ANwg4VEw';
+});
 Route::get('/register_form', [Controller::class, 'register_form']);
 Route::get('/logout', [Controller::class, 'logout']);
 
