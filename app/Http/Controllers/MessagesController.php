@@ -127,12 +127,7 @@ class MessagesController extends Controller
         
         $tmp = $room_model->check(Auth::id(), $room_id);
         if(empty($tmp) || $tmp->status != 1)
-            return [
-                'messages'   => [],
-                'msg_users'  => [],
-                'newest_msg' => 0,
-                'files'      => [],
-            ];
+            return false;
         
         $msgs = $msgM->get($room_id, 10);
 
