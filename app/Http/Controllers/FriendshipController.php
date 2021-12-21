@@ -18,6 +18,15 @@ class FriendshipController extends Controller
         $userModel = new \App\Models\User();
 
         $friends = $friendsModel->get($user_id);
+        if(!is_array($friends) && !is_object($friends)){
+            if($switch_response == 'json'){
+                return response()->json([
+                    'friends_data' => $friends_data
+                ]);
+            }else if($switch_response == 'array'){
+                return $friends_data;
+            }
+        }
         foreach($friends as $friend){
             $invite = 0;
             if($friend->user_id == $user_id){
