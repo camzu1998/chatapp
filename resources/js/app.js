@@ -223,7 +223,14 @@ $('.content-image').click(function(){
 
     return false;
 });
-$('#send').click(function(){
+$('#content').keypress(function(e){
+    if(e.which === 13 && !e.shiftKey) {
+        e.preventDefault();
+
+        $('#send').trigger( "click" );
+    }
+});
+$('#send').on( "click", function() {
     var user_id = $('#user_id').val();
     var img_ext = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
     var fd = new FormData();
