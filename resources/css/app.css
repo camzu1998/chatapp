@@ -596,7 +596,10 @@ input:checked + .slider:before {
 .none{
   display: none;
 }
-
+#messagesList {
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}
 @media(max-width: 768px){
   .user-panel{
     width: 100%;
@@ -653,4 +656,14 @@ input:checked + .slider:before {
     font-size: 24px;
     left: 96%;
   }
+  #content {
+    height: 100px;
+  }
+  .formContainer {
+    height: 150px;
+  }
+  #messagesList {
+    height: calc(100vh - 250px);
+  }
+   
 }

@@ -1,6 +1,6 @@
 <img id="image-full-screen" src="" style="display:none;"/>
 <!-- Messages -->
-<div id="messagesList" class="w-full flex flex-col-reverse text-gray-200 px-12 pt-8" style="height: calc(100vh - 200px); overflow-y: auto;">
+<div id="messagesList" class="w-full flex flex-col-reverse text-gray-200 px-12 md:pt-8">
     @foreach ($messages as $msg)
         @if ($msg->user_id != $user->id)
             <div class="msg msg-left mb-12 relative p-2">
@@ -25,7 +25,7 @@
     @endforeach
 </div>
 <!-- Message Form -->
-<div class="flex flex-col fixed bottom-2 right-2 formContainer">
+<div class="flex flex-col fixed bottom-2 right-0 md:right-2 formContainer">
     <form class="w-full h-full flex flex-col relative" id="msgForm" enctype='multipart/form-data'>
         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
         <input type="hidden" name="room_id" id="room_id" value="{{ $room_id }}">
