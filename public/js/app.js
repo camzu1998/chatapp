@@ -2311,7 +2311,7 @@ $('#send').on("click", function () {
         html += '<div class="msg msg-left mb-12 relative p-2">';
       }
 
-      html += '<img src="http://localhost/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
+      html += '<img src="/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
     }
 
     $('#messagesList').html(html);
@@ -2357,7 +2357,7 @@ function load_messages() {
         html += '<div class="msg msg-left mb-12 relative p-2">';
       }
 
-      html += '<img src="http://localhost/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
+      html += '<img src="/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
     }
 
     $('#messagesList').html(html);

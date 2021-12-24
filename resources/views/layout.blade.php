@@ -27,9 +27,9 @@
         <div class="flex flex-row">
             <div class="user-panel absolute inset-x-0 top-0 text-center">
                 <div class="relative h-full">
-                    <div class="app-logo-chat w-full text-center text-white text-5xl">
+                    <a class="app-logo-chat block w-full text-center text-white text-5xl" href="/main">
                         Czatap
-                    </div>
+                    </a>
                     <i class="fas fa-bars" id="toggle-menu"></i>
                 </div>
                 <div class="flex flex-col h-screen text-center items-center" id="user-dashboard">
