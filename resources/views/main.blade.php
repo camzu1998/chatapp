@@ -1,6 +1,6 @@
 <div class="w-full flex flex-row flex-wrap">
-    <h2 class="heading w-full">Twoje pokoje: </h2>
-    <div class="list flex flex-row w-full flex-wrap">
+    <h2 class="heading w-full text-center md:text-left ">Twoje pokoje: </h2>
+    <div class="list flex flex-col md:flex-row w-full flex-wrap">
         @foreach ($rooms_data as $room_id => $room)
             <a class="friend relative flex flex-row flex-wrap" href="/room/{{ $room_id }}">
                 <div class="profile_container relative flex flex-row justify-center align-center items-center">
@@ -15,8 +15,8 @@
     </div>
 </div>
 <div class="w-full flex flex-row flex-wrap">
-    <h2 class="heading w-full">Twoi znajomi: </h2>
-    <div class="list flex flex-row w-full flex-wrap">
+    <h2 class="heading w-full text-center md:text-left">Twoi znajomi: </h2>
+    <div class="list flex flex-col md:flex-row w-full flex-wrap">
         @foreach ($friends_data as $friend_id => $friend)
             @if($friend['status'] == 1)
                 <div class="friend flex flex-row">

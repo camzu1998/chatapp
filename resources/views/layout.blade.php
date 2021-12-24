@@ -35,8 +35,8 @@
                 <div class="flex flex-col h-screen text-center items-center" id="user-dashboard">
                     <i class="fas fa-times" id="close-menu"></i>
                     <!-- Profile logo -->
-                    <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
-                    <div class="hello-user w-full text-center mb-8">
+                    <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image md:block none mt-8 mb-4"/>
+                    <div class="hello-user  md:w-full md:text-center md:mb-8">
                     Witaj {{ $user->nick }}
                         @if($room_id != 0)
                             w pokoju {{ $room->room_name }}
@@ -107,7 +107,7 @@
                 <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
             </div>
             <div class="w-full text-center mt-6">Wpisz nick i dodaj znajomego</div>
-            <form class="flex flex-row justify-around mt-2" id="add_friend_form" method="POST">
+            <form class="flex flex-row items-center justify-around mt-2" id="add_friend_form" method="POST">
                 @csrf
                 <div class="input-group relative">
                     <input class="form-input" type="text" name="nickname" id="nickname" required/>
@@ -159,22 +159,21 @@
             </div>
 
             <div class="w-full flex flex-row justify-evenly mt-6">
-                <div class="w-1/3 flex flex-col">
+                <div class="w-1/2 md:w-1/3 flex flex-col">
                     <span class="w-full text-center">Wyszukaj pokój</span>
-                    <div class="input-group relative">
-                        <input class="form-input" type="text" name="search_room" id="search_room" required/>
-                        <span class="highlight"></span>
-                        <span class="bar"></span>
-                        <label>Nazwa pokoju</label>
-                    </div>
                 </div>
-                <div class="w-1/3 text-center">
+                <div class="none md:w-1/3 text-center">
                     lub
                 </div>
-                <button class="w-1/3 cta-btn box-content rounded-xl modalToggle" data="addRoomModal" type="button">Utwórz pokój <i class="fas fa-users"></i></button>
+                <button class="w-1/2 md:w-1/3 cta-btn box-content rounded-xl modalToggle" data="addRoomModal" type="button">Utwórz pokój <i class="fas fa-users"></i></button>
             </div>
-
-            <div class="list flex flex-row flex-wrap flex-around">
+            <div class="input-group relative">
+                <input class="form-input" type="text" name="search_room" id="search_room" required/>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Nazwa pokoju</label>
+            </div>
+            <div class="list flex flex-col md:flex-row flex-wrap flex-around">
                 @foreach ($rooms_data as $room_id => $room)
                     <div class="friend relative flex flex-row flex-wrap">
                         <div class="profile_container relative flex flex-row justify-center align-center items-center">

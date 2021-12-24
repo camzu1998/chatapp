@@ -593,12 +593,19 @@ input:checked + .slider:before {
   transform: translate(-50%, -50%);
   z-index: 999;
 }
-media(max-width: 1000px){
+.none{
+  display: none;
+}
+
+@media(max-width: 768px){
   .user-panel{
     width: 100%;
-    height: 100px;
     z-index: 2;
   }
+  .hello-user {
+    line-height: 100px;
+    text-align: left;
+    }
   .formContainer{
     width: 100%;
   }
@@ -635,5 +642,15 @@ media(max-width: 1000px){
     bottom: 0;
     z-index: 3;
     background: #0C113D;
+  }
+  .content-panel {
+    margin-left: 0;
+  }
+  .modal {
+    width: 100%;
+  }
+  .close {
+    font-size: 24px;
+    left: 96%;
   }
 }
