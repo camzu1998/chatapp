@@ -18,7 +18,7 @@ class UserSettings extends Model
         return DB::table($this->table)->select('value')->where('user_id', '=', $user_id)->where('name', 'LIKE', $name)->get();
     }
 
-    public function set($user_id = 0, $name = '', $value = ''){
+    public function set(int $user_id, string $name, int $value){
         if(empty($name) || empty($user_id))
             return false;
 
@@ -26,10 +26,25 @@ class UserSettings extends Model
             $value = 0;
         }
 
-        DB::table($this->table)->upsert([
-            ['user_id' => $user_id, 'name' => $name, 'value' => $value]
-        ],  ['user_id', 'name'], ['value']);
+        DB::table($this->table)->where('user_id', $user_id)->where('name', $name)->update(['value' => $value]);
         
         return true;
+    }
+
+    public function add(int $user_id, string $name, int $value){
+        if(empty($name) || empty($user_id))
+            return false;
+
+        if(empty($value)){
+            $value = 0;
+        }
+
+        $id = DB::table($this->table)->insertGetId([
+            'user_id' => $user_id,
+            'name'    => $name,
+            'value'   => $value
+        ]);
+        
+        return $id;
     }
 }

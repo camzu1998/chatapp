@@ -2162,8 +2162,7 @@ $('#save_settings').click(function () {
     data: fd,
     contentType: false,
     processData: false
-  }).always(function (res) {
-    window.location.reload(true);
+  }).always(function (res) {// window.location.reload(true);
   });
 }); // ROOMS
 

@@ -102,7 +102,7 @@ $('#save_settings').click(function(){
         press_on_enter = 1;
 
     fd.append('_token', $('#token').val());
-    fd.append('sounds', sounds);
+    fd.append('sounds', sounds); 
     fd.append('notifications', notifications);
     fd.append('press_on_enter', press_on_enter);
 
@@ -113,7 +113,7 @@ $('#save_settings').click(function(){
         contentType: false,
         processData: false
     }).always(function(res){
-        window.location.reload(true);
+        // window.location.reload(true);
     });
 });
 // ROOMS

@@ -52,7 +52,7 @@ class UserSettingsController extends Controller
         $userSettingsModel = new \App\Models\UserSettings();
 
         foreach($this->inputs as $name => $init_val){
-            $userSettingsModel->set($user_id, $name, $init_val);
+            $userSettingsModel->add($user_id, $name, $init_val);
         }
 
         return true;
