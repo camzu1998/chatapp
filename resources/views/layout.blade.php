@@ -65,7 +65,7 @@
 
         <div id="settingsModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
             <div class="modal-title w-full text-center relative">Ustawienia
-                <span class="close absolute top-0 left-full">X</span>
+                <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
             </div>
             <form class="flex md:flex-row flex-col">
                 <div class="md:w-6/12 flex flex-col justify-center items-center">
@@ -216,7 +216,7 @@
                     <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
                 </div>
 
-                <div class="flex flex-row h-full w-full">
+                <div class="flex md:flex-row flex-col h-full w-full">
                     <!-- Left column -->
                     <div class="flex flex-col border-r-2 pr-2 mr-2 h-5/6 flex-wrap" style="border-color: #4d5499;"> 
                         <input type="file" name="room_profile" class="file_input rounded-full mb-4" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
