@@ -8,6 +8,9 @@
                     @if ($room->status == 0)
                         <i class="fas fa-user-clock waiting_friend"></i>
                     @endif
+                    @if($room->unreaded != 0)
+                        <span class="unreaded absolute bottom-2 left-2">{{ $room->unreaded }}</span>
+                    @endif
                 </div>
                 <div class="friend_name ml-2">{{ $room->room_name }}</div>
             </a>

@@ -34,21 +34,23 @@ class Messages extends Model
 
         return  DB::table($this->table)->select()->where('room_id', '=', $room_id)->latest()->first(); 
     }
+    public function get_difference(int $room_id, int $last_msg){
+
+        return  DB::table($this->table)->selectRaw('COUNT(id) as unreaded')->where('room_id', '=', $room_id)->where('id', '>', $last_msg)->first();
+    }
 
     public function create(int $room_id, string $content, int $file_id, int $user_id){
         if(empty($room_id) || empty($user_id) || (empty($content) && empty($file_id)))
             return false;
 
         $date = date('Y-m-d H:i:s');
-        DB::table($this->table)->insert([
+        return DB::table($this->table)->insertGetId([
             'user_id'    => $user_id,
             'room_id'    => $room_id,
             'file_id'    => $file_id,
             'content'    => $content,
             'created_at' => $date,
         ]);
-
-        return true;
     }
 
     public function delete_room(int $room_id){

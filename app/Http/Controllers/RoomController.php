@@ -19,8 +19,9 @@ class RoomController extends Controller
         $user_id = Auth::id();
         $rooms_data = array();
         
-        $roomModel = new \App\Models\Room();
-        $userModel = new \App\Models\User();
+        $roomModel = new Room();
+        $userModel = new User();
+        $msgsModel = new Messages();
 
         $user_rooms = $roomModel->get_user_rooms($user_id);
         if(empty($user_rooms[0])){
@@ -40,6 +41,12 @@ class RoomController extends Controller
             $rooms_data[$user_room->room_id]->admin_img = $user_data->profile_img;
             $rooms_data[$user_room->room_id]->status = $user_room->status;
             $rooms_data[$user_room->room_id]->nickname = $user_room->nickname;
+            $rooms_data[$user_room->room_id]->unreaded = 0;
+            //Unread messages
+            if($user_room->status == 1){
+                $res = $msgsModel->get_difference($user_room->room_id, $user_room->last_msg_id);
+                $rooms_data[$user_room->room_id]->unreaded = $res->unreaded;
+            }
         }
 
         if($switch_response == 'json'){

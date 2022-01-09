@@ -2269,8 +2269,10 @@ $('.content-image').click(function () {
 });
 $('#content').keypress(function (e) {
   if (e.which === 13 && !e.shiftKey) {
-    e.preventDefault();
-    $('#send').trigger("click");
+    if ($('#press_on_enter').prop('checked')) {
+      e.preventDefault();
+      $('#send').trigger("click");
+    }
   }
 });
 $('#send').on("click", function () {
@@ -2361,7 +2363,7 @@ function load_messages() {
     }
 
     $('#messagesList').html(html);
-    $('#notifySound').get(0).play();
+    if ($('#sounds').prop('checked')) $('#notifySound').get(0).play();
   });
   return false;
 }

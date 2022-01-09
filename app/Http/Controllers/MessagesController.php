@@ -7,6 +7,7 @@ use App\Models\Messages;
 use App\Models\Files;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\UserRoom;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Auth;
@@ -18,12 +19,12 @@ class MessagesController extends Controller
         if(empty($room_id) || !is_numeric($room_id))
             return false;
 
-        $room = new \App\Models\Room;
+        $room = new Room();
         $room_status = $room->check(Auth::id(), $room_id);
         if(empty($room_status->created_at) && $room_status->status != 1)
             return false;
 
-        $msgM = new \App\Models\Messages;
+        $msgM = new Messages();
         $msgs = $msgM->get_last($room_id);
         if(empty($msgs->id)){
             return false;
@@ -44,7 +45,7 @@ class MessagesController extends Controller
 
         // Check if isset room_id
         if(!empty($room_id)){
-            $room = new \App\Models\Room;
+            $room = new Room();
             $room_status = $room->check(Auth::id(), $room_id);
             if(empty($room_status->created_at) && $room_status->status != 1){
                 return false;
@@ -52,8 +53,10 @@ class MessagesController extends Controller
         }
         //Check if user is in the room
         $msg = new Messages();
+        $UserRoomModel = new UserRoom();
 
-        $msg->create($room_id, $content, 0, Auth::id());
+        $msg_id = $msg->create($room_id, $content, 0, Auth::id());
+        $UserRoomModel->set_user_msg($room_id, Auth::id(), $msg_id);
 
         return $this->get($room_id);
     }
@@ -72,11 +75,12 @@ class MessagesController extends Controller
         }
         $files_con = new FilesController();
         $msg = new Messages();
+        $UserRoomModel = new UserRoom();
         //Store file
         $file = $files_con->store($request);
         //Add message
-        $msg->create($room_id, '', $file['file_id'], Auth::id());
-
+        $msg_id = $msg->create($room_id, '', $file['file_id'], Auth::id());
+        $UserRoomModel->set_user_msg($room_id, Auth::id(), $msg_id);
         return $this->get($room_id);
     }
 
@@ -85,9 +89,9 @@ class MessagesController extends Controller
         $file_array = array();
         
         $msgM = new \App\Models\Messages;
-        $files_model = new \App\Models\Files;
-        $user_model = new \App\Models\User;
-        $room_model = new \App\Models\Room;
+        $files_model = new Files();
+        $user_model = new User();
+        $room_model = new Room();
         
         $tmp = $room_model->check(Auth::id(), $room_id);
         if(empty($tmp) || $tmp->status != 1)
@@ -107,11 +111,14 @@ class MessagesController extends Controller
                 'profile_img' => $msg_user->profile_img
             ];
         }
+        $UserRoomModel = new UserRoom();
+        $newest_id = $this->get_newest_id($room_id);
+        $UserRoomModel->set_user_msg($room_id, Auth::id(), $newest_id);
 
         return response()->json([
             'messages'   => $msgs,
             'msg_users'  => $users_array,
-            'newest_msg' => $this->get_newest_id($room_id),
+            'newest_msg' => $newest_id,
             'files'      => $file_array,
         ]);
     }
@@ -120,10 +127,10 @@ class MessagesController extends Controller
         $users_array = array();
         $file_array = array();
         
-        $msgM = new \App\Models\Messages;
-        $files_model = new \App\Models\Files;
-        $user_model = new \App\Models\User;
-        $room_model = new \App\Models\Room;
+        $msgM = new Messages();
+        $files_model = new Files();
+        $user_model = new User();
+        $room_model = new Room();
         
         $tmp = $room_model->check(Auth::id(), $room_id);
         if(empty($tmp) || $tmp->status != 1)

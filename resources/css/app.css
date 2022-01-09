@@ -600,6 +600,14 @@ input:checked + .slider:before {
   height: calc(100vh - 200px);
   overflow-y: auto;
 }
+.unreaded {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  background: #480827;
+  text-align: center;
+}
 @media(max-width: 768px){
   .user-panel{
     width: 100%;

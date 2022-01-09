@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserSettingsController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\RoomController;
+use App\Models\UserRoom;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +72,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     $room = new App\Http\Controllers\RoomController();
     $messages = new App\Http\Controllers\MessagesController();
     $UserSettingsController = new App\Http\Controllers\UserSettingsController();
+    $UserRoomModel = new UserRoom();
 
     $tmp = $messages->get_array($room_id);
     if($tmp == false){
@@ -90,6 +93,8 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     $data['admin_room_id'] = $room_id;
     $data['img_ext'] = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
     $data['content'] = 'chat';
+
+    $UserRoomModel->set_user_msg($room_id, Auth::id(), $tmp['newest_msg']);
 
     return $con->load('chat', $data);
 });
