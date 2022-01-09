@@ -15,7 +15,14 @@ class UserSettings extends Model
         if(empty($name) || empty($user_id))
             return false;
 
-        return DB::table($this->table)->select('value')->where('user_id', '=', $user_id)->where('name', 'LIKE', $name)->get();
+        return DB::table($this->table)->select('value')->where('user_id', '=', $user_id)->where('name', 'LIKE', $name)->first();
+    }
+
+    public function get_all(int $user_id){
+        if(empty($user_id))
+            return false;
+
+        return DB::table($this->table)->select()->where('user_id', '=', $user_id)->get();
     }
 
     public function set(int $user_id, string $name, int $value){

@@ -42,8 +42,9 @@ class UserSettingsController extends Controller
     }
     public function load_user_settings(){
         $user_id = Auth::id();
-
-
+        $userSettingsModel = new \App\Models\UserSettings();
+        
+        return $userSettingsModel->get_all($user_id);
     }
     public function set_init_settings($user_id = null){
         if(!$user_id)

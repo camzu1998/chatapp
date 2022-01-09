@@ -102,7 +102,7 @@ $('#save_settings').click(function(){
         press_on_enter = 1;
 
     fd.append('_token', $('#token').val());
-    fd.append('sounds', sounds); 
+    fd.append('sounds', sounds);
     fd.append('notifications', notifications);
     fd.append('press_on_enter', press_on_enter);
 
@@ -113,7 +113,7 @@ $('#save_settings').click(function(){
         contentType: false,
         processData: false
     }).always(function(res){
-        // window.location.reload(true);
+        window.location.reload(true);
     });
 });
 // ROOMS
@@ -225,9 +225,11 @@ $('.content-image').click(function(){
 });
 $('#content').keypress(function(e){
     if(e.which === 13 && !e.shiftKey) {
-        e.preventDefault();
+        if($('#press_on_enter').prop('checked')){
+            e.preventDefault();
 
-        $('#send').trigger( "click" );
+            $('#send').trigger( "click" );
+        }
     }
 });
 $('#send').on( "click", function() {
@@ -309,7 +311,9 @@ function load_messages(){
             html += '<img src="/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+content+'</p><span class="msg-date"></span></div></div>';
         }
         $('#messagesList').html(html);
-        $('#notifySound').get(0).play()
+
+        if($('#sounds').prop('checked'))
+            $('#notifySound').get(0).play()
     });
 
     return false;

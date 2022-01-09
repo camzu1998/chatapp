@@ -22,6 +22,7 @@
         </script>
         <link rel="manifest" href="/manifest.json">
         <meta name="csrf-token" content="{{ csrf_token() }}" />
+        <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </head>
     <body class="antialiased overflow-x-hidden">
         <div class="flex flex-row">
@@ -76,21 +77,21 @@
                 <div class="w-6/12 flex flex-col mt-8">
                     <div class="form-group flex flex-row mb-3 ml-3">
                         <label class="switch">
-                            <input type="checkbox" name="sounds" id="sounds" value="1">
+                            <input type="checkbox" name="sounds" id="sounds" value="1" @if( $user_settings[2]->value == 1 ) checked @endif >
                             <span class="slider round"></span>
                         </label>
                         <span class="label">Dźwięki są wyłączone</span>
                     </div>
                     <div class="form-group flex flex-row mb-3 ml-3">
                         <label class="switch">
-                            <input type="checkbox" name="notifications" id="notifications" value="1">
+                            <input type="checkbox" name="notifications" id="notifications" value="1" @if( $user_settings[0]->value == 1 ) checked @endif >
                             <span class="slider round"></span>
                         </label>
                         <span class="label">Powiadomienia są wyłączone</span>
                     </div>
                     <div class="form-group flex flex-row mb-3 ml-3">
                         <label class="switch">
-                            <input type="checkbox" name="press_on_enter" id="press_on_enter" value="1">
+                            <input type="checkbox" name="press_on_enter" id="press_on_enter" value="1" @if( $user_settings[1]->value == 1 ) checked @endif >
                             <span class="slider round"></span>
                         </label>
                         <span class="label">Wyślij na [Enter] jest wyłączone</span>
@@ -98,7 +99,7 @@
                 </div>
             </form>
             <div class="w-full h-full flex flex-row justify-end items-end">
-                <button class="cta-btn form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
+                <button class="cta-btn btn-modal absolute bottom-2 right-2 form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
             </div>
         </div>
 
@@ -109,13 +110,13 @@
             <div class="w-full text-center mt-6">Wpisz nick i dodaj znajomego</div>
             <form class="flex flex-row items-center justify-around mt-2" id="add_friend_form" method="POST">
                 @csrf
-                <div class="input-group relative">
+                <div class="input-group mr-4 relative">
                     <input class="form-input" type="text" name="nickname" id="nickname" required/>
                     <span class="highlight"></span>
                     <span class="bar"></span>
                     <label>Nickname</label>
                 </div>
-                <button class="cta-btn form-submit box-content rounded-xl" id="add_friend" type="button">Dodaj <i class="fas fa-paper-plane"></i></button>
+                <button class="cta-btn btn-modal form-submit box-content rounded-xl" id="add_friend" type="button">Dodaj <i class="fas fa-paper-plane"></i></button>
             </form>
             <div class="list flex flex-row flex-wrap flex-around">
                 @foreach ($friends_data as $friend_id => $friend)
@@ -165,7 +166,7 @@
                 <div class="none md:w-1/3 text-center">
                     lub
                 </div>
-                <button class="w-1/2 md:w-1/3 cta-btn box-content rounded-xl modalToggle" data="addRoomModal" type="button">Utwórz pokój <i class="fas fa-users"></i></button>
+                <button class="w-1/2 md:w-1/3 cta-btn btn-modal box-content rounded-xl modalToggle" data="addRoomModal" type="button">Utwórz pokój <i class="fas fa-users"></i></button>
             </div>
             <div class="input-group relative">
                 <input class="form-input" type="text" name="search_room" id="search_room" required/>
@@ -212,14 +213,14 @@
 
         @if( $room_id != 0 && $rooms_data[$room_id]->admin_id == $user->id )
             <form id="roomSettingsModal" class="modal-xl modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" enctype="multipart/form-data" method="post"  style="display:none">
-                <div class="modal-title w-full text-center relative">Ustawienia pokoju
+                <div class="modal-title w-full mb-4 text-center relative">Ustawienia pokoju
                     <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
                 </div>
 
                 <div class="flex flex-row h-full w-full">
                     <!-- Left column -->
-                    <div class="flex flex-col flex-wrap"> 
-                        <input type="file" name="room_profile" class="file_input rounded-full" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
+                    <div class="flex flex-col border-r-2 pr-2 mr-2 h-5/6 flex-wrap" style="border-color: #4d5499;"> 
+                        <input type="file" name="room_profile" class="file_input rounded-full mb-4" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
                         <div class="input-group relative">
                             <input class="form-input" type="text" name="update_room_name" id="update_room_name" value="{{ $rooms_data[$room_id]->room_name }}" required/>
                             <span class="highlight"></span>
@@ -232,7 +233,7 @@
                         <div class="w-full text-center">Wyrzuć znajomych</div>
                         <div class="list flex flex-col overflow-y-auto pr-2 overflow-x-hidden">
                             @foreach ($roommates_data as $roommate_id => $roommate)
-                                @if ($roommate['status'] == 1)
+                                @if ($roommate['status'] == 1 && $roommate_id != $user->id)
                                     <div class="friend relative w-full flex flex-row flex-wrap border-b-2">
                                         <div class="profile_container relative flex flex-row justify-center align-center items-center">
                                             <img src="{{ asset('storage/profiles_miniatures/'.$roommate['profile_img']) }}" class="profile-image"/>

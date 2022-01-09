@@ -31,9 +31,11 @@ Route::get('/main', function(Request $request){
     $con = new App\Http\Controllers\Controller();
     $friendship = new App\Http\Controllers\FriendshipController();
     $room = new App\Http\Controllers\RoomController();
+    $UserSettingsController = new App\Http\Controllers\UserSettingsController();
     
     $data['friends_data'] = $friendship->get_user_friends('array');
     $data['rooms_data'] = $room->get_user_rooms('array');
+    $data['user_settings'] = $UserSettingsController->load_user_settings();
     $data['roommates_data'] = [];
     $data['room_id'] = 0;
     $data['content'] = 'main';
@@ -67,6 +69,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     $friendship = new App\Http\Controllers\FriendshipController();
     $room = new App\Http\Controllers\RoomController();
     $messages = new App\Http\Controllers\MessagesController();
+    $UserSettingsController = new App\Http\Controllers\UserSettingsController();
 
     $tmp = $messages->get_array($room_id);
     if($tmp == false){
@@ -74,6 +77,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
     }
 
     
+    $data['user_settings'] = $UserSettingsController->load_user_settings();
     $data['friends_data'] = $friendship->get_user_friends('array');
     $data['rooms_data'] = $room->get_user_rooms('array');
     $data['room'] = $room->get_room($room_id);
