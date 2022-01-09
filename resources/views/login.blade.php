@@ -44,5 +44,6 @@
                 <p class="form-text text-base mt-8 mb-4">Nie masz konta? </br> <a href="/register_form" class="text-blue-400">Zarejestruj się!</a> </p>
             </form>
         </div>
+        <div>Icons made by <a href="https://www.freepik.com" rel="nofollow" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" rel="nofollow" title="Flaticon">www.flaticon.com</a></div>
     </body>
 </html>

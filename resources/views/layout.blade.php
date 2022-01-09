@@ -22,7 +22,6 @@
         </script>
         <link rel="manifest" href="/manifest.json">
         <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
     </head>
     <body class="antialiased overflow-x-hidden">
         <div class="flex flex-row">
@@ -68,13 +67,13 @@
             <div class="modal-title w-full text-center relative">Ustawienia
                 <span class="close absolute top-0 left-full">X</span>
             </div>
-            <form class="flex flex-row">
-                <div class="w-6/12 flex flex-col justify-center items-center">
+            <form class="flex md:flex-row flex-col">
+                <div class="md:w-6/12 flex flex-col justify-center items-center">
                     <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
                     <label for="input_profile" class="file-input text-center box-content rounded-xl px-2">Wgraj nowe zdjęcie <i class="fas fa-upload"></i></label>
                     <input type="file" name="input_profile" id="input_profile" style="display: none;"/>
                 </div>
-                <div class="w-6/12 flex flex-col mt-8">
+                <div class="md:w-6/12 md:items-start items-center flex flex-col mt-8" class="w-6/12 flex flex-col mt-8">
                     <div class="form-group flex flex-row mb-3 ml-3">
                         <label class="switch">
                             <input type="checkbox" name="sounds" id="sounds" value="1" @if( $user_settings[2]->value == 1 ) checked @endif >
@@ -98,8 +97,8 @@
                     </div>
                 </div>
             </form>
-            <div class="w-full h-full flex flex-row justify-end items-end">
-                <button class="cta-btn btn-modal absolute bottom-2 right-2 form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
+            <div class="w-full h-full flex flex-row md:justify-end justify-center items-end">
+                <button class="cta-btn btn-modal form-submit box-content rounded-xl" id="save_settings">Zapisz <i class="far fa-save"></i></button>
             </div>
         </div>
 
