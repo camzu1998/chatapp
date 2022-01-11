@@ -318,12 +318,14 @@ function load_messages(){
 
     return false;
 }
-
+//Refresh room message
 var worker = new Worker('/js/worker.js');
+var notifyWorker = new Worker('/js/notification.js');
 
 worker.onmessage = function(e) {
     var newest_id = e.data;
     if(newest_id > $('#newest_id').val()){
+        notifyWorker.postMessage({name: "notify_room_message", token: $('#token').val(), room: $('#room_id').val()});
         $('#newest_id').val(newest_id);
         load_messages();
     }
@@ -343,3 +345,16 @@ setInterval(function(){
 
     return false;
 }, 3000);
+//Check all room
+setInterval(function(){
+    notifyWorker.postMessage({name: "check_messages", token: $('#token').val()});
+
+    return false;
+}, 30000);
+
+Notification.requestPermission(function (permission) {
+    // If the user accepts, let's create a notification
+    if (permission === "granted") {
+        notifyWorker.postMessage({name: "notification"});
+    }
+});

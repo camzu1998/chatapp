@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserSettingsController;
@@ -116,4 +117,7 @@ Route::post('/chat/message/{room_id}', [MessagesController::class, 'send']);
 Route::post('/chat/file/{room_id}', [MessagesController::class, 'upload']);
 Route::get('/get_msg/{room_id}', [MessagesController::class, 'get']);
 Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_id']);
+//Notifications
+Route::get('/get_notify_data/{room_id}', [NotificationController::class, 'notify_room_message']);
+Route::get('/get_notify_data', [NotificationController::class, 'check_messages']);
 

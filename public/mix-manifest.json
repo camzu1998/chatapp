@@ -2,5 +2,6 @@
     "/js/app.js": "/js/app.js",
     "/sw.js": "/sw.js",
     "/js/worker.js": "/js/worker.js",
+    "/js/notification.js": "/js/notification.js",
     "/css/app.css": "/css/app.css"
 }

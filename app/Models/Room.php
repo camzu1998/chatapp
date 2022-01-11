@@ -40,11 +40,13 @@ class Room extends Model
             'created_at' => $Date,
         ]);
         DB::table($this->table[1])->insert([
-            'room_id'    => $id,
-            'user_id'    => $user_id,
-            'status'     => 1,
-            'nickname'   => '',
-            'created_at' => $Date,
+            'room_id'        => $id,
+            'user_id'        => $user_id,
+            'status'         => 1,
+            'last_msg_id'    => 0,
+            'last_notify_id' => 0,
+            'nickname'       => '',
+            'created_at'     => $Date,
         ]);
         return $id;
     }
@@ -55,11 +57,13 @@ class Room extends Model
 
         $Date = date('Y-m-d H:i:s');
         DB::table($this->table[1])->insert([
-            'room_id'    => $room_id,
-            'user_id'    => $user_id,
-            'status'     => 0,
-            'nickname'   => '',
-            'created_at' => $Date,
+            'room_id'        => $room_id,
+            'user_id'        => $user_id,
+            'status'         => 0,
+            'last_msg_id'    => 0,
+            'last_notify_id' => 0,
+            'nickname'       => '',
+            'created_at'     => $Date,
         ]);
         return true;
     }
@@ -95,7 +99,7 @@ class Room extends Model
 
         DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('id', '=', $room_id)->delete();
         DB::table($this->table[1])->where('room_id', '=', $room_id)->delete();
-        DB::table('messages')->where('room_id', '=', $room_id)->delete();
+        DB::table('messages')->where('room_id', '=', $room_id)->delete(); //Run Message Controller to delete messages & attachments
 
         return true;
     }
