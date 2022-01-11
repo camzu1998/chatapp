@@ -602,11 +602,16 @@ input:checked + .slider:before {
 }
 .unreaded {
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  background: #480827;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
   text-align: center;
+  background-image: url(/storage/images/notification.png);
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  background-position: center;
+  background-size: 40px 40px;
+  color: #ff5fff;
 }
 @media(max-width: 768px){
   .user-panel{
