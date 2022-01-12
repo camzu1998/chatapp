@@ -1,33 +1,4 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <!--META Tags-->
-        <meta charset="utf-8"/>
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="robots" content="NOFOLLOW, NOINDEX">
-        <!--Stylesheets-->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-        <link href="/css/login.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Advent+Pro:400,600|Encode+Sans:400,600" rel="stylesheet"/>
-    </head>
-    <body class="w-full h-screen relative">
-        <form class="absolute login_container py-8 px-6 flex flex-col flex-wrap w-full text-center mx-auto" action="/reset/{{ $token }}" method="POST">
-            @csrf
-            <div class="logo_box mb-2 mx-auto">
-                <img src="/img/logo.svg" class="hq_logo"/>
-            </div>
-            <input type="password" name="pass" placeholder="PASSWORD" class="login_input my-2 mx-auto "/>
-            <input type="password" name="pass2" placeholder="REPEAT PASSWORD" class="login_input my-2 mx-auto "/>
-            <button type="submit" class="login_submit login_input mt-2 mb-4 mx-auto">ZAPISZ</button>
-            <span class="w-full text-center" >Wszedłeś tu przypadkiem?</span>
-            <a href="/">Wróc do logowania</a>
-        </form>
-    </body>
-</html>
-<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -55,7 +26,7 @@
 
         <div class="w-screen mt-12 relative flex flex-col justify-center content-center items-center overflow-x-hidden">
             <form class="flex flex-col items-center text-gray-800 py-4 startForm rounded-lg px-2" action="/reset/{{ $token }}" method="POST">
-                <div class="w-full text-center text-lg form-text mb-8 mt-4">Zaloguj się</div>
+                <div class="w-full text-center text-lg form-text mb-8 mt-4">Ustaw hasło</div>
                 @csrf
                 <div class="input-group relative">
                     <input class="form-input" type="password" name="pass" id="pass" required onchange="this.setAttribute('value', this.value);"/>
