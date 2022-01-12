@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\UserSettingsController;
+use Illuminate\Support\Str;
+use App\Mail\ResetPassword;
+use Illuminate\Support\Facades\Mail;
 
 class Controller extends BaseController
 {
@@ -91,5 +94,61 @@ class Controller extends BaseController
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function remember_password(Request $request){
+        if(empty($request->email)){
+            return back()->withErrors(['email' => 'Provided email doesnt pass x']);
+        }
+
+        $userModel = new User();
+        $res = $userModel->check_email($request->email);
+        if($res != null){
+            $token = Str::random(40);
+            $affected = $userModel->set_token($res->id, $token);
+            if($affected != 1){
+                return back()->withErrors(['email' => 'Provided email doesnt pass xx']);
+            }
+            //Send email
+            Mail::to($res->email)->send(new ResetPassword($token));
+
+            return redirect('/');
+        }
+        return back()->withErrors(['email' => 'Provided email doesnt pass']);
+    }
+
+    public function reset(string $token){
+        if(empty($token)){
+            return redirect('/');
+        }
+        $userModel = new User();
+        //Check token
+        $res = $userModel->check_token($token);
+        if($res != null && $res != false){
+            return view('set_password', ['token' => $token]);
+        }
+
+        return redirect('/');
+    }
+
+    public function save_password(string $token, Request $request){
+        if(empty($request->pass) || empty($request->pass2)){
+            return back()->withErrors(['pass' => 'Provided password doesnt pass']);
+        }
+        if($request->pass != $request->pass2){
+            return back()->withErrors(['pass' => 'Provided passwords doesnt match']);
+        }
+        $userModel = new User();
+        //Check token
+        $res = $userModel->check_token($token);
+        if($res != null && $res != false){
+            $pass = Hash::make($request->pass);
+            //Store pass in db & clear token
+            $userModel->update_pass($pass, $token, $res->id);
+            //Redirect user to login page
+            return redirect('/');
+        }
+
+        return back()->withErrors(['pass' => 'An error occured']);
     }
 }

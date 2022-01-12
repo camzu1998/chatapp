@@ -11,7 +11,7 @@ onmessage = function(e) {
                 }
              };
             ajax.send('_token='+e.data.token);          
-        break;
+            break;
         case "check_messages":
             ajax.open('GET', '/get_notify_data');
             ajax.onload  = function() {
@@ -23,10 +23,10 @@ onmessage = function(e) {
                 }
              };
             ajax.send('_token='+e.data.token);   
-        break;
+            break;
         case "notification":
             var notification = new Notification("Hi there :)");
-        break;
+            break;
         default:
           console.error("Unknown message:", e.data.name);
     }

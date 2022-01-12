@@ -120,4 +120,15 @@ Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_i
 //Notifications
 Route::get('/get_notify_data/{room_id}', [NotificationController::class, 'notify_room_message']);
 Route::get('/get_notify_data', [NotificationController::class, 'check_messages']);
+// Reset password
+Route::post('/reset/{token}', [Controller::class, 'save_password']); //Store new pass in db 
+Route::post('/reset', [Controller::class, 'remember_password']); //Sending email to user with token to reset pass
+Route::get('/reset/{token}', [Controller::class, 'reset']); //Return form to set new pass
+Route::get('/forgot_password', function(){
+    if (Auth::check()){
+        return redirect('main');
+    }
+
+    return view('remember_password');
+});
 

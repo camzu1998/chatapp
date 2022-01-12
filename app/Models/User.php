@@ -87,4 +87,36 @@ class User extends Authenticatable
 
         return true;
     }
+    public function update_pass(string $pass, string $token, int $user_id){
+        return DB::table($this->table)->where('id', $user_id)->where('reset_token', 'LIKE', $token)->update([
+            'password'    => $pass,
+            'reset_token' => NULL
+        ]);
+    }
+
+    public function check_email(string $email, int $user_id = null){
+        if(empty($email))
+            return false;
+
+        if($user_id != null){
+            return DB::table($this->table)->where('email', 'LIKE', $email)->where('id', '!=', $user_id)->first();
+        }else{
+            return DB::table($this->table)->where('email', 'LIKE', $email)->first();
+        }
+    }
+
+    public function set_token(int $user_id, string $token = ""){
+        $date = date('Y-m-d H:i:s');
+
+        return DB::table($this->table)->where('id', $user_id)->update([
+            'reset_token' => $token
+        ]);
+    }
+
+    public function check_token(string $token){
+        if(empty($token))
+            return false;
+
+        return DB::table($this->table)->where('reset_token', 'LIKE', $token)->first();
+    }
 }

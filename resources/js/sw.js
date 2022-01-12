@@ -56,18 +56,17 @@ var CACHE_NAME = 'init_cache';
     //     );
     // });
     self.addEventListener('activate', function(event) {
-
-        var cacheAllowlist = ['init_cache'];
+      var cacheAllowlist = ['init_cache'];
       
-        event.waitUntil(
-          caches.keys().then(function(cacheNames) {
-            return Promise.all(
-              cacheNames.map(function(cacheName) {
-                if (cacheAllowlist.indexOf(cacheName) === -1) {
-                  return caches.delete(cacheName);
-                }
-              })
-            );
-          })
-        );
-      });
+      event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+          return Promise.all(
+            cacheNames.map(function(cacheName) {
+              if (cacheAllowlist.indexOf(cacheName) === -1) {
+                return caches.delete(cacheName);
+              }
+            })
+          );
+        })
+      );
+    });
