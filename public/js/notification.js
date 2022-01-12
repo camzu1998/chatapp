@@ -13,7 +13,10 @@ onmessage = function onmessage(e) {
 
       ajax.onload = function () {
         var res = ajax.response;
-        var notification = new Notification("Użytkownik " + res.user + " wysłał wiadomość do pokoju " + res.room);
+
+        if (res.status == true) {
+          var notification = new Notification("Użytkownik " + res.user + " wysłał wiadomość do pokoju " + res.room);
+        }
       };
 
       ajax.send('_token=' + e.data.token);
@@ -24,10 +27,19 @@ onmessage = function onmessage(e) {
 
       ajax.onload = function () {
         var res = ajax.response;
-        var notification = new Notification("Użytkownik " + res.user + " wysłał wiadomość do pokoju " + res.room);
+
+        if (res.length != 0) {
+          res.forEach(function (el, index) {
+            var notification = new Notification("Użytkownik " + el.user + " wysłał wiadomość do pokoju " + el.room);
+          });
+        }
       };
 
       ajax.send('_token=' + e.data.token);
+      break;
+
+    case "notification":
+      var notification = new Notification("Hi there :)");
       break;
 
     default:

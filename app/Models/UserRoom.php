@@ -29,4 +29,8 @@ class UserRoom extends Model
     public function set_user_msg(int $room_id, int $user_id, int $msg_id){
         return DB::table($this->table)->where('room_id', $room_id)->where('user_id', $user_id)->update(['last_msg_id' => $msg_id]);
     }
+
+    public function set_user_notify(int $room_id, int $user_id, int $notify_id){
+        return DB::table($this->table)->where('room_id', $room_id)->where('user_id', $user_id)->update(['last_notify_id' => $notify_id]);
+    }
 }
