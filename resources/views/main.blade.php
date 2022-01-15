@@ -8,11 +8,19 @@
                     @if ($room->status == 0)
                         <i class="fas fa-user-clock waiting_friend"></i>
                     @endif
-                    @if($room->unreaded != 0)
-                        <span class="unreaded absolute bottom-2 left-2">{{ $room->unreaded }}</span>
+                    @if($room->unreaded != 0 && $room->status == 1)
+                        <span class="unreaded absolute -top-1 -left-1">{{ $room->unreaded }}</span>
+                    @endif
+                    @if($room->status == 1)
+                        <img src="{{ asset('storage/profiles_miniatures/'.$room->last_msg_user_img) }}" class="profile-image-room absolute bottom-2 -right-1"/>
                     @endif
                 </div>
-                <div class="friend_name ml-2">{{ $room->room_name }}</div>
+                <div class="flex flex-col items-center justify-evenly">
+                    <div class="room_name ml-2">{{ $room->room_name }}</div>
+                    @if($room->status == 1)
+                        <div class="room_last_msg ml-2">{{ $room->last_msg_user }}: {{ $room->last_msg_content }}</div>
+                    @endif
+                </div>
             </a>
         @endforeach
     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 use App\Models\Friendship;
 use App\Models\Room;
@@ -42,10 +43,27 @@ class RoomController extends Controller
             $rooms_data[$user_room->room_id]->status = $user_room->status;
             $rooms_data[$user_room->room_id]->nickname = $user_room->nickname;
             $rooms_data[$user_room->room_id]->unreaded = 0;
+            $rooms_data[$user_room->room_id]->last_msg_user = "";
+            $rooms_data[$user_room->room_id]->last_msg_user_img = "";
+            $rooms_data[$user_room->room_id]->last_msg_content = "";
             //Unread messages
             if($user_room->status == 1){
                 $res = $msgsModel->get_difference($user_room->room_id, $user_room->last_msg_id);
                 $rooms_data[$user_room->room_id]->unreaded = $res->unreaded;
+                $last_msg = $msgsModel->get_last($user_room->room_id);
+                $rooms_data[$user_room->room_id]->last_msg_user = "Ty";
+                $rooms_data[$user_room->room_id]->last_msg_user_img = $user_data->profile_img;
+
+                if($last_msg->user_id != Auth::id()){
+                    $last_user_data = $userModel->get_user_data($last_msg->user_id);
+                    $rooms_data[$user_room->room_id]->last_msg_user = $last_user_data->nick;
+                    $rooms_data[$user_room->room_id]->last_msg_user_img = $last_user_data->profile_img;
+                }
+                $content = Str::limit($last_msg->content, 20);
+                if($last_msg->file_id != 0){
+                    $content = "Wysłał załącznik";
+                }
+                $rooms_data[$user_room->room_id]->last_msg_content = $content;
             }
         }
 

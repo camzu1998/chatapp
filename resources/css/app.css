@@ -601,17 +601,25 @@ input:checked + .slider:before {
   overflow-y: auto;
 }
 .unreaded {
-  border-radius: 50%;
   width: 40px;
   height: 40px;
   line-height: 40px;
   text-align: center;
-  background-image: url(/storage/images/notification.png);
+  background-image: url(/storage/images/5.svg);
   background-repeat: no-repeat;
   background-origin: content-box;
   background-position: center;
   background-size: 40px 40px;
-  color: #ff5fff;
+  color: #f0e8f0;
+}
+.room_last_msg {
+  color: #767b95;
+}
+.profile-image-room{
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  opacity: .9;
 }
 @media(max-width: 768px){
   .user-panel{

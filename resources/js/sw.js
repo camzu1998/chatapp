@@ -7,7 +7,6 @@ if ('serviceWorker' in navigator) {
 }
 var CACHE_NAME = 'init_cache';
     var urlsToCache = [
-        '/css/app.css',
         '/storage/sounds/mmm-2-tone-sexy.mp3',
     ];
 
@@ -69,4 +68,4 @@ var CACHE_NAME = 'init_cache';
           );
         })
       );
-    });
+    }); 
