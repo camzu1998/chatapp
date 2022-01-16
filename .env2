@@ -2,7 +2,7 @@ APP_NAME=Czatap
 APP_ENV=local
 APP_KEY=base64:hXS0HCVa9ZADXxsageeR1Wid9OxNakQgM8XZwwdPG1s=
 APP_DEBUG=true
-APP_URL=http://czatap.k-langer.pl
+APP_URL=https://czatap.k-langer.pl
 
 LOG_CHANNEL=stack
 LOG_LEVEL=debug

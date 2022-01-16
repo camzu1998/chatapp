@@ -62,15 +62,21 @@ class MessagesController extends Controller
     }
     public function upload(int $room_id, Request $request){
         if(!$request->hasFile('file'))
-            return false;
+            return response()->json([
+                'status' => false,
+                'step'   => 0
+            ]);;
 
         // Check if isset room_id
         if(!empty($room_id)){
             $room = new Room();
             //Check if user is in the room
             $room_status = $room->check(Auth::id(), $room_id);
-            if(empty($room_status->created_at) && $room_status->status != 1){
-                return false;
+            if(empty($room_status->created_at) || $room_status->status != 1){
+                return response()->json([
+                    'status' => false,
+                    'step'   => 1
+                ]);;
             }
         }
         $files_con = new FilesController();
@@ -95,7 +101,10 @@ class MessagesController extends Controller
         
         $tmp = $room_model->check(Auth::id(), $room_id);
         if(empty($tmp) || $tmp->status != 1)
-            return false;
+            return response()->json([
+                'status' => false,
+                'step'   => 0
+            ]);;
 
         $msgs = $msgM->get($room_id, 10);
 
