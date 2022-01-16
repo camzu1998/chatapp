@@ -216,7 +216,7 @@ $('.friendship_menu').click(function(){
 });
 
 //CHAT
-$('.content-image').click(function(){
+$('div').on('click', '.content-image', function(){
     var src = $(this).prop('src');
     $('#image-full-screen').prop('src', src);
     $('#image-full-screen').fadeIn();
