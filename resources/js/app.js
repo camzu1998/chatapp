@@ -40,9 +40,9 @@ $('.file_input').filepond({
 const chat_file = FilePond.create(document.getElementById('file'));
 chat_file.setOptions({
     server: {
-        url: '/chat/file/'+$('#room_id').val(),
+        url: '/chat/file',
         process: {
-            url: '/',
+            url: '/'+$('#room_id').val(),
             onload: (response) => {
                 chat_file.removeFile();
             },
