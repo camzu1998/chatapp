@@ -612,6 +612,7 @@ input:checked + .slider:before {
 }
 .room > .open_fast_menu{
   width: 30px;
+  z-index: 1;
 }
 .cta-btn.btn-modal.w-1\/2.md\:w-1\/3 {
   width: 33.3333333%;
