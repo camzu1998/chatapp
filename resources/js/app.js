@@ -58,7 +58,8 @@ $('#toggle-menu').click(function(){
     .hide()
     .fadeIn();
 });
-$('.open_fast_menu').click(function(){
+$('.open_fast_menu').click(function(e){
+    e.preventDefault();
     $(this).siblings('.fast_menu').fadeIn();
 });
 $('.cancel_fast_menu').click(function(){

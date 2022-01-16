@@ -2116,7 +2116,8 @@ chat_file.setOptions({
 $('#toggle-menu').click(function () {
   $('#user-dashboard').css("display", "flex").hide().fadeIn();
 });
-$('.open_fast_menu').click(function () {
+$('.open_fast_menu').click(function (e) {
+  e.preventDefault();
   $(this).siblings('.fast_menu').fadeIn();
 });
 $('.cancel_fast_menu').click(function () {
