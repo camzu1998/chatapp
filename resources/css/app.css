@@ -441,7 +441,6 @@ input:checked + .slider:before {
 .add-friends{
   border: 2px solid #59ED92;
   color: #EEFDF4;
-  transform: translateX(-50%);
   transition: box-shadow .5s ease-in-out;
 }
 .add-friends:hover{
@@ -669,6 +668,7 @@ input:checked + .slider:before {
   }
   .modal {
     width: 100%;
+    height: 100%;;
   }
   .close {
     font-size: 24px;
@@ -680,7 +680,7 @@ input:checked + .slider:before {
   .formContainer {
     height: 150px;
   }
-  #messagesList {
+  #messagesList { 
     height: calc(100vh - 250px);
   }
   .fast_menu {

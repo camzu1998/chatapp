@@ -45,15 +45,15 @@
                     <!-- Btns -->
                     <div class="btns-box flex-grow flex flex-col w-full"> 
                         @if( $room_id != 0 && $rooms_data[$room_id]->admin_id == $user->id )
-                            <button class="btn animated-button my-8 modalToggle btn-secondary" data="roomSettingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</span></button>
+                            <button class="btn animated-button my-1 md:my-8 modalToggle btn-secondary" data="roomSettingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</span></button>
                         @endif
-                        <button class="btn animated-button victoria-three my-4 w-full modalToggle" data="friendsModal"><span class="relative w-full text-center z-10"><i class="fas fa-users"></i> Znajomi</span></button>
-                        <button class="btn animated-button victoria-three my-4 w-full modalToggle" data="roomsModal"><span class="relative w-full text-center z-10"><i class="far fa-comment"></i> Pokoje</span></button>
-                        <button class="btn animated-button victoria-three my-4 w-full modalToggle" data="settingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-cogs"></i> Ustawienia</span></button>
+                        <button class="btn animated-button victoria-three my-1 md:my-4 w-full modalToggle" data="friendsModal"><span class="relative w-full text-center z-10"><i class="fas fa-users"></i> Znajomi</span></button>
+                        <button class="btn animated-button victoria-three my-1 md:my-4 w-full modalToggle" data="roomsModal"><span class="relative w-full text-center z-10"><i class="far fa-comment"></i> Pokoje</span></button>
+                        <button class="btn animated-button victoria-three my-1 md:my-4 w-full modalToggle" data="settingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-cogs"></i> Ustawienia</span></button>
                         @if($room_id != 0)
-                            <a href="/" class="btn animated-button btn-gray my-8 w-full"><span class="relative w-full text-center z-10"><i class="fas fa-arrow-left"></i> Wróc na stronę główną</span></a>
+                            <a href="/" class="btn animated-button btn-gray my-1 md:my-8 w-full"><span class="relative w-full text-center z-10"><i class="fas fa-arrow-left"></i> Wróc na stronę główną</span></a>
                         @endif
-                        <a href="/logout" class="btn animated-button mt-4 w-full logout"><span class="relative w-full text-center z-10"><i class="fas fa-sign-out-alt"></i> Wyloguj się</span></a>
+                        <a href="/logout" class="btn animated-button my-1 md:mt-4 w-full logout"><span class="relative w-full text-center z-10"><i class="fas fa-sign-out-alt"></i> Wyloguj się</span></a>
                     </div>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                 </div>
                 <button class="cta-btn btn-modal form-submit box-content rounded-xl" id="add_friend" type="button">Dodaj <i class="fas fa-paper-plane"></i></button>
             </form>
-            <div class="list flex flex-row flex-wrap flex-around">
+            <div class="list flex flex-col md:flex-row md:flex-wrap flex-around overflow-y-auto overflow-x-hidden h-full">
                 @foreach ($friends_data as $friend_id => $friend)
                     <div class="friend relative flex flex-row flex-wrap">
                         <div class="profile_container relative flex flex-row justify-center align-center items-center">
@@ -173,7 +173,7 @@
                 <span class="bar"></span>
                 <label>Nazwa pokoju</label>
             </div>
-            <div class="list flex flex-col md:flex-row flex-wrap flex-around">
+            <div class="list flex flex-col md:flex-row md:flex-wrap flex-around overflow-y-auto overflow-x-hidden h-full">
                 @foreach ($rooms_data as $room_id => $room)
                     <div class="friend relative flex flex-row flex-wrap">
                         <div class="profile_container relative flex flex-row justify-center align-center items-center">
@@ -216,9 +216,9 @@
                     <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
                 </div>
 
-                <div class="flex md:flex-row flex-col h-full w-full">
+                <div class="flex md:flex-row flex-col md:h-full h-4/5 overflow-y-hidden w-full">
                     <!-- Left column -->
-                    <div class="flex flex-col border-r-2 pr-2 mr-2 h-5/6 flex-wrap" style="border-color: #4d5499;"> 
+                    <div class="flex flex-col md:border-r-2 md:pr-2 md:mr-2 md:h-5/6 flex-wrap" style="border-color: #4d5499;"> 
                         <input type="file" name="room_profile" class="file_input rounded-full mb-4" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
                         <div class="input-group relative">
                             <input class="form-input" type="text" name="update_room_name" id="update_room_name" value="{{ $rooms_data[$room_id]->room_name }}" required/>
@@ -228,9 +228,9 @@
                         </div>
                     </div>
                     <!-- Right column -->
-                    <div class="w-full flex flex-col"> 
+                    <div class="w-full flex flex-col h-7/10 overflow-y-hidden"> 
                         <div class="w-full text-center">Wyrzuć znajomych</div>
-                        <div class="list flex flex-col overflow-y-auto pr-2 overflow-x-hidden">
+                        <div class="list flex flex-col overflow-y-auto h-full pr-2 overflow-x-hidden">
                             @foreach ($roommates_data as $roommate_id => $roommate)
                                 @if ($roommate['status'] == 1 && $roommate_id != $user->id)
                                     <div class="friend relative w-full flex flex-row flex-wrap border-b-2">
@@ -250,9 +250,11 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="deleteRoom settings-btn btn-danger btn-modal absolute bottom-2 left-2" data="{{ $room_id }}">Usuń pokój <i class="far fa-trash-alt"></i></button>
-                <button type="button" class="add-friends settings-btn btn-modal modalToggle absolute bottom-2 left-1/2" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
-                <button type="button" class="cta-btn btn-modal absolute bottom-2 right-2 form-submit box-content rounded-xl" id="update_room">Zapisz <i class="far fa-save"></i></button>
+                <div class="flex flex-col md:flex-row md:h-16 h-1/5 justify-between w-full md:items-end items-center">
+                    <button type="button" class="deleteRoom settings-btn btn-danger btn-modal" data="{{ $room_id }}">Usuń pokój <i class="far fa-trash-alt"></i></button>
+                    <button type="button" class="add-friends settings-btn btn-modal modalToggle" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
+                    <button type="button" class="cta-btn btn-modal form-submit box-content rounded-xl" id="update_room">Zapisz <i class="far fa-save"></i></button>
+                </div>
             </form>
 
             <form id="inviteFriendsModal" class="modal-xl modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
@@ -260,7 +262,7 @@
                     <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
                 </div>
 
-                <div class="flex flex-row flex-wrap w-full">
+                <div class="flex md:flex-row md:flex-wrap flex-col overflow-x-hidden overflow-y-auto w-full mb-9">
                     @foreach ($friends_data as $friend_id => $friend)
                         @if ($friend['status'] == 1)
                             <div class="friend relative w-full flex flex-row flex-wrap border-b-2">
