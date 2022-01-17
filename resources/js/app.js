@@ -332,6 +332,15 @@ worker.onmessage = function(e) {
     }
     console.log('Data received from worker');
 }
+notifyWorker.onmessage = function(e) {
+    var res = e.data[0];
+    
+    if(e.data == 'notification'){
+        var notification = new Notification("Hi there :)");
+    }else{
+        var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
+    }
+}
 
 worker.addEventListener('error', function(e) {
     alert('wystapil blad w linii: ' + e.lineno +
