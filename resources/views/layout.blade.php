@@ -48,7 +48,7 @@
                             <button class="btn animated-button my-1 md:my-8 modalToggle btn-secondary" data="roomSettingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-sliders-h"></i> Ustawienia pokoju</span></button>
                         @endif
                         <button class="btn animated-button victoria-three my-1 md:my-4 w-full modalToggle" data="friendsModal"><span class="relative w-full text-center z-10"><i class="fas fa-users"></i> Znajomi</span></button>
-                        <button class="btn animated-button victoria-three my-1 md:my-4 w-full modalToggle" data="roomsModal"><span class="relative w-full text-center z-10"><i class="far fa-comment"></i> Pokoje</span></button>
+                        <button class="btn animated-button victoria-three my-1 md:my-4 w-full modalToggle" data="roomsModal" id="roomsModalBtn"><span class="relative w-full text-center z-10"><i class="far fa-comment"></i> Pokoje</span></button>
                         <button class="btn animated-button victoria-three my-1 md:my-4 w-full modalToggle" data="settingsModal"><span class="relative w-full text-center z-10"><i class="fas fa-cogs"></i> Ustawienia</span></button>
                         @if($room_id != 0)
                             <a href="/" class="btn animated-button btn-gray my-1 md:my-8 w-full"><span class="relative w-full text-center z-10"><i class="fas fa-arrow-left"></i> Wróc na stronę główną</span></a>

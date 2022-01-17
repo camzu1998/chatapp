@@ -17,9 +17,7 @@ onmessage = function(e) {
             ajax.onload  = function() {
                 var res = ajax.response;
                 if(res.length != 0){
-                    res.forEach(function(el, index){
-                        postMessage(res);
-                    });
+                    postMessage(res);
                 }
              };
             ajax.send('_token='+e.data.token);   

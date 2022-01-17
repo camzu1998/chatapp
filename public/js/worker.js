@@ -1,1 +1,23 @@
-onmessage=function(e){var t=new XMLHttpRequest,s=e.data;null!=s[1]&&(t.onreadystatechange=function(){4==this.readyState&&200==this.status&&(console.log("Newest id: "+this.responseText),postMessage(this.responseText))},t.open("GET","/get_newest_id/"+s[1]),t.send("_token="+s[0]))};
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!********************************!*\
+  !*** ./resources/js/worker.js ***!
+  \********************************/
+onmessage = function onmessage(e) {
+  var ajax = new XMLHttpRequest();
+  var data = e.data;
+
+  if (data[1] != undefined) {
+    ajax.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        console.log('Newest id: ' + this.responseText);
+        postMessage(this.responseText);
+      }
+    };
+
+    ajax.open('GET', '/get_newest_id/' + data[1]);
+    ajax.send('_token=' + data[0]);
+  }
+};
+/******/ })()
+;

@@ -12,7 +12,7 @@ if ('serviceWorker' in navigator) {
 }
 
 var CACHE_NAME = 'init_cache';
-var urlsToCache = ['/css/app.css', '/storage/sounds/mmm-2-tone-sexy.mp3'];
+var urlsToCache = ['/storage/sounds/mmm-2-tone-sexy.mp3'];
 self.addEventListener('install', function (event) {
   // Perform install steps
   event.waitUntil(caches.open(CACHE_NAME).then(function (cache) {
