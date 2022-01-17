@@ -7,7 +7,7 @@ onmessage = function(e) {
             ajax.onload  = function() {
                 var res = ajax.response;
                 if(res.status == true){
-                    var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
+                    postMessage(res);
                 }
              };
             ajax.send('_token='+e.data.token);          
@@ -18,17 +18,16 @@ onmessage = function(e) {
                 var res = ajax.response;
                 if(res.length != 0){
                     res.forEach(function(el, index){
-                        var notification = new Notification("Użytkownik "+el.user+" wysłał wiadomość do pokoju "+el.room);
+                        postMessage(res);
                     });
                 }
              };
             ajax.send('_token='+e.data.token);   
             break;
         case "notification":
-            var notification = new Notification("Hi there :)");
+            postMessage('notification');
             break;
         default:
           console.error("Unknown message:", e.data.name);
     }
-    postMessage('Receiver');
 }
