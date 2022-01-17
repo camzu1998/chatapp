@@ -2,7 +2,7 @@
     <h2 class="heading w-full text-center md:text-left ">Twoje pokoje: </h2>
     <div class="list flex flex-col md:flex-row w-full flex-wrap">
         @foreach ($rooms_data as $room_id => $room)
-            <a class="friend room relative flex flex-row flex-wrap" href="/room/{{ $room_id }}">
+            <a class="friend room relative flex flex-row flex-wrap" href="/room/{{ $room_id }}" id="panel_room_{{ $room_id }}">
                 <div class="profile_container relative flex flex-row justify-center align-center items-center">
                     <img src="{{ asset('storage/room_miniatures/'.$room->room_img) }}" class="profile-image"/>
                     @if ($room->status == 0)
@@ -15,7 +15,7 @@
                         <img src="{{ asset('storage/profiles_miniatures/'.$room->last_msg_user_img) }}" class="profile-image-room absolute bottom-2 -right-1"/>
                     @endif
                 </div>
-                <div class="flex flex-col items-center justify-evenly">
+                <div class="flex flex-col items-center justify-evenly room_info">
                     <div class="room_name ml-2">{{ $room->room_name }}</div>
                     @if($room->status == 1)
                         <div class="room_last_msg ml-2">{{ $room->last_msg_user }}: {{ $room->last_msg_content }}</div>

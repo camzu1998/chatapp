@@ -326,18 +326,28 @@ var notifyWorker = new Worker('/js/notification.js');
 worker.onmessage = function(e) {
     var newest_id = e.data;
     if(newest_id > $('#newest_id').val()){
+
         notifyWorker.postMessage({name: "notify_room_message", token: $('#token').val(), room: $('#room_id').val()});
+
         $('#newest_id').val(newest_id);
+
         load_messages();
     }
     console.log('Data received from worker');
 }
 notifyWorker.onmessage = function(e) {
     var res = e.data[0];
+    console.log(res);
     
     if(e.data == 'notification'){
         var notification = new Notification("Hi there :)");
     }else{
+        var panel_room = $('#panel_room_'+res.room_id);
+        if(panel_room.length != 0){
+            panel_room.children('.profile_container').children('.unreaded').html(res.unreaded); // /main
+            panel_room.children('.room_info').children('.room_last_msg').html(res.user+': '+res.content); // /main
+            console.log(e.data.sum_unreaded);
+        }
         var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
     }
 }
