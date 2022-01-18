@@ -19,7 +19,11 @@
                             <img src="{{ asset('storage/'.$files[$msg->file_id][0]->path) }}" alt="{{ $files[$msg->file_id][0]->filename }}" class="content-image">
                         @endif
                     </p>
-                    <span class="msg-date"></span>
+                    @if ($msg->user_id != $user->id)
+                        <span class="msg-date absolute top-1 right-1">{{ $msg->created_at }}</span>
+                    @elseif ($msg->user_id == $user->id)
+                        <span class="msg-date absolute top-1 left-1">{{ $msg->created_at }}</span>
+                    @endif
                 </div>
             </div>
     @endforeach

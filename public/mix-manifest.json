@@ -1,7 +1,7 @@
 {
-    "/js/app.js": "/js/app.js",
-    "/sw.js": "/sw.js",
-    "/js/worker.js": "/js/worker.js",
-    "/js/notification.js": "/js/notification.js",
-    "/css/app.css": "/css/app.css"
+    "/js/app.js": "/js/app.js?id=06f3ecc1d5f7b6296d1d",
+    "/sw.js": "/sw.js?id=df28389920893f4e99f9",
+    "/js/worker.js": "/js/worker.js?id=862ab76428b809d2c6ab",
+    "/js/notification.js": "/js/notification.js?id=976e46c8c4168f03ba11",
+    "/css/app.css": "/css/app.css?id=dedb5bca50388a7c14fd"
 }
