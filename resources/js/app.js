@@ -342,13 +342,19 @@ notifyWorker.onmessage = function(e) {
     if(e.data == 'notification'){
         var notification = new Notification("Hi there :)");
     }else{
-        var panel_room = $('#panel_room_'+res.room_id);
-        if(panel_room.length != 0){
-            panel_room.children('.profile_container').children('.unreaded').html(res.unreaded); // /main
-            panel_room.children('.room_info').children('.room_last_msg').html(res.user+': '+res.content); // /main
-            console.log(e.data.sum_unreaded);
+        if(e.data.sum_unreaded != 0){
+            $('#roomsModalBtn').children('.btn-notify').html(e.data.sum_unreaded).fadeIn();
+        }else{
+            $('#roomsModalBtn').children('.btn-notify').html("").fadeOut();
         }
-        var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
+        if(typeof res !== undefined){
+            var panel_room = $('#panel_room_'+res.room_id);
+            if(panel_room.length != 0){
+                panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
+                panel_room.children('.room_info').children('.room_last_msg').html(res.user+': '+res.content);
+            }
+            var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
+        }
     }
 }
 
