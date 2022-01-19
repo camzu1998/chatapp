@@ -52,6 +52,26 @@ chat_file.setOptions({
         }
     },
 });
+const user_profile = FilePond.create(document.getElementById('user_profile_input_fieldset'));
+user_profile.setOptions({
+    allowMultiple: false,
+    stylePanelLayout: 'compact circle',
+    imagePreviewHeight: 170,
+    imageCropAspectRatio: '1:1',
+    styleLoadIndicatorPosition: 'center bottom',
+    styleProgressIndicatorPosition: 'right bottom',
+    styleButtonRemoveItemPosition: 'left bottom',
+    styleButtonProcessItemPosition: 'right bottom',
+    server: {
+        url: '/user/set_profile',
+        process: {
+            url: '/'+$('#user_id').val(),
+        },
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    },
+});
 $('#toggle-menu').click(function(){
     $('#user-dashboard')
     .css("display", "flex")
@@ -86,11 +106,6 @@ $('.full-shadow').click(function(){
 });
 $('#save_settings').click(function(){
     var fd = new FormData();
-    var files = $('#input_profile')[0].files;
-    
-    // Check file selected or not
-    if(files.length > 0 )
-        fd.append('input_profile',files[0]);
 
     var sounds = 0;
     if($('#sounds').prop('checked'))
@@ -109,12 +124,21 @@ $('#save_settings').click(function(){
 
     $.ajax({
         method: 'post',
-        url: '/save_settings',
+        url: '/user/set_settings',
         data: fd,
+        dataType: 'json',
         contentType: false,
         processData: false
     }).always(function(res){
-        window.location.reload(true);
+        if(res.status != 0){
+            //Fail
+
+        }
+        //Success
+        $('#feedback_wrapper').html(res.msg).fadeIn();
+        setTimeout(function(){
+            $('#feedback_wrapper').fadeOut();
+        }, 3500)
     });
 });
 // ROOMS
@@ -265,10 +289,12 @@ $('#send').on( "click", function() {
             }
             if(user_id == msg.user_id){
                 html += '<div class="msg msg-right mb-12 relative p-2">';
+                date = '<span class="msg-date absolute top-1 left-1">'+msg.created_at+'</span>';
             }else{
                 html += '<div class="msg msg-left mb-12 relative p-2">';
+                date = '<span class="msg-date absolute top-1 right-1">'+msg.created_at+'</span>';
             }
-            html += '<img src="/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+content+'</p><span class="msg-date"></span></div></div>';
+            html += '<img src="/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+content+'</p>'+date+'<span class="msg-date"></span></div></div>';
         }
         $('#messagesList').html(html);
     });
@@ -306,10 +332,12 @@ function load_messages(){
 
             if(user_id == msg.user_id){
                 html += '<div class="msg msg-right mb-12 relative p-2">';
+                date = '<span class="msg-date absolute top-1 left-1">'+msg.created_at+'</span>';
             }else{
                 html += '<div class="msg msg-left mb-12 relative p-2">';
+                date = '<span class="msg-date absolute top-1 right-1">'+msg.created_at+'</span>';
             }
-            html += '<img src="/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+content+'</p><span class="msg-date"></span></div></div>';
+            html += '<img src="/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+content+'</p>'+date+'<span class="msg-date"></span></div></div>';
         }
         $('#messagesList').html(html);
 

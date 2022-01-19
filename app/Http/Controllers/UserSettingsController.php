@@ -19,26 +19,34 @@ class UserSettingsController extends Controller
         $user_id = Auth::id();
         $userSettingsModel = new \App\Models\UserSettings();
 
-        //Check for profile upload
-        if ($request->hasFile('input_profile')) {
-            //Run UserController store functions
-            $usrCon = new \App\Http\Controllers\UserController();
-            $usrCon->save_profile_image($request->input_profile);
-        }
-
         foreach($this->inputs as $name => $init_val){
             switch($request->input($name)){
                 case 0:
-                    $userSettingsModel->set($user_id, $name, 0);
+                    if($userSettingsModel->set($user_id, $name, 0) != 1)
+                        return response()->json([
+                            'status' => 1,
+                            'msg'    => 'Błąd zapisu'
+                        ]);
                     break;
                 case 1:
-                    $userSettingsModel->set($user_id, $name, 1);
+                    if($userSettingsModel->set($user_id, $name, 1) != 1)
+                        return response()->json([
+                            'status' => 1,
+                            'msg'    => 'Błąd zapisu'
+                        ]);
                     break;
                 default:
-                    $userSettingsModel->set($user_id, $name, $init_val);
+                    if($userSettingsModel->set($user_id, $name, $init_val) != 1)
+                        return response()->json([
+                            'status' => 1,
+                            'msg'    => 'Błąd zapisu'
+                        ]);
             }
         }
-        return true;
+        return response()->json([
+            'status' => 0,
+            'msg'    => 'Ustawienia zapisano'
+        ]);
     }
     public function load_user_settings(){
         $user_id = Auth::id();
@@ -57,5 +65,20 @@ class UserSettingsController extends Controller
         }
 
         return true;
+    }
+
+    public function set_user_profile(Request $request){
+        if ($request->hasFile('input_profile')) {
+            //Run UserController store functions
+            $usrCon = new \App\Http\Controllers\UserController();
+            $res = $usrCon->save_profile_image($request->input_profile);
+            if(!$res){
+                return false;
+            }
+
+            return $res;
+        }
+
+        return false;
     }
 }
