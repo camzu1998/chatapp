@@ -199,6 +199,7 @@ input:focus ~ .highlight {
   margin-right: 40px;
   text-align: right;
   color: #094A00;
+  padding-top: 10px
 }
 .msg-right > .msg-user_name {
   color: rgb(9, 74, 0, 0.50);
@@ -628,6 +629,9 @@ input:checked + .slider:before {
   color: rgb(34, 0, 89, 0.50);
   font-size: 11px;
 }
+.msg-date.left-1 {
+  color: rgb(34,0,89,.5);
+}
 .btn-notify{
   transform: translateY(-50%);
   background-image: url(/storage/images/5.svg);
@@ -638,6 +642,12 @@ input:checked + .slider:before {
   color: #f0e8f0;
   width: 40px;
   font-size: 18px;
+}
+#feedback_wrapper{
+  transform: translateX(-50%);
+  background: #4a58d7;
+  min-width: 200px;
+  text-align: center;
 }
 @media(max-width: 768px){
   .user-panel{

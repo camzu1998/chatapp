@@ -33,9 +33,7 @@ class UserSettings extends Model
             $value = 0;
         }
 
-        DB::table($this->table)->where('user_id', $user_id)->where('name', $name)->update(['value' => $value]);
-        
-        return true;
+        return DB::table($this->table)->where('user_id', $user_id)->where('name', $name)->update(['value' => $value]);
     }
 
     public function add(int $user_id, string $name, int $value){

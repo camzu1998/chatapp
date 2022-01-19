@@ -46,24 +46,14 @@ Route::get('/main', function(Request $request){
     return $con->load('main', $data);
 });
 
-Route::post('/register', function(Request $request){
-    $con = new App\Http\Controllers\Controller();
-    return $con->register($request);
-});
-Route::post('/login', function(Request $request){
-    $con = new App\Http\Controllers\Controller();
-    return $con->authenticate($request);
-});
-Route::post('/save_settings', function(Request $request){
-    $user_settings = new App\Http\Controllers\UserSettingsController();
-    return $user_settings->save_user_settings($request);
-});
+Route::post('/register', [Controller::class, 'register']);
+Route::post('/login', [Controller::class, 'authenticate']);
+// User
+Route::post('/user/set_profile/{user_id}', [UserSettingsController::class, 'set_user_profile']);
+Route::post('/user/set_settings', [UserSettingsController::class, 'save_user_settings']);
 // Friendship
 Route::get('/friendship', [FriendshipController::class, 'get_user_friends']);
-Route::post('/friendship', function(Request $request){
-    $friendship = new App\Http\Controllers\FriendshipController();
-    return $friendship->save_friendship($request);
-});
+Route::post('/friendship', [FriendshipController::class, 'save_friendship']);
 Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
 // Room
 Route::get('/room', [RoomController::class, 'get_user_rooms']);

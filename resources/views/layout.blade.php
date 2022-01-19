@@ -72,9 +72,21 @@
             </div>
             <form class="flex md:flex-row flex-col">
                 <div class="md:w-6/12 flex flex-col justify-center items-center">
-                    <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/>
-                    <label for="input_profile" class="file-input text-center box-content rounded-xl px-2">Wgraj nowe zdjęcie <i class="fas fa-upload"></i></label>
-                    <input type="file" name="input_profile" id="input_profile" style="display: none;"/>
+                    <!-- <img src="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" class="profile-image mt-8 mb-4"/> -->
+                    <fieldset id="user_profile_input_fieldset">
+                        <legend>Files</legend>
+                        <!-- a list of already uploaded files -->
+                        <ul>
+                            <li>
+                                <label>
+                                    <input value="{{ asset('storage/profiles_miniatures/'.$user->profile_img) }}" checked type="checkbox"/>
+                                    {{ $user->profile_img }}
+                                </label>
+                            </li>
+                        </ul>
+                        <!-- our filepond input -->
+                        <input type="file" name="input_profile" id="user_profile_input" style="display: none;"/>
+                    </fieldset>
                 </div>
                 <div class="md:w-6/12 md:items-start items-center flex flex-col mt-8" class="w-6/12 flex flex-col mt-8">
                     <div class="form-group flex flex-row mb-3 ml-3">
@@ -332,6 +344,7 @@
             <button class="cta-btn absolute bottom-2 right-2 form-submit box-content rounded-xl" id="save_room">Zapisz <i class="far fa-save"></i></button>
         </div>
 
+        <div id="feedback_wrapper" class="absolute bottom-2 left-1/2 py-2 px-4 rounded-xl" style="display: none;"></div>
         <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}"/>
         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
         <audio style="display:none;" id="notifySound">
