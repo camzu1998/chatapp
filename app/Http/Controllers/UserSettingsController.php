@@ -11,38 +11,24 @@ class UserSettingsController extends Controller
 {
     protected $inputs = [
         'sounds' => 0,
-        'notifications' => 1,
+        'notifications' => 0,
         'press_on_enter' => 0
     ];
 
     public function save_user_settings(Request $request){
         $user_id = Auth::id();
-        $userSettingsModel = new \App\Models\UserSettings();
+        $userSettingsModel = new UserSettings();
 
         foreach($this->inputs as $name => $init_val){
             switch($request->input($name)){
                 case 0:
                     $res = $userSettingsModel->set($user_id, $name, 0);
-                    if($res == 0)
-                        return response()->json([
-                            'status' => 1,
-                            'msg'    => 'Błąd zapisu'
-                        ]);
                     break;
                 case 1:
                     $res = $userSettingsModel->set($user_id, $name, 1);
-                    if($res == 0)
-                        return response()->json([
-                            'status' => 1,
-                            'msg'    => 'Błąd zapisu'
-                        ]);
                     break;
                 default:
-                    if($userSettingsModel->set($user_id, $name, $init_val) == 0)
-                        return response()->json([
-                            'status' => 1,
-                            'msg'    => 'Błąd zapisu'
-                        ]);
+                    $userSettingsModel->set($user_id, $name, $init_val);
             }
         }
         return response()->json([
@@ -52,7 +38,7 @@ class UserSettingsController extends Controller
     }
     public function load_user_settings(){
         $user_id = Auth::id();
-        $userSettingsModel = new \App\Models\UserSettings();
+        $userSettingsModel = new UserSettings();
         
         return $userSettingsModel->get_all($user_id);
     }
@@ -60,7 +46,7 @@ class UserSettingsController extends Controller
         if(!$user_id)
             return false;
 
-        $userSettingsModel = new \App\Models\UserSettings();
+        $userSettingsModel = new UserSettings();
 
         foreach($this->inputs as $name => $init_val){
             $userSettingsModel->add($user_id, $name, $init_val);
@@ -72,7 +58,7 @@ class UserSettingsController extends Controller
     public function set_user_profile(Request $request){
         if ($request->hasFile('input_profile')) {
             //Run UserController store functions
-            $usrCon = new \App\Http\Controllers\UserController();
+            $usrCon = new UserController();
             $res = $usrCon->save_profile_image($request->input_profile);
             if(!$res){
                 return false;

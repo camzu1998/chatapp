@@ -25,15 +25,8 @@ class UserSettings extends Model
         return DB::table($this->table)->select()->where('user_id', '=', $user_id)->get();
     }
 
-    public function set(int $user_id, string $name, int $value){
-        if(empty($name) || empty($user_id))
-            return 0;
-
-        if(empty($value)){
-            $value = 0;
-        }
-
-        return DB::table($this->table)->where('user_id', $user_id)->where('name', 'LIKE', $name)->update(['value' => $value]);
+    public function set(int $user_id, string $name, int $value = 0){
+        return DB::table($this->table)->where('user_id', $user_id)->where('name', 'LIKE', $name)->update(['value' => $value, 'updated_at' => date('Y-m-d H:i:s')]);
     }
 
     public function add(int $user_id, string $name, int $value){
