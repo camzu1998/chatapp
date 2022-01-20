@@ -27,13 +27,13 @@ class UserSettings extends Model
 
     public function set(int $user_id, string $name, int $value){
         if(empty($name) || empty($user_id))
-            return false;
+            return 0;
 
         if(empty($value)){
             $value = 0;
         }
 
-        return DB::table($this->table)->where('user_id', $user_id)->where('name', $name)->update(['value' => $value]);
+        return DB::table($this->table)->where('user_id', $user_id)->where('name', 'LIKE', $name)->update(['value' => $value]);
     }
 
     public function add(int $user_id, string $name, int $value){

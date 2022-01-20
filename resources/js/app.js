@@ -130,9 +130,11 @@ $('#save_settings').click(function(){
         contentType: false,
         processData: false
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -140,6 +142,9 @@ $('#save_settings').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -165,9 +170,11 @@ $('#save_room').click(function(){
         contentType: false,
         processData: false
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -175,6 +182,9 @@ $('#save_room').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -185,9 +195,11 @@ $('#update_room').click(function(){
         url: '/room/'+$('#room_id').val()+'/update',
         data: $('#roomSettingsModal').serialize(),
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -195,6 +207,9 @@ $('#update_room').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -205,9 +220,11 @@ $('#send_invites').click(function(){
         url: '/room/'+$('#room_id').val()+'/invite',
         data: $('#inviteFriendsModal').serialize(),
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -215,6 +232,9 @@ $('#send_invites').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -224,9 +244,11 @@ $('.deleteRoom').click(function(){
         type: 'DELETE',
         url: '/room/'+$('#room_id').val(),
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -234,6 +256,9 @@ $('.deleteRoom').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -249,9 +274,11 @@ $('.room_menu').click(function(){
         url: '/room/'+room_id,
         data: 'button='+$(this).attr('id'),
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -259,6 +286,9 @@ $('.room_menu').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -280,9 +310,11 @@ $('#add_friend').click(function(){
         url: '/friendship',
         data: $('#add_friend_form').serialize(),
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -290,6 +322,9 @@ $('#add_friend').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -305,9 +340,11 @@ $('.friendship_menu').click(function(){
         url: '/friendship/'+friend_id,
         data: 'button='+$(this).attr('id'),
     }).always(function(res){
+        var fail = false;
         if(res.status != 0){
             //Fail
             $('#feedback_wrapper').addClass('danger');
+            fail = true;
         }
         //Success
         $('#feedback_wrapper').html(res.msg).fadeIn();
@@ -315,6 +352,9 @@ $('.friendship_menu').click(function(){
             $('#feedback_wrapper').fadeOut();
             if($('#feedback_wrapper').hasClass('danger')){
                 $('#feedback_wrapper').removeClass('danger');
+            }
+            if(!fail){
+                window.location.reload(true);
             }
         }, 3500);
     });
@@ -449,7 +489,8 @@ notifyWorker.onmessage = function(e) {
     console.log(res);
     
     if(e.data == 'notification'){
-        var notification = new Notification("Hi there :)");
+        if($('#notifications').prop('checked'))
+            var notification = new Notification("Hi there :)");
     }else{
         if(e.data.sum_unreaded != 0){
             $('#roomsModalBtn').children('.btn-notify').html(e.data.sum_unreaded).fadeIn();
@@ -462,7 +503,8 @@ notifyWorker.onmessage = function(e) {
                 panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
                 panel_room.children('.room_info').children('.room_last_msg').html(res.user+': '+res.content);
             }
-            var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
+            if($('#notifications').prop('checked'))
+                var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
         }
     }
 }
@@ -487,9 +529,11 @@ setInterval(function(){
     return false;
 }, 30000);
 
-Notification.requestPermission(function (permission) {
-    // If the user accepts, let's create a notification
-    if (permission === "granted") {
-        notifyWorker.postMessage({name: "notification"});
-    }
-});
+if($('#notifications').prop('checked')){
+    Notification.requestPermission(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+            notifyWorker.postMessage({name: "notification"});
+        }
+    });
+}
