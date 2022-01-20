@@ -574,7 +574,7 @@ input:checked + .slider:before {
   border: 2px solid #D00081;
   line-height: 35px;
   font-size: 15px;
-  background: transparent;
+  background: linear-gradient(135deg, rgba(37,14,64,1) 25%, rgba(47,0,101,1) 50%, rgba(37,14,64,1) 75%); 
   transition: box-shadow .5s ease-in-out;
 }
 
