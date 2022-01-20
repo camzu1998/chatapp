@@ -22,21 +22,23 @@ class UserSettingsController extends Controller
         foreach($this->inputs as $name => $init_val){
             switch($request->input($name)){
                 case 0:
-                    if($userSettingsModel->set($user_id, $name, 0) != 1)
+                    $res = $userSettingsModel->set($user_id, $name, 0);
+                    if($res == 0)
                         return response()->json([
                             'status' => 1,
                             'msg'    => 'Błąd zapisu'
                         ]);
                     break;
                 case 1:
-                    if($userSettingsModel->set($user_id, $name, 1) != 1)
+                    $res = $userSettingsModel->set($user_id, $name, 1);
+                    if($res == 0)
                         return response()->json([
                             'status' => 1,
                             'msg'    => 'Błąd zapisu'
                         ]);
                     break;
                 default:
-                    if($userSettingsModel->set($user_id, $name, $init_val) != 1)
+                    if($userSettingsModel->set($user_id, $name, $init_val) == 0)
                         return response()->json([
                             'status' => 1,
                             'msg'    => 'Błąd zapisu'

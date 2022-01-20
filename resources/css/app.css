@@ -642,7 +642,7 @@ input:checked + .slider:before {
   text-align: center;
 }
 #feedback_wrapper.danger{
-  background: rgba(132, 1, 19, 1);
+  background: rgb(206, 29, 53);
 }
 @media(max-width: 768px){
   .user-panel{
