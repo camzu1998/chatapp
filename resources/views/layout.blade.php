@@ -225,7 +225,7 @@
             </div>
         </div>
         @if( $room_id != 0 && $rooms_data[$room_id]->admin_id == $user->id )
-            <div id="roomSettingsModal" class="modal-xl modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
+            <form id="roomSettingsModal" class="modal-xl modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
                 <div class="modal-title w-full mb-4 text-center relative">Ustawienia pokoju
                     <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
                 </div>
@@ -269,9 +269,9 @@
                     <button type="button" class="add-friends settings-btn btn-modal modalToggle" data="inviteFriendsModal">Zaproś znajomych <i class="fas fa-user-plus"></i></button>
                     <button type="button" class="cta-btn btn-modal form-submit box-content rounded-xl" id="update_room">Zapisz <i class="far fa-save"></i></button>
                 </div>
-            </div>
+            </form>
 
-            <div id="inviteFriendsModal" class="modal-xl modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
+            <form id="inviteFriendsModal" class="modal-xl modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">
                 <div class="modal-title w-full text-center relative">Zaproś znajomych do pokoju
                     <span class="close absolute top-0 left-full"><i class="fas fa-times"></i></span>
                 </div>
@@ -294,7 +294,7 @@
                 </div>
                 <button type="button" class="back settings-btn btn-modal btn-danger absolute bottom-2 left-2 modalToggle" data="roomSettingsModal">Wróć <i class="fas fa-chevron-left"></i></button>
                 <button type="button" class="cta-btn absolute bottom-2 right-2 form-submit box-content rounded-xl" id="send_invites">Zaproś <i class="fas fa-user-plus"></i></button>
-            </div>
+            </form>
         @endif
 
         <div id="addRoomModal" class="modal flex flex-col absolute left-2/4 top-2/4 p-4 rounded-xl" style="display:none">

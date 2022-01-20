@@ -62,7 +62,8 @@ class FriendshipController extends Controller
 
         if(empty($request->nickname)){
             return response()->json([
-                'msg' => 'Friend id not defined'
+                'status' => 1,
+                'msg'    => 'Friend id not defined'
             ]);
         }
         $friend_id = $userModel->get_user_id($request->nickname);
@@ -70,19 +71,22 @@ class FriendshipController extends Controller
         $res = $friendsModel->check($user_id, $friend_id->id);
         if(!empty($res[0])){
             return response()->json([
-                'msg' => 'Friend already exist'
+                'status' => 2,
+                'msg'    => 'Friend already exist'
             ]); 
         }
 
 
         if($friendsModel->save($user_id, $friend_id->id)){
             return response()->json([
-                'msg' => 'Friend added'
+                'status' => 0,
+                'msg'    => 'Friend added'
             ]); 
         }
 
         return response()->json([
-            'msg' => 'Friend isnt added but not your fault :)'
+            'status' => 3,
+            'msg'    => 'Friend isnt added but not your fault :)'
         ]);
     }
 
@@ -95,14 +99,16 @@ class FriendshipController extends Controller
         //Valid status
         if(!in_array($request->button, $actions)){
             return response()->json([
-                'msg' => 'Invalid action'
+                'status' => 1,
+                'msg'    => 'Invalid action'
             ]);
         }
         //Valid friendship
         $res = $friendsModel->check($user_id, $friend_id);
         if(empty($res[0])){
             return response()->json([
-                'msg' => 'Friendship never exist'
+                'status' => 2,
+                'msg'    => 'Friendship never exist'
             ]); 
         }
         switch($request->button){
@@ -123,6 +129,15 @@ class FriendshipController extends Controller
             break;
         }
         //Update friendship status
-        return $status;
+        if($status != 0){
+            return response()->json([
+                'status' => 0,
+                'msg'    => 'Success'
+            ]);
+        }
+        return response()->json([
+            'status' => 3,
+            'msg'    => 'Error'
+        ]);
     }
 }
