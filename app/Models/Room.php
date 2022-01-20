@@ -97,11 +97,10 @@ class Room extends Model
         if(empty($tmp))
             return false;
 
-        DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('id', '=', $room_id)->delete();
         DB::table($this->table[1])->where('room_id', '=', $room_id)->delete();
         DB::table('messages')->where('room_id', '=', $room_id)->delete(); //Run Message Controller to delete messages & attachments
 
-        return true;
+        return DB::table($this->table[0])->where('admin_id', '=', $admin_id)->where('id', '=', $room_id)->delete();;
     }
 
     public function update_img($room_id = null, $filename = null){

@@ -641,6 +641,9 @@ input:checked + .slider:before {
   min-width: 200px;
   text-align: center;
 }
+#feedback_wrapper.danger{
+  background: rgba(132, 1, 19, 1);
+}
 @media(max-width: 768px){
   .user-panel{
     width: 100%;
