@@ -280,7 +280,18 @@ $('#add_friend').click(function(){
         url: '/friendship',
         data: $('#add_friend_form').serialize(),
     }).always(function(res){
-        window.location.reload(true);
+        if(res.status != 0){
+            //Fail
+            $('#feedback_wrapper').addClass('danger');
+        }
+        //Success
+        $('#feedback_wrapper').html(res.msg).fadeIn();
+        setTimeout(function(){
+            $('#feedback_wrapper').fadeOut();
+            if($('#feedback_wrapper').hasClass('danger')){
+                $('#feedback_wrapper').removeClass('danger');
+            }
+        }, 3500);
     });
 });
 $('.friendship_menu').click(function(){
@@ -294,7 +305,18 @@ $('.friendship_menu').click(function(){
         url: '/friendship/'+friend_id,
         data: 'button='+$(this).attr('id'),
     }).always(function(res){
-        window.location.reload(true);
+        if(res.status != 0){
+            //Fail
+            $('#feedback_wrapper').addClass('danger');
+        }
+        //Success
+        $('#feedback_wrapper').html(res.msg).fadeIn();
+        setTimeout(function(){
+            $('#feedback_wrapper').fadeOut();
+            if($('#feedback_wrapper').hasClass('danger')){
+                $('#feedback_wrapper').removeClass('danger');
+            }
+        }, 3500);
     });
 });
 
