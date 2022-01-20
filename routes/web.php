@@ -89,10 +89,7 @@ Route::get('/room/{room_id}', function($room_id, Request $request){
 
     return $con->load('chat', $data);
 });
-Route::post('/room', function(Request $request){
-    $room = new App\Http\Controllers\RoomController();
-    return $room->save_room($request);
-});
+Route::post('/room', [RoomController::class, 'save_room']);
 Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);
 //Room settings
 Route::delete('/room/{room_id}', [RoomController::class, 'delete_room']);

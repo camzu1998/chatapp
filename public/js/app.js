@@ -2184,13 +2184,19 @@ $('#save_settings').click(function () {
     contentType: false,
     processData: false
   }).always(function (res) {
-    if (res.status != 0) {//Fail
+    if (res.status != 0) {
+      //Fail
+      $('#feedback_wrapper').addClass('danger');
     } //Success
 
 
     $('#feedback_wrapper').html(res.msg).fadeIn();
     setTimeout(function () {
       $('#feedback_wrapper').fadeOut();
+
+      if ($('#feedback_wrapper').hasClass('danger')) {
+        $('#feedback_wrapper').removeClass('danger');
+      }
     }, 3500);
   });
 }); // ROOMS
@@ -2208,10 +2214,24 @@ $('#save_room').click(function () {
     method: 'post',
     url: '/room',
     data: fd,
+    dataType: 'json',
     contentType: false,
     processData: false
   }).always(function (res) {
-    window.location.reload(true);
+    if (res.status != 0) {
+      //Fail
+      $('#feedback_wrapper').addClass('danger');
+    } //Success
+
+
+    $('#feedback_wrapper').html(res.msg).fadeIn();
+    setTimeout(function () {
+      $('#feedback_wrapper').fadeOut();
+
+      if ($('#feedback_wrapper').hasClass('danger')) {
+        $('#feedback_wrapper').removeClass('danger');
+      }
+    }, 3500);
   });
 });
 $('#update_room').click(function () {
@@ -2220,7 +2240,20 @@ $('#update_room').click(function () {
     url: '/room/' + $('#room_id').val() + '/update',
     data: $('#roomSettingsModal').serialize()
   }).always(function (res) {
-    window.location.reload(true);
+    if (res.status != 0) {
+      //Fail
+      $('#feedback_wrapper').addClass('danger');
+    } //Success
+
+
+    $('#feedback_wrapper').html(res.msg).fadeIn();
+    setTimeout(function () {
+      $('#feedback_wrapper').fadeOut();
+
+      if ($('#feedback_wrapper').hasClass('danger')) {
+        $('#feedback_wrapper').removeClass('danger');
+      }
+    }, 3500);
   });
 });
 $('#send_invites').click(function () {
@@ -2229,14 +2262,41 @@ $('#send_invites').click(function () {
     url: '/room/' + $('#room_id').val() + '/invite',
     data: $('#inviteFriendsModal').serialize()
   }).always(function (res) {
-    window.location.reload(true);
+    if (res.status != 0) {
+      //Fail
+      $('#feedback_wrapper').addClass('danger');
+    } //Success
+
+
+    $('#feedback_wrapper').html(res.msg).fadeIn();
+    setTimeout(function () {
+      $('#feedback_wrapper').fadeOut();
+
+      if ($('#feedback_wrapper').hasClass('danger')) {
+        $('#feedback_wrapper').removeClass('danger');
+      }
+    }, 3500);
   });
 });
 $('.deleteRoom').click(function () {
   $.ajax({
     type: 'DELETE',
     url: '/room/' + $('#room_id').val()
-  }).always(function (res) {// window.location.reload(true);
+  }).always(function (res) {
+    if (res.status != 0) {
+      //Fail
+      $('#feedback_wrapper').addClass('danger');
+    } //Success
+
+
+    $('#feedback_wrapper').html(res.msg).fadeIn();
+    setTimeout(function () {
+      $('#feedback_wrapper').fadeOut();
+
+      if ($('#feedback_wrapper').hasClass('danger')) {
+        $('#feedback_wrapper').removeClass('danger');
+      }
+    }, 3500);
   });
 });
 $('.room_menu').click(function () {
@@ -2250,7 +2310,20 @@ $('.room_menu').click(function () {
     url: '/room/' + room_id,
     data: 'button=' + $(this).attr('id')
   }).always(function (res) {
-    window.location.reload(true);
+    if (res.status != 0) {
+      //Fail
+      $('#feedback_wrapper').addClass('danger');
+    } //Success
+
+
+    $('#feedback_wrapper').html(res.msg).fadeIn();
+    setTimeout(function () {
+      $('#feedback_wrapper').fadeOut();
+
+      if ($('#feedback_wrapper').hasClass('danger')) {
+        $('#feedback_wrapper').removeClass('danger');
+      }
+    }, 3500);
   });
 });
 $('body').on('click', '.btn_invite', function () {

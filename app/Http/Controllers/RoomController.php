@@ -85,7 +85,8 @@ class RoomController extends Controller
 
         if(empty($request->add_friend)){
             return response()->json([
-                'msg' => 'Please add some friends to room'
+                'status' => 1,
+                'msg'    => 'Please add some friends to room'
             ]);
         }
 
@@ -105,11 +106,15 @@ class RoomController extends Controller
             $roomModel->add_user($room_id, $friend_id);
         }
 
-        return true;
+        return response()->json([
+            'status' => 0,
+            'msg'    => 'Saved room'
+        ]);
     }
 
     public function update_room_status(Request $request, int $room_id){
         $roomModel = new \App\Models\Room();
+        $userRoomModel = new \App\Models\UserRoom();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();
         $actions = array('acceptInvite', 'decelineInvite', 'outRoom', 'blockRoom', 'deleteRoom');
@@ -117,6 +122,7 @@ class RoomController extends Controller
         //Valid action
         if(!in_array($request->button, $actions)){
             return response()->json([
+                'status' => 1,
                 'msg' => 'Invalid action'
             ]);
         }
@@ -124,6 +130,7 @@ class RoomController extends Controller
         $res = $roomModel->check($user_id, $room_id);
         if(empty($res->created_at)){
             return response()->json([
+                'status' => 2,
                 'msg' => 'Friendship never exist'
             ]); 
         }
@@ -135,17 +142,26 @@ class RoomController extends Controller
                 $status = $roomModel->update($user_id, $room_id, 2);
             break;
             case 'outRoom':
-                $status = $roomModel->delete_user($user_id, $room_id);
+                $status = $userRoomModel->delete_user($user_id, $room_id);
             break;
             case 'blockRoom':
                 $status = $roomModel->update($user_id, $room_id, 2);
             break;
             case 'deleteRoom':
-                $status = $roomModel->delete($user_id, $room_id);
+                $status = $roomModel->delete_room($user_id, $room_id);
             break;
         }
         //Update room status
-        return $status;
+        if($status != 0){
+            return response()->json([
+                'status' => 0,
+                'msg'    => 'Success'
+            ]);
+        }
+        return response()->json([
+            'status' => 3,
+            'msg'    => 'Error'
+        ]);
     }
     /**
      * Upload room profile image
@@ -200,7 +216,8 @@ class RoomController extends Controller
     public function update(Request $request, int $room_id){
         if(empty($room_id) || empty($request->input('update_room_name')))
             return response()->json([
-                'err' => '1',
+                'status' => '1',
+                'msg'    => 'Empty data'
             ]);
 
         $user_id = Auth::id();
@@ -210,7 +227,8 @@ class RoomController extends Controller
         $tmp = $roomModel->check_admin($user_id, $room_id);
         if(empty($tmp))
             return response()->json([
-                'err' => '2',
+                'status' => '2',
+                'msg'    => 'Incorrect admin'
             ]);
 
         //Delete retrieved roommates
@@ -220,9 +238,17 @@ class RoomController extends Controller
             }
         }
         //Update name
-        $roomModel->update_room($room_id, $request->input('update_room_name'));
+        if($roomModel->update_room($room_id, $request->input('update_room_name')) != 0){
+            return response()->json([
+                'status' => 0,
+                'msg'    => 'Success'
+            ]);
+        }
 
-        return true;
+        return response()->json([
+            'status' => 1,
+            'msg'    => 'Error'
+        ]);
     }
     /**
      *  Get room roommates
@@ -253,7 +279,10 @@ class RoomController extends Controller
      */
     public function delete_room(int $room_id){
         if(empty($room_id))
-            return false;
+            return response()->json([
+                'status' => 1,
+                'msg'    => 'No data'
+            ]);
         
         $user_id = Auth::id();
         //Delete room image
@@ -261,8 +290,16 @@ class RoomController extends Controller
         $tmp = $roomModel->check_admin($user_id, $room_id);
         Storage::delete('room_miniatures/'.$tmp->room_img);
         //Delete room
-        $roomModel->delete_room($user_id, $room_id);
-        return true;
+        if($roomModel->delete_room($user_id, $room_id) != 0){
+            return response()->json([
+                'status' => 0,
+                'msg'    => 'Success'
+            ]);
+        }
+        return response()->json([
+            'status' => 2,
+            'msg'    => 'Error'
+        ]);
     }
     /**
      * Send invites to friends
@@ -274,7 +311,8 @@ class RoomController extends Controller
 
         if(empty($request->add_friend)){
             return response()->json([
-                'msg' => 'Please add some friends to room'
+                'status' => 1,
+                'msg'    => 'Please add some friends to room'
             ]);
         }
 
@@ -288,7 +326,10 @@ class RoomController extends Controller
             $roomModel->add_user($room_id, $friend_id);
         }
 
-        return true;
+        return response()->json([
+            'status' => 0,
+            'msg'    => 'Success'
+        ]);
     }
     /**
      *  Get room data
