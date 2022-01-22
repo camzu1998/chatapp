@@ -19,17 +19,6 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function login_form(){
-        if (Auth::check()) {
-            // The user is not logged in...
-            return redirect('/main');
-        }
-
-        return view('login');
-    }
-    public function register_form(){
-        return view('register_form');
-    }
     public function load($content = 'main' ,$data = array()){
         if (!Auth::check()) {
             // The user is not logged in...
@@ -40,115 +29,33 @@ class Controller extends BaseController
 
         return view('layout', $data);
     }
-    public function register(Request $request){
-        if(empty($request->input('nick')) || empty($request->input('email')) || empty($request->input('pass')))
-            return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
-            ]);
 
-        if($request->input('pass') != $request->input('pass_2'))
-            return back()->withErrors([
-                'pass_2' => 'Paswwords do not match each other.',
-            ]);
-
-        $pass = Hash::make($request->input('pass'));
-        $userModel = new User();
-
-        $tmp = $userModel->check_names($request->input('nick'), $request->input('email'));
-        if(!empty($tmp)){
-            return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
-            ]);
+    public function init(){
+        if (Auth::check()) {
+            // The user is not logged in...
+            return redirect('/main');
         }
 
-        $user_id = $userModel->save_user($request->input('nick'), $request->input('email'), $pass);
-
-        $user_settings_controller = new UserSettingsController();
-        $user_settings_controller->set_init_settings($user_id);
-
-        return redirect('/');
+        return view('login');
     }
 
-    public function authenticate(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect('main');
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
-    }
-
-    public function remember_password(Request $request){
-        if(empty($request->email)){
-            return back()->withErrors(['email' => 'Provided email doesnt pass x']);
-        }
-
-        $userModel = new User();
-        $res = $userModel->check_email($request->email);
-        if($res != null){
-            $token = Str::random(40);
-            $affected = $userModel->set_token($res->id, $token);
-            if($affected != 1){
-                return back()->withErrors(['email' => 'Provided email doesnt pass xx']);
-            }
-            //Send email
-            Mail::to($res->email)->send(new ResetPassword($token));
-
-            return redirect('/');
-        }
-        return back()->withErrors(['email' => 'Provided email doesnt pass']);
-    }
-
-    public function reset(string $token){
-        if(empty($token)){
-            return redirect('/');
-        }
-        $userModel = new User();
-        //Check token
-        $res = $userModel->check_token($token);
-        if($res != null && $res != false){
-            return view('set_password', ['token' => $token]);
-        }
-
-        return redirect('/');
-    }
-
-    public function save_password(string $token, Request $request){
-        if(empty($request->pass) || empty($request->pass2)){
-            return back()->withErrors(['pass' => 'Provided password doesnt pass']);
-        }
-        if($request->pass != $request->pass2){
-            return back()->withErrors(['pass' => 'Provided passwords doesnt match']);
-        }
-        $userModel = new User();
-        //Check token
-        $res = $userModel->check_token($token);
-        if($res != null && $res != false){
-            $pass = Hash::make($request->pass);
-            //Store pass in db & clear token
-            $userModel->update_pass($pass, $token, $res->id);
-            //Redirect user to login page
+    public function dashboard(Request $request){
+        if (!Auth::check()) {
+            // The user is not logged in...
             return redirect('/');
         }
 
-        return back()->withErrors(['pass' => 'An error occured']);
+        $friendship = new FriendshipController();
+        $room = new RoomController();
+        $UserSettingsController = new UserSettingsController();
+        
+        $data['friends_data'] = $friendship->get_user_friends('array');
+        $data['rooms_data'] = $room->get_user_rooms('array');
+        $data['user_settings'] = $UserSettingsController->load_user_settings();
+        $data['roommates_data'] = [];
+        $data['room_id'] = 0;
+        $data['content'] = 'main';
+
+        return $this->load('main', $data);
     }
 }
