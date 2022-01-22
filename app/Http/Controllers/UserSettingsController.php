@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\UserSettings;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,13 @@ class UserSettingsController extends Controller
     ];
 
     public function save_user_settings(Request $request){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 1,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
         $user_id = Auth::id();
         $userSettingsModel = new UserSettings();
 
@@ -56,15 +64,38 @@ class UserSettingsController extends Controller
     }
 
     public function set_user_profile(Request $request){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return false;
+        }
+
         if ($request->hasFile('input_profile')) {
-            //Run UserController store functions
-            $usrCon = new UserController();
-            $res = $usrCon->save_profile_image($request->input_profile);
-            if(!$res){
+            $file = $request->input_profile;
+
+            //Check extension & weight
+            if(!in_array($file->extension(), $this->profile_ext)){
+                //Extension didn't pass
                 return false;
             }
+            if($file->getSize() > (1024 * (1024 * 25))){
+                //File is oversized
+                return false;
+            }
+            //Check if need to delete previous image
+            $user_id = Auth::id();
+            $userModel = new User();
+            $user = $userModel->get_user_data($user_id);
+            if($user->profile_img != 'no_image.jpg'){
+                //Delete old profile image
+                Storage::delete('profiles_miniatures/'.$user->profile_img);
+            }
+            //Store file
+            $filename = $file->getClientOriginalName();
 
-            return $res;
+            $path = $file->storeAs('profiles_miniatures', $filename);
+            $userModel->set_profile_image($user_id, $filename);
+            //Return data
+            return $filename;
         }
 
         return false;

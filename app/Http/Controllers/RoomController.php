@@ -12,6 +12,12 @@ use App\Models\Room;
 use App\Models\User;
 use App\Models\Messages;
 
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\FriendshipController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\UserSettingsController;
+
 class RoomController extends Controller
 {
     protected $profile_ext = array('png', 'jpeg', 'jpg');
@@ -77,9 +83,16 @@ class RoomController extends Controller
     }
 
     public function save_room(Request $request){
-        $roomModel = new \App\Models\Room();
-        $userModel = new \App\Models\User();
-        $friendsModel = new \App\Models\Friendship();
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+        $roomModel = new Room();
+        $userModel = new User();
+        $friendsModel = new Friendship();
         $user = Auth::user();
         $user_id = Auth::id();
 
@@ -113,9 +126,17 @@ class RoomController extends Controller
     }
 
     public function update_room_status(Request $request, int $room_id){
-        $roomModel = new \App\Models\Room();
-        $userRoomModel = new \App\Models\UserRoom();
-        $userModel = new \App\Models\User();
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+
+        $roomModel = new Room();
+        $userRoomModel = new UserRoom();
+        $userModel = new User();
         $user_id = Auth::id();
         $actions = array('acceptInvite', 'decelineInvite', 'outRoom', 'blockRoom', 'deleteRoom');
 
@@ -214,6 +235,14 @@ class RoomController extends Controller
      *  Update room data
      */
     public function update(Request $request, int $room_id){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+
         if(empty($room_id) || empty($request->input('update_room_name')))
             return response()->json([
                 'status' => '1',
@@ -221,8 +250,8 @@ class RoomController extends Controller
             ]);
 
         $user_id = Auth::id();
-        $userRoomModel = new \App\Models\UserRoom();
-        $roomModel = new \App\Models\Room();
+        $userRoomModel = new UserRoom();
+        $roomModel = new Room();
         //Check user admin
         $tmp = $roomModel->check_admin($user_id, $room_id);
         if(empty($tmp))
@@ -258,8 +287,8 @@ class RoomController extends Controller
         if(empty($room_id))
             return false;
 
-        $userRoomModel = new \App\Models\UserRoom();
-        $userModel = new \App\Models\User();
+        $userRoomModel = new UserRoom();
+        $userModel = new User();
         $roommates = $userRoomModel->get_roommates($room_id);
 
         foreach($roommates as $roommate){
@@ -278,6 +307,14 @@ class RoomController extends Controller
      * Delete room and connected data
      */
     public function delete_room(int $room_id){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+
         if(empty($room_id))
             return response()->json([
                 'status' => 1,
@@ -305,8 +342,16 @@ class RoomController extends Controller
      * Send invites to friends
      */
     public function invite(int $room_id, Request $request){
-        $roomModel = new \App\Models\Room();
-        $friendsModel = new \App\Models\Friendship();
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+
+        $roomModel = new Room();
+        $friendsModel = new Friendship();
         $user_id = Auth::id();
 
         if(empty($request->add_friend)){
@@ -335,11 +380,49 @@ class RoomController extends Controller
      *  Get room data
      */
     public function get_room(int $room_id){        
-        $roomModel = new \App\Models\Room();
+        $roomModel = new Room();
         $user_id = Auth::id();
 
         //Check if user is in room
 
         return $roomModel->get($room_id);
+    }
+    /**
+     * Return room view
+     */
+    public function load_room(int $room_id, Request $request){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return redirect('/');
+        }
+
+        $friendship = new FriendshipController();
+        $room = new RoomController();
+        $messages = new MessagesController();
+        $UserSettingsController = new UserSettingsController();
+        $UserRoomModel = new UserRoom();
+
+        $tmp = $messages->get_array($room_id);
+        if($tmp == false){
+            return redirect('/main');
+        }
+        
+        $data['user_settings'] = $UserSettingsController->load_user_settings();
+        $data['friends_data'] = $friendship->get_user_friends('array');
+        $data['rooms_data'] = $room->get_user_rooms('array');
+        $data['room'] = $room->get_room($room_id);
+        $data['roommates_data'] = $room->get_roommates($room_id);
+        $data['messages'] = $tmp['messages'];
+        $data['msg_users'] = $tmp['msg_users'];
+        $data['files'] = $tmp['files'];
+        $data['newest_msg'] = $tmp['newest_msg'];
+        $data['room_id'] = $room_id;
+        $data['admin_room_id'] = $room_id;
+        $data['img_ext'] = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
+        $data['content'] = 'chat';
+
+        $UserRoomModel->set_user_msg($room_id, Auth::id(), $tmp['newest_msg']);
+
+        return $this->load('chat', $data);
     }
 }

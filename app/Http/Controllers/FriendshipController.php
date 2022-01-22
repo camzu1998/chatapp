@@ -10,6 +10,22 @@ use Illuminate\Support\Facades\Auth;
 class FriendshipController extends Controller
 {
     public function get_user_friends($switch_response = 'json'){
+        if (!Auth::check()) {
+            if($switch_response == 'json'){
+                return response()->json([
+                    'status' => 9,
+                    'msg'    => 'Brak autoryzacji',
+                    'friends_data' => []
+                ]);
+            }else{
+                return [
+                    'status' => 9,
+                    'msg'    => 'Brak autoryzacji',
+                    'friends_data' => []
+                ];
+            }
+        }
+
         $user_id = Auth::id();
         $friends_data = array();
         $banned_friends_data = array();
@@ -18,9 +34,11 @@ class FriendshipController extends Controller
         $userModel = new \App\Models\User();
 
         $friends = $friendsModel->get($user_id);
-        if(!is_array($friends) && !is_object($friends)){
+        if(!is_array($friends) || !is_object($friends)){
             if($switch_response == 'json'){
                 return response()->json([
+                    'status' => 1,
+                    'msg'    => 'No friends',
                     'friends_data' => $friends_data
                 ]);
             }else if($switch_response == 'array'){
@@ -56,6 +74,14 @@ class FriendshipController extends Controller
     }
 
     public function save_friendship(Request $request){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+
         $friendsModel = new \App\Models\Friendship();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();
@@ -91,6 +117,14 @@ class FriendshipController extends Controller
     }
 
     public function update_friendship_status(Request $request, $friend_id){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+        
         $friendsModel = new \App\Models\Friendship();
         $userModel = new \App\Models\User();
         $user_id = Auth::id();

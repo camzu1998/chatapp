@@ -2202,7 +2202,9 @@ $('#save_settings').click(function () {
       }
 
       if (!fail) {
-        window.location.reload(true);
+        location.reload();
+      } else {
+        location.assign("/logout");
       }
     }, 3500);
   });

@@ -14,20 +14,33 @@ use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
 {
-    public function get_newest_id($room_id = null){        
+    public function get_newest_id($room_id = null){  
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }      
         // Check if isset room_id
         if(empty($room_id) || !is_numeric($room_id))
-            return false;
+            return response()->json([
+                'status' => 1,
+                'msg'    => 'Błedny id pokoju'
+            ]);
 
         $room = new Room();
         $room_status = $room->check(Auth::id(), $room_id);
         if(empty($room_status->created_at) && $room_status->status != 1)
-            return false;
+            return response()->json([
+                'status' => 2,
+                'msg'    => 'Brak użytkownika w pokoju'
+            ]);
 
         $msgM = new Messages();
         $msgs = $msgM->get_last($room_id);
         if(empty($msgs->id)){
-            return false;
+            return 0;
         }
 
         return $msgs->id;
@@ -36,19 +49,28 @@ class MessagesController extends Controller
     public function send(int $room_id, Request $request){
         if (!Auth::check()) {
             // The user is not logged in...
-            return redirect('/');
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
         }
 
         $content = $request->input('content');
         if(empty($content))
-            return false;
+            return response()->json([
+                'status' => 1,
+                'msg'    => 'Pusta wiadomość'
+            ]);
 
         // Check if isset room_id
         if(!empty($room_id)){
             $room = new Room();
             $room_status = $room->check(Auth::id(), $room_id);
             if(empty($room_status->created_at) && $room_status->status != 1){
-                return false;
+                return response()->json([
+                    'status' => 2,
+                    'msg'    => 'Brak użytkownika w pokoju'
+                ]);
             }
         }
         //Check if user is in the room
@@ -61,6 +83,14 @@ class MessagesController extends Controller
         return $this->get($room_id);
     }
     public function upload(int $room_id, Request $request){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+
         if(!$request->hasFile('file'))
             return response()->json([
                 'status' => false,
@@ -91,10 +121,18 @@ class MessagesController extends Controller
     }
 
     public function get($room_id = null){
+        if (!Auth::check()) {
+            // The user is not logged in...
+            return response()->json([
+                'status' => 9,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
+
         $users_array = array();
         $file_array = array();
         
-        $msgM = new \App\Models\Messages;
+        $msgM = new Messages();
         $files_model = new Files();
         $user_model = new User();
         $room_model = new Room();
