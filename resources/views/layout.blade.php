@@ -340,10 +340,8 @@
                     @endif
                 @endforeach
             </div>
-
             <button class="cta-btn absolute bottom-2 right-2 form-submit box-content rounded-xl" id="save_room">Zapisz <i class="far fa-save"></i></button>
         </div>
-
         <div id="feedback_wrapper" class="absolute bottom-2 left-1/2 py-2 px-4 rounded-xl" style="display: none;"></div>
         <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}"/>
         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
