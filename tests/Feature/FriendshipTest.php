@@ -13,7 +13,7 @@ class FriendshipTest extends TestCase
     {
         $response = $this->get('/friendship');
 
-        $response->assertRedirect('/'); 
+        $response->assertStatus(200)->assertJson(['status' => 9]);
     }
 
     /** @test */
