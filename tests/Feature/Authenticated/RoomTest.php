@@ -69,6 +69,28 @@ class RoomTest extends AuthenticatedTestCase
     }
 
     /** @test */
+    public function check_auth_user_cant_access_someone_else_room()
+    {
+        //Create admin room
+        $user = User::factory()->create();
+        //Create room
+        $room = Room::factory()->create([
+            'room_name' => 'test_delete_someone_room',
+            'admin_id'  => $user->id
+        ]);
+        $this->assertModelExists($room);
+        $userRoom = UserRoom::factory()->create([
+            'room_id' => $room->id,
+            'user_id' => $user->id,
+            'status'  => 1
+        ]);
+        $this->assertModelExists($userRoom);
+        //Acess room route
+        $response = $this->get('/room/'.$room->id);
+        $response->assertRedirect('/main'); 
+    }
+
+    /** @test */
     public function check_auth_user_can_delete_own_room()
     {
         //Create room
