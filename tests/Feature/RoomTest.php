@@ -9,7 +9,7 @@ use Tests\TestCase;
 class RoomTest extends TestCase
 {
     /** @test */
-    public function check_user_room_view_route()
+    public function check_unauthenticated_user_cant_access_room()
     {
         $response = $this->get('/room/1');
 
@@ -17,7 +17,7 @@ class RoomTest extends TestCase
     }
 
     /** @test */
-    public function check_create_room_route()
+    public function check_unauthenticated_user_cant_create_room()
     {
         $response = $this->post('/room', []);
 
@@ -25,7 +25,7 @@ class RoomTest extends TestCase
     }
     
     /** @test */
-    public function check_update_room_status_route()
+    public function check_unauthenticated_user_cant_update_room_status()
     {
         $response = $this->put('/room/1', []);
 
@@ -33,7 +33,7 @@ class RoomTest extends TestCase
     }
     
     /** @test */
-    public function check_delete_room_route()
+    public function check_unauthenticated_user_cant_delete_room()
     {
         $response = $this->delete('/room/1');
 
@@ -41,7 +41,7 @@ class RoomTest extends TestCase
     }
     
     /** @test */
-    public function check_update_room_route()
+    public function check_unauthenticated_user_cant_update_room()
     {
         $response = $this->put('/room/1/update');
 
@@ -49,7 +49,7 @@ class RoomTest extends TestCase
     }
     
     /** @test */
-    public function check_invite_friends_route()
+    public function check_unauthenticated_user_cant_invite_friends()
     {
         $response = $this->post('/room/1/invite', []);
 
