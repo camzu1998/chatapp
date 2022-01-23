@@ -11,6 +11,7 @@ use App\Models\Friendship;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Messages;
+use App\Models\UserRoom;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FriendshipController;
@@ -59,17 +60,21 @@ class RoomController extends Controller
                 $last_msg = $msgsModel->get_last($user_room->room_id);
                 $rooms_data[$user_room->room_id]->last_msg_user = "Ty";
                 $rooms_data[$user_room->room_id]->last_msg_user_img = $user_data->profile_img;
+                if(!empty($last_msg->user_id))
+                {
+                    if($last_msg->user_id != Auth::id()){
+                        $last_user_data = $userModel->get_user_data($last_msg->user_id);
+                        $rooms_data[$user_room->room_id]->last_msg_user = $last_user_data->nick;
+                        $rooms_data[$user_room->room_id]->last_msg_user_img = $last_user_data->profile_img;
+                    }
 
-                if($last_msg->user_id != Auth::id()){
-                    $last_user_data = $userModel->get_user_data($last_msg->user_id);
-                    $rooms_data[$user_room->room_id]->last_msg_user = $last_user_data->nick;
-                    $rooms_data[$user_room->room_id]->last_msg_user_img = $last_user_data->profile_img;
+                    $content = Str::limit($last_msg->content, 20);
+                    if($last_msg->file_id != 0){
+                        $content = "Wysłał załącznik";
+                    }
+                    
+                    $rooms_data[$user_room->room_id]->last_msg_content = $content;
                 }
-                $content = Str::limit($last_msg->content, 20);
-                if($last_msg->file_id != 0){
-                    $content = "Wysłał załącznik";
-                }
-                $rooms_data[$user_room->room_id]->last_msg_content = $content;
             }
         }
 
@@ -107,7 +112,7 @@ class RoomController extends Controller
         if(empty($room_name)){
             $room_name = $user->nick.'_room';
         }
-        $room_id = $roomModel->save($room_name, $user_id);
+        $room_id = $roomModel->save_room($room_name, $user_id);
 
         //Add invited friends to room
         foreach($request->add_friend as $friend_id){

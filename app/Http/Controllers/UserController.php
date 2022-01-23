@@ -17,10 +17,18 @@ class UserController extends Controller
     protected $profile_ext = array('png', 'jpeg', 'jpg');
 
     public function register_form(){
+        if (Auth::check()) {
+            return redirect('/main');
+        }
+
         return view('register_form');
     }
 
     public function register(Request $request){
+        if (Auth::check()) {
+            return redirect('/main');
+        }
+
         if(empty($request->input('nick')) || empty($request->input('email')) || empty($request->input('pass')))
             return redirect('/register')->withErrors([
                 'email' => 'The provided credentials do not match our records.',
@@ -51,6 +59,9 @@ class UserController extends Controller
 
     public function authenticate(Request $request)
     {
+        if(Auth::check()) {
+            return redirect('/main');
+        }
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -69,6 +80,9 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect('/');
+        }
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
