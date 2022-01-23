@@ -157,7 +157,7 @@ class RoomController extends Controller
         if(empty($res->created_at)){
             return response()->json([
                 'status' => 2,
-                'msg' => 'Friendship never exist'
+                'msg' => 'User isnt in room'
             ]); 
         }
         switch($request->button){
@@ -330,6 +330,12 @@ class RoomController extends Controller
         //Delete room image
         $roomModel = new Room();
         $tmp = $roomModel->check_admin($user_id, $room_id);
+        if(empty($tmp->created_at)){
+            return response()->json([
+                'status' => 2,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
         Storage::delete('room_miniatures/'.$tmp->room_img);
         //Delete room
         if($roomModel->delete_room($user_id, $room_id) != 0){
@@ -339,7 +345,7 @@ class RoomController extends Controller
             ]);
         }
         return response()->json([
-            'status' => 2,
+            'status' => 3,
             'msg'    => 'Error'
         ]);
     }
@@ -365,7 +371,14 @@ class RoomController extends Controller
                 'msg'    => 'Please add some friends to room'
             ]);
         }
-
+        
+        $tmp = $roomModel->check_admin($user_id, $room_id);
+        if(empty($tmp->created_at)){
+            return response()->json([
+                'status' => 2,
+                'msg'    => 'Brak autoryzacji'
+            ]);
+        }
         //Add invited friends to room
         foreach($request->add_friend as $friend_id){
             //Check friendship
