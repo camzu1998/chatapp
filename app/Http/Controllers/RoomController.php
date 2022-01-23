@@ -26,7 +26,7 @@ class RoomController extends Controller
     public function get_user_rooms($switch_response = 'json'){
         $user_id = Auth::id();
         $rooms_data = array();
-        
+
         $msgsModel = new Messages();
 
         $user_rooms = UserRoom::where('user_id', '=', $user_id)->orderBy('status', 'asc')->get();
@@ -42,7 +42,7 @@ class RoomController extends Controller
         }
         foreach($user_rooms as $user_room){
             //Get info aboout room & save to array
-            $rooms_data[$user_room->room_id] = Room::find($room_id);
+            $rooms_data[$user_room->room_id] = Room::find($user_room->room_id);
             $user_data = User::find($rooms_data[$user_room->room_id]->admin_id);
             $rooms_data[$user_room->room_id]->admin_img = $user_data->profile_img;
             $rooms_data[$user_room->room_id]->status = $user_room->status;
