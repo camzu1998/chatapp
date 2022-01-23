@@ -67,7 +67,7 @@ class RoomTest extends AuthenticatedTestCase
         $response = $this->get('/room/'.$room->id);
         $response->assertStatus(200);
     }
-
+    
     /** @test */
     public function check_auth_user_cant_access_someone_else_room()
     {
@@ -201,6 +201,68 @@ class RoomTest extends AuthenticatedTestCase
         $response->assertStatus(200)->assertJson(['status' => 2]);
         $this->assertDatabaseMissing('user_room', [
             'room_id' => $room->id,
+        ]);
+    }
+
+    /** @test */
+    public function check_auth_user_can_accept_invite()
+    {
+        $admin = User::factory()->create();
+        Friendship::factory()->create([
+            'user_id' => $this->user->id,
+            'user2_id' => $admin->id,
+            'status' => 1,
+            'by_who' => $this->user->id
+        ]);
+        //Create room
+        $room = Room::factory()->create([
+            'room_name' => 'test_accept_invite',
+            'admin_id'  => $admin->id
+        ]);
+        $this->assertModelExists($room);
+        $userRoom = UserRoom::factory()->create([
+            'room_id' => $room->id,
+            'user_id' => $this->user->id,
+            'status'  => 0
+        ]);
+        $this->assertModelExists($userRoom);
+        //Invite friends
+        $response = $this->put('/room/'.$room->id, [
+            'button' => 'acceptInvite'
+        ]);
+        $response->assertStatus(200)->assertJson(['status' => 0]);
+        $this->assertDatabaseHas('user_room', [
+            'room_id' => $room->id,
+            'user_id' => $this->user->id,
+            'status'  => 1
+        ]);
+    }
+
+    /** @test */
+    public function check_auth_user_cant_accept_invite_without_invite()
+    {
+        $admin = User::factory()->create();
+        Friendship::factory()->create([
+            'user_id' => $this->user->id,
+            'user2_id' => $admin->id,
+            'status' => 1,
+            'by_who' => $this->user->id
+        ]);
+        //Create room
+        $room = Room::factory()->create([
+            'room_name' => 'test_accept_without_invite',
+            'admin_id'  => $admin->id
+        ]);
+        $this->assertModelExists($room);
+        //Invite friends
+        $response = $this->put('/room/'.$room->id, [
+            'button' => 'acceptInvite'
+        ]);
+        $response->assertStatus(200)->assertJson(['status' => 2]);
+        $this->assertDatabaseMissing('user_room', [
+            'room_id' => $room->id,
+            'user_id' => $this->user->id,
+            'status'  => 1
         ]);
     }
 }

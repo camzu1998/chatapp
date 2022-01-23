@@ -51,7 +51,7 @@ class RoomController extends Controller
             if($user_room->status == 1){
                 $res = $msgsModel->get_difference($user_room->room_id, $user_room->last_msg_id);
                 $rooms_data[$user_room->room_id]->unreaded = $res->unreaded;
-                $last_msg = Messages::where('room_id', '=', $room_id)->latest()->first();
+                $last_msg = Messages::where('room_id', '=', $user_room->room_id)->latest()->first();
                 $rooms_data[$user_room->room_id]->last_msg_user = "Ty";
                 $rooms_data[$user_room->room_id]->last_msg_user_img = $user_data->profile_img;
                 if(!empty($last_msg->user_id))
@@ -154,7 +154,7 @@ class RoomController extends Controller
 
         $user_id = Auth::id();
         //Valid status
-        $user_room = UserRoom::where('user_id', $user_id)->where('room_id', $room_id)->where('status', 1)->first();
+        $user_room = UserRoom::where('user_id', $user_id)->where('room_id', $room_id)->first();
         if(empty($user_room->created_at)){
             return response()->json([
                 'status' => 2,
