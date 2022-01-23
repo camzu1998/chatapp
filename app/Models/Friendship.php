@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+use Database\Factories\FriendshipFactory;
+
 class Friendship extends Model
 {
     use HasFactory;
@@ -18,6 +20,18 @@ class Friendship extends Model
      *  2 => 'blocked'
      * ]
      */
+
+    protected $attributes = [
+        'user_id' => false,
+        'user2_id' => false,
+        'status' => 0,
+        'by_who' => false,
+        'created_at' => '1998-07-14 07:00:00'
+    ];
+
+    public $timestamps = false;
+    public $incrementing = false;
+    protected $primaryKey = 'user_id';
 
     public function get($user_id = null){
         if(empty($user_id))

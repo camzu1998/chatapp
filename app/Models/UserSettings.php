@@ -9,7 +9,21 @@ use Illuminate\Support\Facades\DB;
 class UserSettings extends Model
 {
     use HasFactory;
+
     protected $table = 'user_settings';
+
+    protected $inputs = [
+        'sounds' => 0,
+        'notifications' => 0,
+        'press_on_enter' => 0
+    ];
+
+    protected $attributes = [
+        'user_id' => false,
+        'name' => 'sounds',
+        'value' => 0,
+        'created_at' => false
+    ];
 
     public function get($user_id = 0, $name = ''){
         if(empty($name) || empty($user_id))

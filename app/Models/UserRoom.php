@@ -12,6 +12,20 @@ class UserRoom extends Model
 
     protected $table = 'user_room';
 
+    protected $attributes = [
+        'room_id' => 0,
+        'user_id' => 0,
+        'status' => 0,
+        'last_msg_id' => 0,
+        'last_notify_id' => 0,
+        'nickname' => '',
+        'created_at' => '1998-07-14 07:00:00'
+    ];
+
+    public $timestamps = false;
+    public $incrementing = false;
+    protected $primaryKey = 'user_id';
+
     public function delete_user(int $user_id, int $room_id){
         if(empty($user_id) || empty($room_id))
             return false;
