@@ -50,6 +50,21 @@ class RoomTest extends AuthenticatedTestCase
     }
 
     /** @test */
+    public function check_auth_user_cant_create_room()
+    {
+        //Send create room request
+        $response = $this->post('/room', [
+            'room_name' => 'test',
+            'add_friend' => []
+        ]);
+        $response->assertStatus(200)->assertJson(['status' => 1]);
+        $this->assertDatabaseMissing('room', [
+            'room_name' => 'test',
+            'admin_id'  => $this->user->id
+        ]);
+    }
+
+    /** @test */
     public function check_auth_user_can_access_room()
     {
         //Create room
@@ -67,7 +82,7 @@ class RoomTest extends AuthenticatedTestCase
         $response = $this->get('/room/'.$room->id);
         $response->assertStatus(200);
     }
-    
+
     /** @test */
     public function check_auth_user_cant_access_someone_else_room()
     {
@@ -130,7 +145,7 @@ class RoomTest extends AuthenticatedTestCase
     }
     
     /** @test */
-    public function check_user_can_invite_friends_to_own_room()
+    public function check_auth_user_can_invite_friends_to_own_room()
     {
         $users_ids = [];
 
@@ -170,7 +185,7 @@ class RoomTest extends AuthenticatedTestCase
     }
     
     /** @test */
-    public function check_user_cant_invite_friends_to_someone_else_room()
+    public function check_auth_user_cant_invite_friends_to_someone_else_room()
     {
         $users_ids = [];
 
