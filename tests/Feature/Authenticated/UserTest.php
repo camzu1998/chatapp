@@ -9,6 +9,8 @@ use App\Models\User;
 
 class UserTest extends AuthenticatedTestCase
 {
+    use RefreshDatabase;
+    
     /** @test */
     public function check_user_main_access()
     {

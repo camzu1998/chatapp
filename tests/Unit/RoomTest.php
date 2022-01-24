@@ -12,6 +12,8 @@ use App\Models\UserRoom;
 
 class RoomTest extends TestCase
 {
+    use RefreshDatabase;
+    
     public function test_creating_room()
     {
         //First need to create user

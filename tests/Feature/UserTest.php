@@ -9,6 +9,8 @@ use App\Models\User;
 
 class UserTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /** @test */
     public function check_user_register_form()
     {

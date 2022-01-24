@@ -8,6 +8,8 @@ use Tests\TestCase;
 
 class ChatTest extends TestCase
 {
+    use RefreshDatabase;
+    
     /** @test */
     public function check_send_message_route()
     {
