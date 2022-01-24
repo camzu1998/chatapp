@@ -30,11 +30,11 @@ class FriendshipController extends Controller
         $friends_data = array();
         $banned_friends_data = array();
         
-        $friendsModel = new \App\Models\Friendship();
-        $userModel = new \App\Models\User();
+        $friendsModel = new Friendship();
+        $userModel = new User();
 
-        $friends = $friendsModel->get($user_id);
-        if(!is_array($friends) || !is_object($friends)){
+        $friends = Friendship::where('user_id', '=', $user_id)->orWhere('user2_id', '=', $user_id)->orderBy('status', 'asc')->get();
+        if(empty($friends[0]->created_at)){
             if($switch_response == 'json'){
                 return response()->json([
                     'status' => 1,
@@ -66,6 +66,7 @@ class FriendshipController extends Controller
 
         if($switch_response == 'json'){
             return response()->json([
+                'status' => 0,
                 'friends_data' => $friends_data
             ]);
         }else if($switch_response == 'array'){
@@ -82,28 +83,33 @@ class FriendshipController extends Controller
             ]);
         }
 
-        $friendsModel = new \App\Models\Friendship();
-        $userModel = new \App\Models\User();
-        $user_id = Auth::id();
-
         if(empty($request->nickname)){
             return response()->json([
                 'status' => 1,
                 'msg'    => 'Friend id not defined'
             ]);
         }
-        $friend_id = $userModel->get_user_id($request->nickname);
+
+        $friendsModel = new Friendship();
+        $userModel = new User();
+        $user_id = Auth::id();
+
+        $friend_id = User::select('id')->where('nick', 'LIKE', $request->nickname)->first();
 
         $res = $friendsModel->check($user_id, $friend_id->id);
-        if(!empty($res[0])){
+        if(!empty($res[0]->created_at)){
             return response()->json([
                 'status' => 2,
                 'msg'    => 'Friend already exist'
             ]); 
         }
 
-
-        if($friendsModel->save($user_id, $friend_id->id)){
+        $friendship = Friendship::factory()->create([
+            'user_id' => $user_id,
+            'user2_id' => $friend_id->id,
+            'by_who' => $user_id
+        ]);
+        if($friendship->user_id == $user_id){
             return response()->json([
                 'status' => 0,
                 'msg'    => 'Friend added'
