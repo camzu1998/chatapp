@@ -29,9 +29,6 @@ class FriendshipController extends Controller
         $user_id = Auth::id();
         $friends_data = array();
         $banned_friends_data = array();
-        
-        $friendsModel = new Friendship();
-        $userModel = new User();
 
         $friends = Friendship::where('user_id', '=', $user_id)->orWhere('user2_id', '=', $user_id)->orderBy('status', 'asc')->get();
         if(empty($friends[0]->created_at)){
@@ -56,7 +53,7 @@ class FriendshipController extends Controller
                 $invite = 1;
             }
 
-            $friend_data = $userModel->get_user_data($friend_id);
+            $friend_data = User::find($friend_id);
             $friends_data[$friend_id]['nick'] = $friend_data->nick;
             $friends_data[$friend_id]['profile_img'] = $friend_data->profile_img; 
             $friends_data[$friend_id]['status'] = $friend->status;
@@ -90,12 +87,11 @@ class FriendshipController extends Controller
             ]);
         }
 
-        $friendsModel = new Friendship();
-        $userModel = new User();
+        
         $user_id = Auth::id();
-
         $friend_id = User::select('id')->where('nick', 'LIKE', $request->nickname)->first();
 
+        $friendsModel = new Friendship();
         $res = $friendsModel->check($user_id, $friend_id->id);
         if(!empty($res[0]->created_at)){
             return response()->json([
@@ -130,42 +126,48 @@ class FriendshipController extends Controller
                 'msg'    => 'Brak autoryzacji'
             ]);
         }
-        
-        $friendsModel = new \App\Models\Friendship();
-        $userModel = new \App\Models\User();
-        $user_id = Auth::id();
-        $actions = array('acceptInvite', 'decelineInvite', 'cancelInvite', 'deleteFriendship', 'blockFriendship');
 
         //Valid status
+        $actions = array('acceptInvite', 'decelineInvite', 'cancelInvite', 'deleteFriendship', 'blockFriendship');
         if(!in_array($request->button, $actions)){
             return response()->json([
                 'status' => 1,
                 'msg'    => 'Invalid action'
             ]);
         }
+        
+        $friendsModel = new Friendship();
+        $user_id = Auth::id();
+
         //Valid friendship
         $res = $friendsModel->check($user_id, $friend_id);
-        if(empty($res[0])){
+        if(empty($res[0]->created_at)){
             return response()->json([
                 'status' => 2,
                 'msg'    => 'Friendship never exist'
             ]); 
         }
+        $status = 0;
         switch($request->button){
             case 'acceptInvite':
-                $status = $friendsModel->update($user_id, $friend_id, 1);
+                if($res[0]->status == 0 && $res[0]->by_who != $user_id)
+                    $status = $friendsModel->update($user_id, $friend_id, 1);
             break;
             case 'decelineInvite':
-                $status = $friendsModel->update($user_id, $friend_id, 2);
+                if($res[0]->status == 0 && $res[0]->by_who != $user_id)
+                    $status = $friendsModel->update($user_id, $friend_id, 2);
             break;
             case 'cancelInvite':
-                $status = $friendsModel->delete($user_id, $friend_id);
+                if($res[0]->status == 0 && $res[0]->by_who == $user_id)
+                    $status = $friendsModel->delete($user_id, $friend_id);
             break;
             case 'deleteFriendship':
-                $status = $friendsModel->delete($user_id, $friend_id);
+                if($res[0]->status == 1)
+                    $status = $friendsModel->delete($user_id, $friend_id);
             break;
             case 'blockFriendship':
-                $status = $friendsModel->update($user_id, $friend_id, 2);
+                if($res[0]->status == 1)
+                    $status = $friendsModel->update($user_id, $friend_id, 2);
             break;
         }
         //Update friendship status
