@@ -96,7 +96,6 @@ class RoomController extends Controller
                 'msg'    => 'Please add some friends to room'
             ]);
         }
-        $friendsModel = new Friendship();
 
         $room_name = $request->room_name;
         if(empty($room_name)){
@@ -115,7 +114,7 @@ class RoomController extends Controller
 
         foreach($request->add_friend as $friend_id){
             //Check friendship
-            $res = $friendsModel->check(Auth::id(), $friend_id);
+            $res = Friendship::check(Auth::id(), $friend_id);
             if(empty($res[0])){
                 continue; 
             }
@@ -364,7 +363,6 @@ class RoomController extends Controller
             ]);
         }
 
-        $friendsModel = new Friendship();
         $room = Room::where('admin_id', Auth::id())->where('id', $room_id)->first();
         if(empty($room->created_at)){
             return response()->json([
@@ -375,7 +373,7 @@ class RoomController extends Controller
         //Add invited friends to room
         foreach($request->add_friend as $friend_id){
             //Check friendship
-            $res = $friendsModel->check(Auth::id(), $friend_id);
+            $res = Friendship::check(Auth::id(), $friend_id);
             if(empty($res[0])){
                 continue; 
             }
