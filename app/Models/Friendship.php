@@ -33,28 +33,32 @@ class Friendship extends Model
     public $incrementing = false;
     protected $primaryKey = 'user_id';
 
-    public function get_user($user_id = null){
-        if(empty($user_id))
-            return false;
-
-        return DB::table($this->table)->where('user_id', '=', $user_id)->orWhere('user2_id', '=', $user_id)->orderBy('status', 'asc')->get();
+    /**
+     * Scope a query to only include user friendships
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUser($query, $user_id)
+    {
+        return $query->where('user_id', '=', $user_id)->orWhere('user2_id', '=', $user_id)->orderBy('status', 'asc');
     }
 
-    public function check($user_id  = null,$friend_id = null){
+    public static function check($user_id  = null, $friend_id = null){
         if(empty($user_id) || empty($friend_id))
             return false;
 
         return DB::select('select * from friendship where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)', [$user_id, $friend_id, $friend_id, $user_id]);
     }
 
-    public function update($user_id = null, $friend_id = null, $status = 0){
+    public static function set_status($user_id = null, $friend_id = null, $status = 0){
         if(empty($user_id) || empty($friend_id))
             return false;
         
         return DB::update('update friendship set status = ?, by_who = ? where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)',[$status, $user_id, $user_id, $friend_id, $friend_id, $user_id]);
     }
 
-    public function delete($user_id  = null,$friend_id = null){
+    public static function delete_friendship($user_id  = null,$friend_id = null){
         return DB::delete('delete from friendship where (`user_id` = ? AND `user2_id` = ?) OR (`user_id` = ? AND `user2_id` = ?)', [$user_id, $friend_id, $friend_id, $user_id]);
     }
 

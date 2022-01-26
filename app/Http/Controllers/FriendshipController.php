@@ -30,7 +30,7 @@ class FriendshipController extends Controller
         $friends_data = array();
         $banned_friends_data = array();
 
-        $friends = Friendship::where('user_id', '=', $user_id)->orWhere('user2_id', '=', $user_id)->orderBy('status', 'asc')->get();
+        $friends = Friendship::user($user_id)->get();
         if(empty($friends[0]->created_at)){
             if($switch_response == 'json'){
                 return response()->json([
@@ -91,8 +91,7 @@ class FriendshipController extends Controller
         $user_id = Auth::id();
         $friend_id = User::select('id')->where('nick', 'LIKE', $request->nickname)->first();
 
-        $friendsModel = new Friendship();
-        $res = $friendsModel->check($user_id, $friend_id->id);
+        $res = Friendship::check($user_id, $friend_id->id);
         if(!empty($res[0]->created_at)){
             return response()->json([
                 'status' => 2,
@@ -135,12 +134,10 @@ class FriendshipController extends Controller
                 'msg'    => 'Invalid action'
             ]);
         }
-        
-        $friendsModel = new Friendship();
-        $user_id = Auth::id();
 
         //Valid friendship
-        $res = $friendsModel->check($user_id, $friend_id);
+        $user_id = Auth::id();
+        $res = Friendship::check($user_id, $friend_id);
         if(empty($res[0]->created_at)){
             return response()->json([
                 'status' => 2,
@@ -151,23 +148,23 @@ class FriendshipController extends Controller
         switch($request->button){
             case 'acceptInvite':
                 if($res[0]->status == 0 && $res[0]->by_who != $user_id)
-                    $status = $friendsModel->update($user_id, $friend_id, 1);
+                    $status = Friendship::set_status($user_id, $friend_id, 1);
             break;
             case 'decelineInvite':
                 if($res[0]->status == 0 && $res[0]->by_who != $user_id)
-                    $status = $friendsModel->update($user_id, $friend_id, 2);
+                    $status = Friendship::set_status($user_id, $friend_id, 2);
             break;
             case 'cancelInvite':
                 if($res[0]->status == 0 && $res[0]->by_who == $user_id)
-                    $status = $friendsModel->delete($user_id, $friend_id);
+                    $status = Friendship::delete_friendship($user_id, $friend_id);
             break;
             case 'deleteFriendship':
                 if($res[0]->status == 1)
-                    $status = $friendsModel->delete($user_id, $friend_id);
+                    $status = Friendship::delete_friendship($user_id, $friend_id);
             break;
             case 'blockFriendship':
                 if($res[0]->status == 1)
-                    $status = $friendsModel->update($user_id, $friend_id, 2);
+                    $status = Friendship::set_status($user_id, $friend_id, 2);
             break;
         }
         //Update friendship status
