@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-class ChatTest extends TestCase
+class MessagesTest extends TestCase
 {
     /**
      * A basic unit test example.

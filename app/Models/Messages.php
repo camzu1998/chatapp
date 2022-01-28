@@ -7,19 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\Files;
 
+use Database\Factories\MessagesFactory;
+
 class Messages extends Model
 {
     use HasFactory;
 
     protected $table = 'messages';
 
-    protected $form = [
+    protected $attributes = [
         'user_id',
         'room_id',
         'file_id',
         'content',
         'created_at'
     ];
+
+    public $timestamps = false;
+    public $incrementing = false;
+    protected $primaryKey = 'room_id';
 
     public function get(int $room_id, int $limiter = null){
         if(!empty($limiter) && is_numeric($limiter)){
