@@ -6,9 +6,7 @@ use Tests\TestCase;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-use App\Models\User;
 use App\Models\Room;
-use App\Models\UserRoom;
 
 class RoomTest extends TestCase
 {
@@ -16,26 +14,29 @@ class RoomTest extends TestCase
 
     public function test_creating_room()
     {
-        //Next need to create room
+        //Need to create room
         $room = Room::factory()->create();
+        //Check if room exist
         $this->assertModelExists($room);
     }
 
     public function test_deleting_room()
     {
-        //Next need to create room
+        //Need to create room
         $room = Room::factory()->create();
-        //Delete data
         $room->delete();
+        //Check if room has been deleted
         $this->assertDeleted($room);
     }
 
     public function test_updating_room()
     {
-        //Next need to create room
+        //Need to create room
         $room = Room::factory()->create();
+        //Change room name
         $room->room_name = 'test';
         $room->save();
+        //Check if changes affected
         $this->assertDatabaseHas('room', [
             'id' => $room->id,
             'room_name' => 'test',

@@ -19,7 +19,7 @@ class FriendshipTest extends TestCase
      */
     public function test_check_get_user_friendships()
     {
-        //Prepare Friendship
+        //Prepare frieends
         $friends = User::factory()->count(2)->create();
         $user = User::factory()->create();
         //Make friendship
@@ -33,12 +33,13 @@ class FriendshipTest extends TestCase
         }
         
         $friendships = Friendship::user($user->id)->get();
+        //Check if number of friendships is the same as we make
         $this->assertEquals(count($friendships), 2);
     }
 
     public function test_check_if_friendship_exist()
     {
-        //Prepare Friendship
+        //Prepare frieends
         $friend_one = User::factory()->create();
         $friend_two = User::factory()->create();
         //Make friendship
@@ -48,13 +49,15 @@ class FriendshipTest extends TestCase
             'by_who' => $friend_one->id
         ]);
         $this->assertModelExists($friendship);
+        //Use the Friendship static method to get friendship
         $friendships = Friendship::check($friend_one->id, $friend_two->id);
+        //Check if thi is the same friendship
         $this->assertEquals($friendship->created_at, $friendships[0]->created_at);
     }
 
     public function test_set_status_friendships()
     {
-        //Prepare Friendship
+        //Prepare frieends
         $friend_one = User::factory()->create();
         $friend_two = User::factory()->create();
         //Make friendship
@@ -64,7 +67,9 @@ class FriendshipTest extends TestCase
             'by_who' => $friend_one->id
         ]);
         $this->assertModelExists($friendship);
+        //Use the Friendship static method to set friendship status
         $friendships = Friendship::set_status($friend_one->id, $friend_two->id, 1);
+        //Check if changes affected
         $this->assertDatabaseHas('friendship', [
             'user_id' => $friend_one->id,
             'user2_id' => $friend_two->id,
@@ -84,7 +89,9 @@ class FriendshipTest extends TestCase
             'by_who' => $friend_one->id
         ]);
         $this->assertModelExists($friendship);
+        //Use the Friendship static method to delete friendship
         Friendship::delete_friendship($friend_one->id, $friend_two->id);
+        //Check if friendship has gone
         $this->assertDatabaseMissing('friendship', [
             'user_id' => $friend_one->id,
             'user2_id' => $friend_two->id,
