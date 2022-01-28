@@ -23,15 +23,19 @@ class UserTest extends TestCase
     
     public function test_creating_user()
     {
+        //Creeating user
         $user = User::factory()->create();
+        //Check if user created
         $this->assertIsObject($user);
         $this->assertModelExists($user);
 
         foreach($this->user_settings as $setting_name){
+            //Creating user settings
             $userSettings = UserSettings::factory()->create([
                 'user_id' => $user->id,
                 'name' => $setting_name
             ]);
+            //Check if user settings exist
             $this->assertIsObject($userSettings);
             $this->assertModelExists($userSettings);
         }
@@ -39,17 +43,19 @@ class UserTest extends TestCase
 
     public function test_deleting_user()
     {
-        //Creeating data
+        //Creeating user
         $user = User::factory()->create();
         foreach($this->user_settings as $setting_name){
+            //Creating user settings
             $userSettings = UserSettings::factory()->create([
                 'user_id' => $user->id,
                 'name' => $setting_name
             ]);
         }
-        //Deleting data
+        //Delete user settings
         $deleted = UserSettings::where('user_id', $user->id)->delete();
         $this->assertDeleted($userSettings);
+        //Delete user
         $user->delete();
         $this->assertDeleted($user);
     }
