@@ -26,6 +26,30 @@ class UserRoom extends Model
     public $incrementing = false;
     protected $primaryKey = 'user_id';
 
+    /**
+     * Scope a query to only include user room
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUser($query, int $user_id)
+    {
+        return $query->where('user_id', $user_id);
+    }
+
+    /**
+     * Scope a query to only include room
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRoom($query, int $room_id)
+    {
+        return $query->where('room_id', $room_id);
+    }
+
+    
+    //LEGACY
     public function delete_user(int $user_id, int $room_id){
         if(empty($user_id) || empty($room_id))
             return false;

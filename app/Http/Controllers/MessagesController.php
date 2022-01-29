@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 use App\Models\Messages;
 use App\Models\Files;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\UserRoom;
+
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\RoomController;
-use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
 {
@@ -65,8 +67,8 @@ class MessagesController extends Controller
         // Check if isset room_id
         if(!empty($room_id)){
             $room = new Room();
-            $room_status = $room->check(Auth::id(), $room_id);
-            if(empty($room_status->created_at) && $room_status->status != 1){
+            $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+            if(empty($room_status->created_at) || $room_status->status != 1){
                 return response()->json([
                     'status' => 2,
                     'msg'    => 'Brak użytkownika w pokoju'

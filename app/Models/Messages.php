@@ -16,17 +16,41 @@ class Messages extends Model
     protected $table = 'messages';
 
     protected $attributes = [
-        'user_id',
-        'room_id',
-        'file_id',
-        'content',
-        'created_at'
+        'user_id' => false,
+        'room_id' => false,
+        'file_id' => false,
+        'content' => '',
+        'created_at'  => '1998-07-14 14:00:00'
     ];
 
     public $timestamps = false;
     public $incrementing = false;
-    protected $primaryKey = 'room_id';
+    protected $primaryKey = 'user_id';
 
+    /**
+     * Scope a query to only include room messages
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRoom($query, int $room_id)
+    {
+        return $query->where('room_id', $room_id)->latest();
+    }
+
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return MessagesFactory::new();
+    }
+
+
+    //LEGACY
     public function get(int $room_id, int $limiter = null){
         if(!empty($limiter) && is_numeric($limiter)){
             return  DB::table($this->table)->select()->where('room_id', '=', $room_id)->take($limiter)->latest()->get();
