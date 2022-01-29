@@ -2,17 +2,35 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use App\Models\Messages;
 
 class MessagesTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
-    public function test_example()
+    // use RefreshDatabase;
+
+    public function test_creating_message()
     {
-        $this->assertTrue(true);
+        //Need to create room
+        $msg = Messages::factory()->create();
+        //Check if room exist
+        $this->assertModelExists($msg);
+    }
+
+    public function test_deleting_messages()
+    {
+        //Need to create room
+        // $tmp = Messages::factory()->create([
+        $tmp = Messages::factory()->count(5)->create([
+            'room_id' => 99,
+        ]);
+        $msgs = Messages::Room(99)->delete();
+        //Check if messages has been deleted
+        $this->assertDatabaseMissing('messages', [
+            'room_id' => 99,
+        ]);
     }
 }
