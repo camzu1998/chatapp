@@ -16,7 +16,7 @@ use App\Http\Controllers\RoomController;
 
 class MessagesController extends Controller
 {
-    public function get_newest_id($room_id = null){  
+    public function get_newest_id(int $room_id){  
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -31,16 +31,15 @@ class MessagesController extends Controller
                 'msg'    => 'Błedny id pokoju'
             ]);
 
-        $room = new Room();
-        $room_status = $room->check(Auth::id(), $room_id);
-        if(empty($room_status->created_at) && $room_status->status != 1)
+        //Check if user is in the room
+        $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+        if(empty($room_status->created_at) || $room_status->status != 1)
             return response()->json([
                 'status' => 2,
                 'msg'    => 'Brak użytkownika w pokoju'
             ]);
 
-        $msgM = new Messages();
-        $msgs = $msgM->get_last($room_id);
+        $msgs = Messages::Room($room_id)->first();
         if(empty($msgs->id)){
             return 0;
         }
@@ -66,7 +65,7 @@ class MessagesController extends Controller
 
         // Check if isset room_id
         if(!empty($room_id)){
-            $room = new Room();
+            //Check if user is in the room
             $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
             if(empty($room_status->created_at) || $room_status->status != 1){
                 return response()->json([
@@ -75,12 +74,17 @@ class MessagesController extends Controller
                 ]);
             }
         }
-        //Check if user is in the room
-        $msg = new Messages();
-        $UserRoomModel = new UserRoom();
-
-        $msg_id = $msg->create($room_id, $content, 0, Auth::id());
-        $UserRoomModel->set_user_msg($room_id, Auth::id(), $msg_id);
+        
+        //Get messages
+        $msg = Messages::create([
+            'user_id' => Auth::id(),
+            'room_id' => $room_id,
+            'file_id' => 0,
+            'content' => $content,
+            'created_at'  => date('Y-m-d H:i:s')
+        ]);
+        //Set user message
+        UserRoom::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $msg->id]);
 
         return $this->get($room_id);
     }
@@ -101,9 +105,8 @@ class MessagesController extends Controller
 
         // Check if isset room_id
         if(!empty($room_id)){
-            $room = new Room();
             //Check if user is in the room
-            $room_status = $room->check(Auth::id(), $room_id);
+            $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
             if(empty($room_status->created_at) || $room_status->status != 1){
                 return response()->json([
                     'status' => false,
@@ -112,17 +115,23 @@ class MessagesController extends Controller
             }
         }
         $files_con = new FilesController();
-        $msg = new Messages();
-        $UserRoomModel = new UserRoom();
         //Store file
         $file = $files_con->store($request);
         //Add message
-        $msg_id = $msg->create($room_id, '', $file['file_id'], Auth::id());
-        $UserRoomModel->set_user_msg($room_id, Auth::id(), $msg_id);
+        $msg = Messages::create([
+            'user_id' => Auth::id(),
+            'room_id' => $room_id,
+            'file_id' => $file['file_id'],
+            'content' => '',
+            'created_at'  => date('Y-m-d H:i:s')
+        ]);
+        //Set user message
+        UserRoom::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $msg->id]);
+
         return $this->get($room_id);
     }
 
-    public function get($room_id = null){
+    public function get(int $room_id){
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -134,35 +143,30 @@ class MessagesController extends Controller
         $users_array = array();
         $file_array = array();
         
-        $msgM = new Messages();
-        $files_model = new Files();
-        $user_model = new User();
-        $room_model = new Room();
-        
-        $tmp = $room_model->check(Auth::id(), $room_id);
-        if(empty($tmp) || $tmp->status != 1)
+        $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+        if(empty($room_status->created_at) || $room_status->status != 1)
             return response()->json([
                 'status' => false,
-                'step'   => 0
+                'step'   => 0,
+                'data' => $room_status
             ]);;
 
-        $msgs = $msgM->get($room_id, 10);
-
+        $msgs = Messages::Room($room_id)->take(10)->get();
         foreach($msgs as $k => $msg){
             //Check file data
             if($msg->file_id != 0){
-                $file_array[$msg->file_id] = $files_model->get($msg->file_id);
+                $file_array[$msg->file_id] = Files::find($msg->file_id);
             }
             //Check user data
-            $msg_user = $user_model->get_user_data($msg->user_id);
+            $msg_user = User::find($msg->user_id);
             $users_array[$msg->user_id] = [
                 'nick' => $msg_user->nick,
                 'profile_img' => $msg_user->profile_img
             ];
         }
-        $UserRoomModel = new UserRoom();
         $newest_id = $this->get_newest_id($room_id);
-        $UserRoomModel->set_user_msg($room_id, Auth::id(), $newest_id);
+        //Set user message
+        UserRoom::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $newest_id]);
 
         return response()->json([
             'messages'   => $msgs,
@@ -175,25 +179,19 @@ class MessagesController extends Controller
     public function get_array($room_id = null){
         $users_array = array();
         $file_array = array();
-        
-        $msgM = new Messages();
-        $files_model = new Files();
-        $user_model = new User();
-        $room_model = new Room();
-        
-        $tmp = $room_model->check(Auth::id(), $room_id);
-        if(empty($tmp) || $tmp->status != 1)
+                
+        $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+        if(empty($room_status->created_at) || $room_status->status != 1)
             return false;
         
-        $msgs = $msgM->get($room_id, 10);
-
+        $msgs = Messages::Room($room_id)->take(10)->get();
         foreach($msgs as $k => $msg){
             //Check file data
             if($msg->file_id != 0){
-                $file_array[$msg->file_id] = $files_model->get($msg->file_id);
+                $file_array[$msg->file_id] = Files::find($msg->file_id);
             }
             //Check user data
-            $msg_user = $user_model->get_user_data($msg->user_id);
+            $msg_user = User::find($msg->user_id);
             $users_array[$msg->user_id] = [
                 'nick' => $msg_user->nick,
                 'profile_img' => $msg_user->profile_img

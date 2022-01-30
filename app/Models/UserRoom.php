@@ -27,7 +27,7 @@ class UserRoom extends Model
     protected $primaryKey = 'user_id';
 
     /**
-     * Scope a query to only include user room
+     * Scope a query to only include user
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder

@@ -23,9 +23,16 @@ class Messages extends Model
         'created_at'  => '1998-07-14 14:00:00'
     ];
 
+    protected $fillable = [
+        'user_id',
+        'room_id',
+        'file_id',
+        'content',
+    ];
+
     public $timestamps = false;
-    public $incrementing = false;
-    protected $primaryKey = 'user_id';
+    public $incrementing = true;
+    protected $primaryKey = 'id';
 
     /**
      * Scope a query to only include room messages
@@ -35,7 +42,7 @@ class Messages extends Model
      */
     public function scopeRoom($query, int $room_id)
     {
-        return $query->where('room_id', $room_id)->latest();
+        return $query->where('room_id', $room_id)->orderBy('id', 'desc');
     }
 
 
@@ -69,19 +76,19 @@ class Messages extends Model
         return  DB::table($this->table)->selectRaw('COUNT(id) as unreaded')->where('room_id', '=', $room_id)->where('id', '>', $last_msg)->first();
     }
 
-    public function create(int $room_id, string $content, int $file_id, int $user_id){
-        if(empty($room_id) || empty($user_id) || (empty($content) && empty($file_id)))
-            return false;
+    // public function create(int $room_id, string $content, int $file_id, int $user_id){
+    //     if(empty($room_id) || empty($user_id) || (empty($content) && empty($file_id)))
+    //         return false;
 
-        $date = date('Y-m-d H:i:s');
-        return DB::table($this->table)->insertGetId([
-            'user_id'    => $user_id,
-            'room_id'    => $room_id,
-            'file_id'    => $file_id,
-            'content'    => $content,
-            'created_at' => $date,
-        ]);
-    }
+    //     $date = date('Y-m-d H:i:s');
+    //     return DB::table($this->table)->insertGetId([
+    //         'user_id'    => $user_id,
+    //         'room_id'    => $room_id,
+    //         'file_id'    => $file_id,
+    //         'content'    => $content,
+    //         'created_at' => $date,
+    //     ]);
+    // }
 
     public function delete_room(int $room_id){
         if(empty($room_id))
