@@ -14,6 +14,30 @@ class Files extends Model
 
     protected $table = 'files';
 
+    protected $attributes = [
+        'filename' => false,
+        'path' => false,
+        'ext' => false,
+        'created_at'  => '1998-07-14 14:00:00',
+        'updated_at'  => '1998-07-14 14:00:00'
+    ];
+
+    public $timestamps = true;
+    public $incrementing = true;
+    protected $primaryKey = 'id';
+
+    /**
+     * Scope a query to only include room messages
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRoom($query, int $room_id)
+    {
+        return $query->where('room_id', $room_id)->latest();
+    }
+
+
     public function get($id = null){
         if(empty($id))
             return false;
