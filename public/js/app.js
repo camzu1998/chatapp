@@ -996,7 +996,7 @@ module.exports = function transformData(data, headers, fns) {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-/* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
+/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 
 
 var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
@@ -2060,7 +2060,7 @@ module.exports = {
   \*****************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
@@ -2591,11 +2591,13 @@ notifyWorker.onmessage = function (e) {
     }
 
     if (_typeof(res) !== undefined) {
-      var panel_room = $('#panel_room_' + res.room_id);
+      if (res.room_id !== undefined) {
+        var panel_room = $('#panel_room_' + res.room_id);
 
-      if (panel_room.length != 0) {
-        panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
-        panel_room.children('.room_info').children('.room_last_msg').html(res.user + ': ' + res.content);
+        if (panel_room.length != 0) {
+          panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
+          panel_room.children('.room_info').children('.room_last_msg').html(res.user + ': ' + res.content);
+        }
       }
 
       if ($('#notifications').prop('checked')) var notification = new Notification("Użytkownik " + res.user + " wysłał wiadomość do pokoju " + res.room);
@@ -20242,7 +20244,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}

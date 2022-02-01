@@ -500,10 +500,12 @@ notifyWorker.onmessage = function(e) {
             $('#roomsModalBtn').children('.btn-notify').html("").fadeOut();
         }
         if(typeof res !== undefined){
-            var panel_room = $('#panel_room_'+res.room_id);
-            if(panel_room.length != 0){
-                panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
-                panel_room.children('.room_info').children('.room_last_msg').html(res.user+': '+res.content);
+            if(res.room_id !== undefined){
+                var panel_room = $('#panel_room_'+res.room_id);
+                if(panel_room.length != 0){
+                    panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
+                    panel_room.children('.room_info').children('.room_last_msg').html(res.user+': '+res.content);
+                }   
             }
             if($('#notifications').prop('checked'))
                 var notification = new Notification("Użytkownik "+res.user+" wysłał wiadomość do pokoju "+res.room);
