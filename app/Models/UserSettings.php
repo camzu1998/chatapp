@@ -22,41 +22,33 @@ class UserSettings extends Model
         'user_id' => false,
         'name' => 'sounds',
         'value' => 0,
-        'created_at' => false
+        'created_at' => false,
+        'updated_at' => false
     ];
 
-    public function get($user_id = 0, $name = ''){
-        if(empty($name) || empty($user_id))
-            return false;
+    public $incrementing = true;
 
-        return DB::table($this->table)->select('value')->where('user_id', '=', $user_id)->where('name', 'LIKE', $name)->first();
+    /**
+     * Scope a query to only include user
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $user_id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUser($query, int $user_id)
+    {
+        return $query->where('user_id', $user_id);
     }
 
-    public function get_all(int $user_id){
-        if(empty($user_id))
-            return false;
-
-        return DB::table($this->table)->select()->where('user_id', '=', $user_id)->get();
-    }
-
-    public function set(int $user_id, string $name, int $value = 0){
-        return DB::table($this->table)->where('user_id', $user_id)->where('name', 'LIKE', $name)->update(['value' => $value, 'updated_at' => date('Y-m-d H:i:s')]);
-    }
-
-    public function add(int $user_id, string $name, int $value){
-        if(empty($name) || empty($user_id))
-            return false;
-
-        if(empty($value)){
-            $value = 0;
-        }
-
-        $id = DB::table($this->table)->insertGetId([
-            'user_id' => $user_id,
-            'name'    => $name,
-            'value'   => $value
-        ]);
-        
-        return $id;
+    /**
+     * Scope a query to only include user
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string $name
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeName($query, string $name)
+    {
+        return $query->where('name', $name);
     }
 }

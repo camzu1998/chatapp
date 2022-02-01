@@ -29,30 +29,35 @@ class UserController extends Controller
             return redirect('/main');
         }
 
-        if(empty($request->input('nick')) || empty($request->input('email')) || empty($request->input('pass')))
-            return redirect('/register')->withErrors([
+        if(empty($request->nick) || empty($request->email) || empty($request->pass))
+            return back()->withErrors([
                 'email' => 'The provided credentials do not match our records.',
             ]);
 
-        if($request->input('pass') != $request->input('pass_2'))
-            return redirect('/register')->withErrors([
+        if($request->pass != $request->pass_2)
+            return back()->withErrors([
                 'pass_2' => 'Paswwords do not match each other.',
             ]);
-
         $pass = Hash::make($request->input('pass'));
-        $userModel = new User();
-
-        $tmp = $userModel->check_names($request->input('nick'), $request->input('email'));
-        if($tmp->duplicated != 0){
-            return redirect('/register')->withErrors([
+        
+        $user = User::where('nick', $request->nick)->orWhere('email', $request->email)->first();
+        if(!empty($user->created_at)){
+            return back()->withErrors([
                 'email' => 'The provided credentials do not match our records.',
             ]);
         }
 
-        $user_id = $userModel->save_user($request->input('nick'), $request->input('email'), $pass);
+        $user = User::create([
+            'nick' => $request->nick,
+            'email' => $request->email,
+            'password' => $pass,
+            'profile_img' => 'no_image.jpg',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
 
         $user_settings_controller = new UserSettingsController();
-        $user_settings_controller->set_init_settings($user_id);
+        $user_settings_controller->set_init_settings($user->id);
 
         return redirect('/');
     }
@@ -95,16 +100,16 @@ class UserController extends Controller
             return back()->withErrors(['email' => 'Provided email doesnt pass x']);
         }
 
-        $userModel = new User();
-        $res = $userModel->check_email($request->email);
-        if($res != null){
+        $user = User::where('email', $request->email)->first();
+        if(!empty($user->created_at)){
             $token = Str::random(40);
-            $affected = $userModel->set_token($res->id, $token);
-            if($affected != 1){
+            $user->reset_token = $token;
+            $user->save();
+            if(!$user->wasChanged()){
                 return back()->withErrors(['email' => 'Provided email doesnt pass xx']);
             }
             //Send email
-            Mail::to($res->email)->send(new ResetPassword($token));
+            Mail::to($user->email)->send(new ResetPassword($token));
 
             return redirect('/');
         }
@@ -115,10 +120,9 @@ class UserController extends Controller
         if(empty($token)){
             return redirect('/');
         }
-        $userModel = new User();
         //Check token
-        $res = $userModel->check_token($token);
-        if($res != null && $res != false){
+        $user = User::where('reset_token', $token)->first();
+        if(!empty($user->created_at)){
             return view('set_password', ['token' => $token]);
         }
 
@@ -132,13 +136,13 @@ class UserController extends Controller
         if($request->pass != $request->pass2){
             return back()->withErrors(['pass' => 'Provided passwords doesnt match']);
         }
-        $userModel = new User();
         //Check token
-        $res = $userModel->check_token($token);
-        if($res != null && $res != false){
+        $user = User::where('reset_token', $token)->first();
+        if(!empty($user->created_at)){
             $pass = Hash::make($request->pass);
             //Store pass in db & clear token
-            $userModel->update_pass($pass, $token, $res->id);
+            $user->password = $pass;
+            $user->save();
             //Redirect user to login page
             return redirect('/');
         }

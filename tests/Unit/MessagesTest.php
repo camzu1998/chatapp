@@ -10,7 +10,7 @@ use App\Models\Messages;
 
 class MessagesTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     public function test_creating_message()
     {

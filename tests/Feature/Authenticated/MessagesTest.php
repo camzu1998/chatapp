@@ -15,7 +15,7 @@ use App\Models\UserRoom;
 
 class MessagesTest extends AuthenticatedTestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
 
     public function test_if_auth_user_can_send_message(){
         $room = Room::factory()->create([

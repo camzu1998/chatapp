@@ -24,20 +24,21 @@ class UserSettingsController extends Controller
                 'msg'    => 'Brak autoryzacji'
             ]);
         }
-        $user_id = Auth::id();
-        $userSettingsModel = new UserSettings();
 
         foreach($this->inputs as $name => $init_val){
-            switch($request->input($name)){
+            $user_setting = UserSettings::User(Auth::id())->Name($name)->first();
+            switch($request->$name){
                 case 0:
-                    $res = $userSettingsModel->set($user_id, $name, 0);
+                    $user_setting->value = 0;
                     break;
                 case 1:
-                    $res = $userSettingsModel->set($user_id, $name, 1);
+                    $user_setting->value = 0;
                     break;
                 default:
-                    $userSettingsModel->set($user_id, $name, $init_val);
+                    $user_setting->value = $init_val;
             }
+            if($user_setting->isDirty())
+                $user_setting->save();
         }
         return response()->json([
             'status' => 0,
@@ -45,19 +46,16 @@ class UserSettingsController extends Controller
         ]);
     }
     public function load_user_settings(){
-        $user_id = Auth::id();
-        $userSettingsModel = new UserSettings();
-        
-        return $userSettingsModel->get_all($user_id);
+        return UserSettings::User(Auth::id())->get();
     }
-    public function set_init_settings($user_id = null){
-        if(!$user_id)
-            return false;
-
-        $userSettingsModel = new UserSettings();
+    public function set_init_settings(int $user_id){
 
         foreach($this->inputs as $name => $init_val){
-            $userSettingsModel->add($user_id, $name, $init_val);
+            UserSettings::factory()->create([
+                'user_id' => Auth::id(),
+                'name'    => $name,
+                'value'   => $init_val,
+            ]);
         }
 
         return true;
@@ -82,9 +80,7 @@ class UserSettingsController extends Controller
                 return false;
             }
             //Check if need to delete previous image
-            $user_id = Auth::id();
-            $userModel = new User();
-            $user = $userModel->get_user_data($user_id);
+            $user = User::find(Auth::id());
             if($user->profile_img != 'no_image.jpg'){
                 //Delete old profile image
                 Storage::delete('profiles_miniatures/'.$user->profile_img);
@@ -93,7 +89,7 @@ class UserSettingsController extends Controller
             $filename = $file->getClientOriginalName();
 
             $path = $file->storeAs('profiles_miniatures', $filename);
-            $userModel->set_profile_image($user_id, $filename);
+            $userModel->set_profile_image($user->id, $filename);
             //Return data
             return $filename;
         }
