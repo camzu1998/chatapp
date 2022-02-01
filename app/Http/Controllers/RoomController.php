@@ -14,7 +14,6 @@ use App\Models\UserRoom;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FriendshipController;
-use App\Http\Controllers\RoomController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\UserSettingsController;
 
@@ -25,8 +24,6 @@ class RoomController extends Controller
     public function get_user_rooms($switch_response = 'json'){
         $user_id = Auth::id();
         $rooms_data = array();
-
-        $msgsModel = new Messages();
 
         $user_rooms = UserRoom::where('user_id', '=', $user_id)->orderBy('status', 'asc')->get();
         if(empty($user_rooms[0])){
@@ -51,7 +48,7 @@ class RoomController extends Controller
             if($user_room->status == 1){
                 $res = Messages::get_difference($user_room->room_id, $user_room->last_msg_id);
                 $rooms_data[$user_room->room_id]->unreaded = $res->unreaded;
-                $last_msg = Messages::where('room_id', '=', $user_room->room_id)->latest()->first();
+                $last_msg = Messages::Room($user_room->room_id)->latest()->first();
                 $rooms_data[$user_room->room_id]->last_msg_user = "Ty";
                 $rooms_data[$user_room->room_id]->last_msg_user_img = $user_data->profile_img;
                 if(!empty($last_msg->user_id))
@@ -96,6 +93,8 @@ class RoomController extends Controller
                 'msg'    => 'Please add some friends to room'
             ]);
         }
+
+        $user = Auth::user();
 
         $room_name = $request->room_name;
         if(empty($room_name)){
@@ -148,9 +147,6 @@ class RoomController extends Controller
             ]);
         }
 
-        $roomModel = new Room();
-        $userRoomModel = new UserRoom();
-
         $user_id = Auth::id();
         //Valid status
         $user_room = UserRoom::where('user_id', $user_id)->where('room_id', $room_id)->first();
@@ -163,33 +159,27 @@ class RoomController extends Controller
         switch($request->button){
             case 'acceptInvite':
                 $user_room->status = 1;
-                $status = $user_room->save();
                 break;
             case 'decelineInvite':
                 $user_room->status = 2;
-                $status = $user_room->save();
                 break;
             case 'outRoom':
                 $status = $user_room->delete();
                 break;
             case 'blockRoom':
                 $user_room->status = 2;
-                $status = $user_room->save();
                 break;
             case 'deleteRoom':
                 return $this->delete_room($room_id);
                 break;
         }
-        //Update room status
-        if($status != 0){
-            return response()->json([
-                'status' => 0,
-                'msg'    => 'Success'
-            ]);
+        if($user_room->isDirty()){
+            $user_room->save();
         }
+
         return response()->json([
-            'status' => 3,
-            'msg'    => 'Error'
+            'status' => 0,
+            'msg'    => 'Success'
         ]);
     }
     /**
@@ -201,12 +191,9 @@ class RoomController extends Controller
                 'err' => '1',
             ]);
 
-        $user_id = Auth::id();
-
         $file = $request->room_profile;
         $filename = $file->getClientOriginalName();
 
-        $roomModel = new Room();
         //Compare user and admin ids
         $room = Room::where('admin_id', Auth::id())->where('id', $room_id)->first();
         if(empty($room->created_at)){

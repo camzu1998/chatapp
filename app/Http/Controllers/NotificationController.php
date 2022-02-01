@@ -13,9 +13,8 @@ use Illuminate\Support\Facades\Auth;
 class NotificationController extends Controller
 {
     public function notify_room_message(int $room_id, string $response = "JSON"){
-        $room = new Room();
         //Check if user has 
-        $room_status = $room->check(Auth::id(), $room_id);
+        $room_status = UserRoom::Room($room_id)->User(Auth::id())->first();
         if(empty($room_status->created_at) || $room_status->status != 1){
             if($response == "ARRAY"){
                 return [
@@ -27,8 +26,7 @@ class NotificationController extends Controller
             ]);
         }
 
-        $msgM = new Messages();
-        $msgs = $msgM->get_last($room_id);
+        $msgs = Messages::Room($room_id)->latest()->first();
         if(empty($msgs->id)){
             if($response == "ARRAY"){
                 return [
@@ -39,8 +37,9 @@ class NotificationController extends Controller
                 'status' => false
             ]);
         }
-        $res = $msgM->get_difference($room_id, $room_status->last_msg_id);
-        $unreaded = $res->unreaded;
+        
+        $diff = Messages::get_difference($room_id, $room_status->last_msg_id);
+        $unreaded = $diff->unreaded;
         //Check if user seen this message
         if($room_status->last_msg_id == $msgs->id || $msgs->user_id == Auth::id() || $room_status->last_notify_id == $msgs->id){
             if($response == "ARRAY"){
@@ -55,19 +54,17 @@ class NotificationController extends Controller
             ]);
         }
         //Get user & room data
-        $user_room = $room->check($msgs->user_id, $room_id);
+        $user_room = UserRoom::Room($room_id)->User($msgs->user_id)->first();
         $nickname = $user_room->nickname;
         if(empty($nickname)){
             //Get user data by id
-            $userModel = new User();
-            $user = $userModel->get_user_data($msgs->user_id);
+            $user = User::find($msgs->user_id);
             $nickname = $user->nick;
         }
-        $room_data = $room->get($room_id);
+        $room_data = Room::find($room_id);
         $room_name = $room_data->room_name;
         //Update user_room table
-        $userRoomModel = new UserRoom();
-        $userRoomModel->set_user_notify($room_id, Auth::id(), $msgs->id);
+        UserRoom::Room($room_id)->User(Auth::id())->update(['last_notify_id' => $msgs->id]);
         //Responses
         if($response == "ARRAY"){
             return [
@@ -92,8 +89,8 @@ class NotificationController extends Controller
     public function check_messages(){
         $notify = [];
         $notify['sum_unreaded'] = 0;
-        $roomModel = new Room();
-        $user_rooms = $roomModel->get_user_rooms(Auth::id());
+
+        $user_rooms = UserRoom::User(Auth::id())->get();
         foreach($user_rooms as $user_room){
             $result = $this->notify_room_message($user_room->room_id, "ARRAY");
             if($result['status'] == false){

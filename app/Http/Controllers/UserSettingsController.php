@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserSettings;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserSettingsController extends Controller
 {
@@ -15,6 +16,8 @@ class UserSettingsController extends Controller
         'notifications' => 0,
         'press_on_enter' => 0
     ];
+    protected $profile_ext = array('png', 'jpeg', 'jpg');
+    
 
     public function save_user_settings(Request $request){
         if (!Auth::check()) {
@@ -52,7 +55,7 @@ class UserSettingsController extends Controller
 
         foreach($this->inputs as $name => $init_val){
             UserSettings::factory()->create([
-                'user_id' => Auth::id(),
+                'user_id' => $user_id,
                 'name'    => $name,
                 'value'   => $init_val,
             ]);
@@ -89,7 +92,8 @@ class UserSettingsController extends Controller
             $filename = $file->getClientOriginalName();
 
             $path = $file->storeAs('profiles_miniatures', $filename);
-            $userModel->set_profile_image($user->id, $filename);
+            $user->profile_img = $filename;
+            $user->save();
             //Return data
             return $filename;
         }
