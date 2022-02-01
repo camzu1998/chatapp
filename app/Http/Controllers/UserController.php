@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -14,8 +13,6 @@ use App\Mail\ResetPassword;
 
 class UserController extends Controller
 {
-    protected $profile_ext = array('png', 'jpeg', 'jpg');
-
     public function register_form(){
         if (Auth::check()) {
             return redirect('/main');
