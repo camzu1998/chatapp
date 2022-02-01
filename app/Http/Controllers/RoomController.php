@@ -53,7 +53,7 @@ class RoomController extends Controller
             $rooms_data[$user_room->room_id]->last_msg_content = "";
             //Unread messages
             if($user_room->status == 1){
-                $res = $msgsModel->get_difference($user_room->room_id, $user_room->last_msg_id);
+                $res = Messages::get_difference($user_room->room_id, $user_room->last_msg_id);
                 $rooms_data[$user_room->room_id]->unreaded = $res->unreaded;
                 $last_msg = Messages::where('room_id', '=', $user_room->room_id)->latest()->first();
                 $rooms_data[$user_room->room_id]->last_msg_user = "Ty";
@@ -294,9 +294,6 @@ class RoomController extends Controller
         if(empty($room_id))
             return false;
 
-        $userRoomModel = new UserRoom();
-        $userModel = new User();
-
         $roommates = UserRoom::where('room_id', $room_id)->where('user_id', '!=', Auth::id())->get();
         foreach($roommates as $roommate){
             //Retrieve user data
@@ -436,7 +433,7 @@ class RoomController extends Controller
         $data['img_ext'] = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
         $data['content'] = 'chat';
 
-        $UserRoomModel->set_user_msg($room_id, Auth::id(), $tmp['newest_msg']);
+        UserRoom::Room($room_id)->User(Auth::id())->update(['last_msg_id' => $tmp['newest_msg']]);
 
         return $this->load('chat', $data);
     }

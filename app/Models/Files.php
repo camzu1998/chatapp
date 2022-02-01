@@ -14,6 +14,12 @@ class Files extends Model
 
     protected $table = 'files';
 
+    protected $fillable = [
+        'filename',
+        'path',
+        'ext',
+    ];
+
     protected $attributes = [
         'filename' => false,
         'path' => false,
@@ -38,26 +44,26 @@ class Files extends Model
     }
 
 
-    public function get($id = null){
-        if(empty($id))
-            return false;
+    // public function get($id = null){
+    //     if(empty($id))
+    //         return false;
         
-        return DB::table($this->table)->select()->where('id', '=', $id)->get();
-    }
+    //     return DB::table($this->table)->select()->where('id', '=', $id)->get();
+    // }
 
-    public function create(string $name,string $path,string $ext){
-        if(empty($name) || empty($path) || empty($ext))
-            return false;
+    // public function create(string $name,string $path,string $ext){
+    //     if(empty($name) || empty($path) || empty($ext))
+    //         return false;
 
-        $date = date('Y-m-d H:i:s');
+    //     $date = date('Y-m-d H:i:s');
         
-        $file_id = DB::table($this->table)->insertGetId([
-            'filename'   => $name,
-            'path'       => $path,
-            'ext'        => $ext,
-            'created_at' => $date
-        ]);
+    //     $file_id = DB::table($this->table)->insertGetId([
+    //         'filename'   => $name,
+    //         'path'       => $path,
+    //         'ext'        => $ext,
+    //         'created_at' => $date
+    //     ]);
 
-        return $file_id;
-    }
+    //     return $file_id;
+    // }
 }

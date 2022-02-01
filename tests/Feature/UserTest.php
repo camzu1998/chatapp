@@ -9,14 +9,14 @@ use App\Models\User;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
     
     /** @test */
     public function check_user_register_form()
     {
         $response = $this->post('/register', []);
 
-        $response->assertRedirect('/register');
+        $response->assertSessionHasErrors(['email']);
     }
 
     /** @test */

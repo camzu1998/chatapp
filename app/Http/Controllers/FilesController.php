@@ -9,24 +9,22 @@ use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {
-    protected $table = 'files';
-
-    protected $form = [
-        'file'
-    ];
-
-
-    public function store(Request $request){        
-        $files = new Files();
+    public function store(Request $request){
         $file_data = array();
 
-        $file = $request->file('file');
-        $filename = $file->getClientOriginalName();
+        $file_req = $request->file('file');
+        $filename = $file_req->getClientOriginalName();
         //Store on disk
-        $path = $file->store('files', 'public');
+        $path = $file_req->store('files', 'public');
         //Fill array
         $files_data = pathinfo($path);
-        $file_data['file_id'] = $files->create($filename, $path, $file->extension());
+        $file = Files::create([
+            'filename'   => $filename,
+            'path'       => $path,
+            'ext'        => $file_req->extension(),
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+        $file_data['file_id'] = $file->id;
 
         return $file_data;
     }
