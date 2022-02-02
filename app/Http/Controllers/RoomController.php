@@ -320,7 +320,8 @@ class RoomController extends Controller
                 'msg'    => 'Brak autoryzacji'
             ]);
         }
-        Storage::delete('room_miniatures/'.$room->room_img);
+        if($room->room_img != 'no_image.jpg')
+            Storage::delete('room_miniatures/'.$room->room_img);
         //Delete room
         if($room->delete() != 0){
             return response()->json([
