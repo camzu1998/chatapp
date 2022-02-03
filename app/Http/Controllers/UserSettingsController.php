@@ -16,8 +16,6 @@ class UserSettingsController extends Controller
         'notifications' => 0,
         'press_on_enter' => 0
     ];
-    protected $profile_ext = array('png', 'jpeg', 'jpg');
-    
 
     public function save_user_settings(Request $request){
         if (!Auth::check()) {
@@ -67,20 +65,20 @@ class UserSettingsController extends Controller
     public function set_user_profile(Request $request){
         if (!Auth::check()) {
             // The user is not logged in...
-            return false;
+            return 'xd';
         }
 
         if ($request->hasFile('input_profile')) {
             $file = $request->input_profile;
 
             //Check extension & weight
-            if(!in_array($file->extension(), $this->profile_ext)){
+            if(!in_array($file->extension(), ['png', 'jpeg', 'jpg', 'webp'])){
                 //Extension didn't pass
-                return false;
+                return 'xd1 - '.$file->extension();
             }
             if($file->getSize() > (1024 * (1024 * 25))){
                 //File is oversized
-                return false;
+                return 'xd2';
             }
             //Check if need to delete previous image
             $user = User::find(Auth::id());
@@ -91,13 +89,14 @@ class UserSettingsController extends Controller
             //Store file
             $filename = $file->getClientOriginalName();
 
-            $path = $file->storeAs('profiles_miniatures', $filename);
+            $path = $request->input_profile->storeAs('profiles_miniatures',  $filename);
+
             $user->profile_img = $filename;
             $user->save();
             //Return data
             return $filename;
         }
 
-        return false;
+        return 'xd3';
     }
 }
