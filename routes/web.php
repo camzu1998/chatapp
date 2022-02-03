@@ -12,6 +12,7 @@ use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\RoomController;
 use App\Models\UserRoom;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,5 +74,10 @@ Route::get('/forgot_password', function(){
     }
 
     return view('remember_password');
+});
+
+
+Route::get('/linkstorage', function () {
+    Artisan::call('storage:link');
 });
 
