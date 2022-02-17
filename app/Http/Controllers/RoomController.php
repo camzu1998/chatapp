@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\Interfaces\RoomInterface;
+
 use App\Models\Friendship;
 use App\Models\Room;
 use App\Models\User;
@@ -17,11 +19,12 @@ use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\UserSettingsController;
 
-class RoomController extends Controller
+class RoomController extends Controller implements RoomInterface
 {
     protected $profile_ext = array('png', 'jpeg', 'jpg');
 
-    public function get_user_rooms($switch_response = 'json'){
+    public function get_user_rooms(string $switch_response = 'json'): mixed
+    {
         $user_id = Auth::id();
         $rooms_data = array();
 
@@ -78,7 +81,8 @@ class RoomController extends Controller
         }
     }
 
-    public function save_room(Request $request){
+    public function save_room(Request $request): mixed
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -129,7 +133,8 @@ class RoomController extends Controller
         ]);
     }
 
-    public function update_room_status(Request $request, int $room_id){
+    public function update_room_status(Request $request, int $room_id): mixed
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -185,7 +190,8 @@ class RoomController extends Controller
     /**
      * Upload room profile image
      */
-    public function upload_room_profile(int $room_id, Request $request){
+    public function upload_room_profile(int $room_id, Request $request): string
+    {
         if(empty($room_id) || !$request->hasFile('room_profile'))
             return response()->json([
                 'err' => '1',
@@ -230,7 +236,8 @@ class RoomController extends Controller
     /**
      *  Update room data
      */
-    public function update(Request $request, int $room_id){
+    public function update(Request $request, int $room_id): mixed
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -272,7 +279,8 @@ class RoomController extends Controller
     /**
      *  Get room roommates
      */
-    public function get_roommates(int $room_id){
+    public function get_roommates(int $room_id): array
+    {
         $roommates_data = array();
         if(empty($room_id))
             return false;
@@ -293,7 +301,8 @@ class RoomController extends Controller
     /**
      * Delete room and connected data
      */
-    public function delete_room(int $room_id){
+    public function delete_room(int $room_id): mixed
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -333,7 +342,8 @@ class RoomController extends Controller
     /**
      * Send invites to friends
      */
-    public function invite(int $room_id, Request $request){
+    public function invite(int $room_id, Request $request): mixed
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -376,7 +386,8 @@ class RoomController extends Controller
     /**
      *  Get room data
      */
-    public function get_room(int $room_id){        
+    public function get_room(int $room_id): mixed
+    {        
         //Check if user is in room
         $room = UserRoom::where('user_id', Auth::id())->where('room_id', $room_id)->where('status', 1)->first();
         if(empty($room->created_at)){
@@ -387,7 +398,8 @@ class RoomController extends Controller
     /**
      * Return room view
      */
-    public function load_room(int $room_id, Request $request){
+    public function load_room(int $room_id, Request $request): mixed
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return redirect('/');
@@ -402,6 +414,10 @@ class RoomController extends Controller
         if($tmp == false){
             return redirect('/main');
         }
+
+        $user_room = UserRoom::Room($room_id)->User(Auth::id())->first();
+        if(empty($user_room->created_at))
+            return redirect('/main');
         
         $data['user_settings'] = $UserSettingsController->load_user_settings();
         $data['friends_data'] = $friendship->get_user_friends('array');

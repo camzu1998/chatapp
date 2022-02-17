@@ -12,7 +12,7 @@ use App\Models\UserSettings;
 
 class UserTest extends TestCase
 {
-    // use RefreshDatabase;
+    use RefreshDatabase;
     
     /**
      * A basic unit test example.
