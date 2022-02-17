@@ -12,7 +12,7 @@ use App\Models\UserSettings;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
     
     /**
      * A basic unit test example.
@@ -54,9 +54,9 @@ class UserTest extends TestCase
         }
         //Delete user settings
         $deleted = UserSettings::where('user_id', $user->id)->delete();
-        $this->assertDeleted($userSettings);
+        $this->assertModelMissing($userSettings);
         //Delete user
         $user->delete();
-        $this->assertDeleted($user);
+        $this->assertModelMissing($user);
     }
 }

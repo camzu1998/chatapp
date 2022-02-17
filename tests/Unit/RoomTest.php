@@ -26,7 +26,7 @@ class RoomTest extends TestCase
         $room = Room::factory()->create();
         $room->delete();
         //Check if room has been deleted
-        $this->assertDeleted($room);
+        $this->assertModelMissing($room);
     }
 
     public function test_updating_room()
