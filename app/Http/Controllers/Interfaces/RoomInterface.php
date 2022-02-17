@@ -14,7 +14,7 @@ interface RoomInterface
     /**
      * Upload room profile image
      */
-    public function upload_room_profile(int $room_id, Request $request): string;
+    public function upload_room_profile(Request $request, int $room_id): string;
     /**
      *  Update room data
      */
@@ -30,7 +30,7 @@ interface RoomInterface
     /**
      * Send invites to friends
      */
-    public function invite(int $room_id, Request $request): mixed;
+    public function invite(Request $request, int $room_id): mixed;
     /**
      *  Get room data
      */
@@ -38,5 +38,5 @@ interface RoomInterface
     /**
      * Return room view
      */
-    public function load_room(int $room_id, Request $request): mixed;
+    public function load_room(Request $request, int $room_id): mixed;
 }

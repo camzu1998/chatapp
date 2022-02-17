@@ -83,21 +83,6 @@ class RoomController extends Controller implements RoomInterface
 
     public function save_room(Request $request): mixed
     {
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return response()->json([
-                'status' => 9,
-                'msg'    => 'Brak autoryzacji'
-            ]);
-        }
-
-        if(empty($request->add_friend)){
-            return response()->json([
-                'status' => 1,
-                'msg'    => 'Please add some friends to room'
-            ]);
-        }
-
         $user = Auth::user();
 
         $room_name = $request->room_name;
@@ -135,26 +120,8 @@ class RoomController extends Controller implements RoomInterface
 
     public function update_room_status(Request $request, int $room_id): mixed
     {
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return response()->json([
-                'status' => 9,
-                'msg'    => 'Brak autoryzacji'
-            ]);
-        }
-
-        //Valid action
-        $actions = array('acceptInvite', 'decelineInvite', 'outRoom', 'blockRoom', 'deleteRoom');
-        if(!in_array($request->button, $actions)){
-            return response()->json([
-                'status' => 1,
-                'msg' => 'Niedozowolona akcja'
-            ]);
-        }
-
-        $user_id = Auth::id();
         //Valid status
-        $user_room = UserRoom::where('user_id', $user_id)->where('room_id', $room_id)->first();
+        $user_room = UserRoom::where('user_id', Auth::id())->where('room_id', $room_id)->first();
         if(empty($user_room->created_at)){
             return response()->json([
                 'status' => 2,
@@ -190,13 +157,8 @@ class RoomController extends Controller implements RoomInterface
     /**
      * Upload room profile image
      */
-    public function upload_room_profile(int $room_id, Request $request): string
+    public function upload_room_profile(Request $request, int $room_id): string
     {
-        if(empty($room_id) || !$request->hasFile('room_profile'))
-            return response()->json([
-                'err' => '1',
-            ]);
-
         $file = $request->room_profile;
         $filename = $file->getClientOriginalName();
 
@@ -238,20 +200,6 @@ class RoomController extends Controller implements RoomInterface
      */
     public function update(Request $request, int $room_id): mixed
     {
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return response()->json([
-                'status' => 9,
-                'msg'    => 'Brak autoryzacji'
-            ]);
-        }
-
-        if(empty($room_id) || empty($request->input('update_room_name')))
-            return response()->json([
-                'status' => '1',
-                'msg'    => 'Brak danych'
-            ]);
-
         $room = Room::where('admin_id', Auth::id())->where('id', $room_id)->first();
         if(empty($room->created_at)){
             return response()->json([
@@ -303,20 +251,6 @@ class RoomController extends Controller implements RoomInterface
      */
     public function delete_room(int $room_id): mixed
     {
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return response()->json([
-                'status' => 9,
-                'msg'    => 'Brak autoryzacji'
-            ]);
-        }
-
-        if(empty($room_id))
-            return response()->json([
-                'status' => 1,
-                'msg'    => 'No data'
-            ]);
-        
         //Get room model
         $room = Room::where('admin_id', Auth::id())->where('id', $room_id)->first();
         if(empty($room->created_at)){
@@ -342,22 +276,8 @@ class RoomController extends Controller implements RoomInterface
     /**
      * Send invites to friends
      */
-    public function invite(int $room_id, Request $request): mixed
+    public function invite(Request $request, int $room_id): mixed
     {
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return response()->json([
-                'status' => 9,
-                'msg'    => 'Brak autoryzacji'
-            ]);
-        }
-        if(empty($request->add_friend)){
-            return response()->json([
-                'status' => 1,
-                'msg'    => 'Please add some friends to room'
-            ]);
-        }
-
         $room = Room::where('admin_id', Auth::id())->where('id', $room_id)->first();
         if(empty($room->created_at)){
             return response()->json([
@@ -398,17 +318,11 @@ class RoomController extends Controller implements RoomInterface
     /**
      * Return room view
      */
-    public function load_room(int $room_id, Request $request): mixed
+    public function load_room(Request $request, int $room_id): mixed
     {
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
         $friendship = new FriendshipController();
         $messages = new MessagesController();
         $UserSettingsController = new UserSettingsController();
-        $UserRoomModel = new UserRoom();
 
         $tmp = $messages->get_array($room_id);
         if($tmp == false){
