@@ -3,9 +3,6 @@
 namespace Tests\Feature\Authenticated;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 
 class UserTest extends AuthenticatedTestCase
 {
@@ -35,7 +32,7 @@ class UserTest extends AuthenticatedTestCase
     /** @test */
     public function check_user_register_route()
     {
-        $response = $this->get('/register_form');
+        $response = $this->get('/register');
 
         $response->assertRedirect('/main');
 

@@ -19,7 +19,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function load($content = 'main' ,$data = array()){
+    public function load($content = 'main' ,$data = array())
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return back();
@@ -30,21 +31,13 @@ class Controller extends BaseController
         return view('layout', $data);
     }
 
-    public function init(){
-        if (Auth::check()) {
-            // The user is not logged in...
-            return redirect('/main');
-        }
-
+    public function init()
+    {
         return view('login');
     }
 
-    public function dashboard(Request $request){
-        if (!Auth::check()) {
-            // The user is not logged in...
-            return redirect('/');
-        }
-
+    public function dashboard()
+    {
         $friendship = new FriendshipController();
         $room = new RoomController();
         $UserSettingsController = new UserSettingsController();
