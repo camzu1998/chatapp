@@ -4,21 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\FilesController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserSettingsController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\Proxy\RoomProxy;
-use App\Models\UserRoom;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Artisan;
-
-
-use App\Http\Requests\CreateUserRequest;
-
-use App\Repositories\UserRepository;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,14 +65,6 @@ Route::get('/reset/{token}', [PasswordController::class, 'reset']); //Return for
 Route::get('/forgot_password', function(){
     return view('remember_password');
 })->middleware('only.guest');
-
-
-Route::get('/linkstorage', function () {
-    Artisan::call('storage:link');
-});
-
-
-
 
 Route::get('/.well-known/acme-challenge/nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o', function(){
     return 'nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o.U_4xLF8dgJ1k8O7LJc-iDhIvoxBMmlL84C3ANwg4VEw';
