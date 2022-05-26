@@ -4,15 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-
-use Database\Factories\RoomFactory;
 
 class Room extends Model
 {
     use HasFactory;
-
-    protected $tables = ['room', 'user_room'];
 
     protected $table = 'room';
 
@@ -25,13 +20,18 @@ class Room extends Model
 
     public $timestamps = false;
 
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
+    public function messages()
     {
-        return RoomFactory::new();
+        return $this->hasMany(Messages::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'id', 'admin_id');
+    }
+
+    public function roomMembers()
+    {
+        return $this->hasMany(RoomMember::class);
     }
 }

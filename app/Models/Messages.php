@@ -14,15 +14,13 @@ class Messages extends Model
     use HasFactory;
 
     protected $table = 'messages';
-
     protected $attributes = [
         'user_id' => false,
         'room_id' => false,
-        'file_id' => false,
+        'file_id' => NULL,
         'content' => '',
         'created_at'  => '1998-07-14 14:00:00'
     ];
-
     protected $fillable = [
         'user_id',
         'room_id',
@@ -31,29 +29,25 @@ class Messages extends Model
     ];
 
     public $timestamps = false;
-    public $incrementing = true;
-    protected $primaryKey = 'id';
 
-    /**
-     * Scope a query to only include room messages
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
+
+    public function file()
+    {
+        return $this->hasOne(Files::class);
+    }
+
     public function scopeRoom($query, int $room_id)
     {
         return $query->where('room_id', $room_id)->orderBy('id', 'desc');
-    }
-
-
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    protected static function newFactory()
-    {
-        return MessagesFactory::new();
     }
 
     public static function get_difference(int $room_id, int $last_msg){
