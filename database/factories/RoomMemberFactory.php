@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\UserRoom;
+use App\Models\RoomMember;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserRoomFactory extends Factory
+class RoomMemberFactory extends Factory
 {
-    protected $model = UserRoom::class;
+    protected $model = RoomMember::class;
     /**
      * Define the model's default state.
      *

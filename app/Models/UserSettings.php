@@ -17,6 +17,12 @@ class UserSettings extends Model
 
     protected $table = 'user_settings';
 
+    public $fillable = [
+        'user_id',
+        'name',
+        'value',
+    ];
+
     protected $attributes = [
         'user_id' => false,
         'name' => 'sounds',

@@ -42,14 +42,13 @@ class UserSettingsController extends Controller
         return Auth::user()->userSettings()->get();
     }
 
-    public function set_init_settings(int $user_id)
+    public function set_init_settings(User $user)
     {
-        foreach(UserSettings::SETTINGS_TYPES as $name => $init_val){
-            DB::transaction(function () use ($user_id, $name, $init_val) {
-                UserSettings::factory()->create([
-                    'user_id' => $user_id,
+        foreach(UserSettings::SETTINGS_TYPES as $name){
+            DB::transaction(function () use ($user, $name) {
+                $user->userSettings()->create([
                     'name'    => $name,
-                    'value'   => $init_val,
+                    'value'   => 0,
                 ]);
             }, 5);
         }

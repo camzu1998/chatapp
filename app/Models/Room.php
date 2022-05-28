@@ -9,8 +9,13 @@ class Room extends Model
 {
     use HasFactory;
 
-    protected $table = 'room';
-
+    protected $fillable = [
+        'admin_id',
+        'room_name',
+        'room_img',
+        'created_at'
+    ];
+    
     protected $attributes = [
         'admin_id' => 0,
         'room_name' => 'default_room_name',

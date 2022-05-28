@@ -29,6 +29,8 @@ class UserTest extends TestCase
             $this->assertIsObject($userSettings);
             $this->assertModelExists($userSettings);
         }
+
+        $this->assertTrue($userSettings->user()->id === $user->id);
     }
 
     public function test_deleting_user()

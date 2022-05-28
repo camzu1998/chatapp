@@ -21,6 +21,7 @@
         <link rel="manifest" href="/manifest.json">
     </head>
     <body class="antialiased">
+        <div id="hello-react"></div>
         <div class="flex flex-row">
             <div class="user-panel absolute inset-x-0 top-0 text-center">
                 <div class="relative h-full">
