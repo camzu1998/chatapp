@@ -28,31 +28,6 @@ class UserController extends Controller
         
         $this->repository->create($data);
 
-        return redirect('/');
-    }
-
-    public function authenticate(LoginUserRequest $request)
-    {
-        $data = $request->validated();
-
-        if (Auth::attempt($data)) {
-            $request->session()->regenerate();
-
-            return redirect('/main');
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+        return redirect('/')->with(['register' => 'success']);
     }
 }

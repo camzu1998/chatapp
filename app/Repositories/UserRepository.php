@@ -2,12 +2,10 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 use App\Models\User;
-use App\Http\Controllers\UserSettingsController;
 use App\Mail\ResetPassword;
 
 class UserRepository {
@@ -23,14 +21,11 @@ class UserRepository {
     {
         $pass = Hash::make($payload['pass']);
 
-        $user = $this->model->factory()->create([
+        $user = $this->model->create([
             'nick'     => $payload['nick'],
             'email'    => $payload['email'],
             'password' => $pass
         ]);
-
-        $user_settings_controller = new UserSettingsController();
-        $user_settings_controller->set_init_settings($user->id);
         
         return true;
     }
@@ -38,12 +33,15 @@ class UserRepository {
     public function create_reset_password(array $payload): bool
     {
         $user = $this->model->where('email', $payload['email'])->first();
-        if(!empty($user->created_at)){
+        if (!empty($user->created_at)){
             $token = Str::random(40);
             $user->reset_token = $token;
             $user->save();
             //Send email
-            // Mail::to($user->email)->send(new ResetPassword($token));
+            if (config('app.env') == 'production')
+            {
+                Mail::to($user->email)->send(new ResetPassword($token));
+            }
 
             return true;
         }
