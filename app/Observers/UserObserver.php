@@ -7,7 +7,7 @@ use App\Models\User;
 
 class UserObserver
 {
-    public function created(User $user)
+    public function created(User $user): void
     {
         $user_settings_controller = new UserSettingsController();
         $user_settings_controller->set_init_settings($user->id);
@@ -18,9 +18,9 @@ class UserObserver
         //
     }
 
-    public function deleted(User $user)
+    public function deleted(User $user): void
     {
-        //
+        $user->userSettings()->delete();
     }
 
     public function restored(User $user)

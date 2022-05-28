@@ -39,7 +39,7 @@ class UserSettingsController extends Controller
 
     public function load_user_settings()
     {
-        return UserSettings::User(Auth::id())->get();
+        return Auth::user()->userSettings()->get();
     }
 
     public function set_init_settings(int $user_id)
