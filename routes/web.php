@@ -6,10 +6,11 @@ use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserSettingsController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\PasswordController;
-use App\Http\Controllers\Proxy\RoomProxy;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,35 +22,39 @@ use App\Http\Controllers\Proxy\RoomProxy;
 | contains the "web" middleware group. Now create something great!
 |
 */
-//User routes
-Route::get('/', [Controller::class, 'init'])->middleware('only.guest');
-Route::post('/login', [UserController::class, 'authenticate'])->middleware('only.guest');
-
-Route::get('/register', [UserController::class, 'register_form'])->middleware('only.guest');
-Route::post('/register', [UserController::class, 'register'])->middleware('only.guest');
-
-Route::get('/main', [Controller::class, 'dashboard'])->middleware('only.auth');;
-Route::get('/logout', [UserController::class, 'logout'])->middleware('only.auth');;
+//Only Guest
+Route::middleware(['only.guest'])->group(function () {
+    Route::get('/', [Controller::class, 'init']);
+    Route::post('/login', [LoginController::class, 'authenticate']);
+    Route::get('/register', [UserController::class, 'register_form']);
+    Route::post('/register', [UserController::class, 'register']);
+});
+//Only Auth
+Route::middleware(['only.auth'])->group(function () {
+    Route::get('/main', [Controller::class, 'dashboard']);
+    Route::get('/logout', [LoginController::class, 'logout']);
+});
 
 Route::post('/user/set_profile/{user_id}', [UserSettingsController::class, 'set_user_profile']);
 Route::post('/user/set_settings', [UserSettingsController::class, 'save_user_settings']);
+
 // Friendship
 Route::get('/friendship', [FriendshipController::class, 'get_user_friends']);
 Route::post('/friendship', [FriendshipController::class, 'save_friendship']);
 Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
 // Room
-Route::get('/room', [RoomProxy::class, 'get_user_rooms']); //JSON Response
-Route::get('/room/{room_id}', [RoomProxy::class, 'load_room']);
-Route::post('/room', [RoomProxy::class, 'save_room']);
-Route::put('/room/{room_id}', [RoomProxy::class, 'update_room_status']);
+Route::get('/room', [RoomController::class, 'get_user_rooms']); //JSON Response
+Route::get('/room/{room_id}', [RoomController::class, 'load_room']);
+Route::post('/room', [RoomController::class, 'save_room']);
+Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);
 //Room settings
-Route::delete('/room/{room_id}', [RoomProxy::class, 'delete_room']);
-Route::put('/room/{room_id}/update', [RoomProxy::class, 'update']);
-Route::post('/room/{room_id}/invite', [RoomProxy::class, 'invite']);
+Route::delete('/room/{room_id}', [RoomController::class, 'delete_room']);
+Route::put('/room/{room_id}/update', [RoomController::class, 'update']);
+Route::post('/room/{room_id}/invite', [RoomController::class, 'invite']);
 //Room image
-Route::post('/room/{room_id}/upload', [RoomProxy::class, 'upload_room_profile']);
-Route::get('/room/{room_id}/get_image', [RoomProxy::class, 'get_room_profile']);
-Route::put('/room/{room_id}/revert', [RoomProxy::class, 'revert_room_profile']);
+Route::post('/room/{room_id}/upload', [RoomController::class, 'upload_room_profile']);
+Route::get('/room/{room_id}/get_image', [RoomController::class, 'get_room_profile']);
+Route::put('/room/{room_id}/revert', [RoomController::class, 'revert_room_profile']);
 // Messages
 Route::post('/chat/message/{room_id}', [MessagesController::class, 'send']);
 Route::post('/chat/file/{room_id}', [MessagesController::class, 'upload']);
