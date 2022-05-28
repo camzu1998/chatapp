@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -21,11 +22,13 @@ class UserRepository {
     {
         $pass = Hash::make($payload['pass']);
 
-        $user = $this->model->create([
-            'nick'     => $payload['nick'],
-            'email'    => $payload['email'],
-            'password' => $pass
-        ]);
+        DB::transaction(function () use ($pass, $payload) {
+            $this->model->create([
+                'nick'     => $payload['nick'],
+                'email'    => $payload['email'],
+                'password' => $pass
+            ]);
+        }, 5);
         
         return true;
     }

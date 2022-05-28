@@ -33,10 +33,9 @@ Route::middleware(['only.guest'])->group(function () {
 Route::middleware(['only.auth'])->group(function () {
     Route::get('/main', [Controller::class, 'dashboard']);
     Route::get('/logout', [LoginController::class, 'logout']);
+    Route::post('/user/set_profile/{user_id}', [UserSettingsController::class, 'set_user_profile']);
+    Route::post('/user/set_settings', [UserSettingsController::class, 'save_user_settings']);
 });
-
-Route::post('/user/set_profile/{user_id}', [UserSettingsController::class, 'set_user_profile']);
-Route::post('/user/set_settings', [UserSettingsController::class, 'save_user_settings']);
 
 // Friendship
 Route::get('/friendship', [FriendshipController::class, 'get_user_friends']);

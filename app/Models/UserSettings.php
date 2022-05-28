@@ -9,7 +9,7 @@ class UserSettings extends Model
 {
     use HasFactory;
 
-    public const USER_SETTINGS_TYPES = [
+    public const SETTINGS_TYPES = [
         'sounds',
         'notifications',
         'send_on_enter'
