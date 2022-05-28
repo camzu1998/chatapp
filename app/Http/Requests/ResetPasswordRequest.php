@@ -2,31 +2,12 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 use App\Models\User;
 
-class ResetPasswordRequest extends FormRequest
+class ResetPasswordRequest extends AbstractRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
-        return User::where('reset_token', $this->route('token'))->first();
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            //
-        ];
+        return (bool)User::where('reset_token', $this->route('token'))->first();
     }
 }
