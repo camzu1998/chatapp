@@ -20,6 +20,9 @@ class Friendship extends Model
      *  2 => 'blocked'
      * ]
      */
+    public const FRIENDSHIP_INVITE_STATUS = 0;
+    public const FRIENDSHIP_STATUS = 1;
+    public const FRIENDSHIP_BLOCKED_STATUS = 2;
 
     protected $attributes = [
         'user_id' => false,
@@ -29,7 +32,6 @@ class Friendship extends Model
         'created_at' => '1998-07-14 07:00:00'
     ];
 
-    public $timestamps = false;
     public $incrementing = false;
     protected $primaryKey = 'user_id';
 

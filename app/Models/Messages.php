@@ -45,7 +45,7 @@ class Messages extends Model
         return $this->hasOne(Files::class);
     }
 
-    public function scopeRoom($query, int $room_id)
+    public function scopeRoomID($query, int $room_id)
     {
         return $query->where('room_id', $room_id)->orderBy('id', 'desc');
     }

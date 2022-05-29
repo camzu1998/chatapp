@@ -14,19 +14,12 @@ abstract class AuthenticatedTestCase extends TestCase
 {
     protected $user;
 
-    public $user_settings = ['sounds', 'notifications', 'press_on_enter'];
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-        foreach($this->user_settings as $setting_name){
-            UserSettings::factory()->create([
-                'user_id' => $this->user->id,
-                'name' => $setting_name
-            ]);
-        }
+
         $this->actingAs($this->user);
     }
 }

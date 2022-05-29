@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RoomMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -9,14 +10,14 @@ use App\Models\Messages;
 use App\Models\Files;
 use App\Models\Room;
 use App\Models\User;
-use App\Models\UserRoom;
 
 use App\Http\Controllers\FilesController;
 use App\Http\Controllers\RoomController;
 
 class MessagesController extends Controller
 {
-    public function get_newest_id(int $room_id){  
+    public function get_newest_id(int $room_id)
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -32,14 +33,15 @@ class MessagesController extends Controller
             ]);
 
         //Check if user is in the room
-        $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+        $room = Room::with('messages')->find($room_id);
+        $room_status = Auth::user()->roomMember()->RoomID($room_id)->first();
         if(empty($room_status->created_at) || $room_status->status != 1)
             return response()->json([
                 'status' => 2,
                 'msg'    => 'Brak użytkownika w pokoju'
             ]);
 
-        $msgs = Messages::Room($room_id)->first();
+        $msgs = $room->messages()->latest()->first();
         if(empty($msgs->id)){
             return 0;
         }
@@ -66,7 +68,7 @@ class MessagesController extends Controller
         // Check if isset room_id
         if(!empty($room_id)){
             //Check if user is in the room
-            $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+            $room_status = RoomMember::User(Auth::id())->Room($room_id)->first();
             if(empty($room_status->created_at) || $room_status->status != 1){
                 return response()->json([
                     'status' => 2,
@@ -84,7 +86,7 @@ class MessagesController extends Controller
             'created_at'  => date('Y-m-d H:i:s')
         ]);
         //Set user message
-        UserRoom::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $msg->id]);
+        RoomMember::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $msg->id]);
 
         return $this->get($room_id);
     }
@@ -106,7 +108,7 @@ class MessagesController extends Controller
         // Check if isset room_id
         if(!empty($room_id)){
             //Check if user is in the room
-            $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+            $room_status = RoomMember::User(Auth::id())->Room($room_id)->first();
             if(empty($room_status->created_at) || $room_status->status != 1){
                 return response()->json([
                     'status' => false,
@@ -126,7 +128,7 @@ class MessagesController extends Controller
             'created_at'  => date('Y-m-d H:i:s')
         ]);
         //Set user message
-        UserRoom::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $msg->id]);
+        RoomMember::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $msg->id]);
 
         return $this->get($room_id);
     }
@@ -143,7 +145,7 @@ class MessagesController extends Controller
         $users_array = array();
         $file_array = array();
         
-        $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+        $room_status = RoomMember::User(Auth::id())->Room($room_id)->first();
         if(empty($room_status->created_at) || $room_status->status != 1)
             return response()->json([
                 'status' => false,
@@ -166,7 +168,7 @@ class MessagesController extends Controller
         }
         $newest_id = $this->get_newest_id($room_id);
         //Set user message
-        UserRoom::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $newest_id]);
+        RoomMember::User(Auth::id())->Room($room_id)->update(['last_msg_id' => $newest_id]);
 
         return response()->json([
             'messages'   => $msgs,
@@ -176,33 +178,47 @@ class MessagesController extends Controller
         ]);
     }
 
-    public function get_array($room_id = null){
+    public function get_array($room_id = null)
+    {
         $users_array = array();
         $file_array = array();
                 
-        $room_status = UserRoom::User(Auth::id())->Room($room_id)->first();
+        $room_status = Auth::user()->roomMember()->roomID($room_id)->first();
         if(empty($room_status->created_at) || $room_status->status != 1)
+        {
             return false;
-        
-        $msgs = Messages::Room($room_id)->take(10)->get();
-        foreach($msgs as $k => $msg){
-            //Check file data
-            if($msg->file_id != 0){
-                $file_array[$msg->file_id] = Files::find($msg->file_id);
+        }
+
+        $room = Room::with('messages')->find($room_id);
+        $msgs = $room->messages;
+        if($msgs)
+        {
+            foreach($msgs as $k => $msg){
+                //Check file data
+                if($msg->file_id != 0){
+                    $file_array[$msg->file_id] = Files::find($msg->file_id);
+                }
+                //Check user data
+                $msg_user = User::find($msg->user_id);
+                $users_array[$msg->user_id] = [
+                    'nick' => $msg_user->nick,
+                    'profile_img' => $msg_user->profile_img
+                ];
             }
-            //Check user data
-            $msg_user = User::find($msg->user_id);
-            $users_array[$msg->user_id] = [
-                'nick' => $msg_user->nick,
-                'profile_img' => $msg_user->profile_img
+
+            return [
+                'messages'   => $msgs,
+                'msg_users'  => $users_array,
+                'newest_msg' => $this->get_newest_id($room_id),
+                'files'      => $file_array,
             ];
         }
 
         return [
-            'messages'   => $msgs,
-            'msg_users'  => $users_array,
-            'newest_msg' => $this->get_newest_id($room_id),
-            'files'      => $file_array,
+            'messages'   => [],
+            'msg_users'  => [],
+            'newest_msg' => 0,
+            'files'      => []
         ];
     }
 }

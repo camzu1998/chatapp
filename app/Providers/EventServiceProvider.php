@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Room;
 use App\Models\User;
+use App\Observers\RoomObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -19,6 +21,7 @@ class EventServiceProvider extends ServiceProvider
 
     protected $observers = [
         User::class => [UserObserver::class],
+        Room::class => [RoomObserver::class],
     ];
 
     public function boot()
