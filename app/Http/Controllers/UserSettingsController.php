@@ -15,7 +15,7 @@ class UserSettingsController extends Controller
     public function save_user_settings(Request $request)
     {
         foreach(UserSettings::SETTINGS_TYPES as $name => $init_val){
-            $user_setting = UserSettings::User(Auth::id())->Name($name)->first();
+            $user_setting = Auth::user()->userSettings()->name($name)->first();
             switch($request->$name){
                 case 0:
                     $user_setting->value = 0;
