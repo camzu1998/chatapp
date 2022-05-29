@@ -25,7 +25,7 @@
         </div>
 
         <div class="w-screen mt-12 relative flex flex-col justify-center content-center items-center overflow-x-hidden">
-            <form class="flex flex-col items-center text-gray-800 py-4 startForm rounded-lg px-2" action="/login" method="POST">
+            <form class="flex flex-col items-center text-gray-800 py-4 startForm rounded-lg px-2" action="{{ route('user.login') }}" method="POST">
                 <div class="w-full text-center text-lg form-text mb-8 mt-4">Zaloguj się</div>
                 @csrf
                 <div class="input-group relative">
@@ -41,8 +41,8 @@
                     <label>Hasło</label>
                 </div>
                 <button class="w-36 cta-btn text-gray-800 my-4 px-4 py-2 rounded-md" id="send" type="submit">Wyślij <i class="far fa-paper-plane"></i></button>
-                <p class="form-text text-base mt-8 mb-4">Nie masz konta? </br> <a href="/register_form" class="text-blue-400">Zarejestruj się!</a> </p>
-                <p class="form-text text-base mt-4 mb-4">Zapomniałeś hasła? </br> <a href="/forgot_password" class="text-blue-400">Resetuj hasło!</a> </p>
+                <p class="form-text text-base mt-8 mb-4">Nie masz konta? </br> <a href="{{ route('user.register') }}" class="text-blue-400">Zarejestruj się!</a> </p>
+                <p class="form-text text-base mt-4 mb-4">Zapomniałeś hasła? </br> <a href="{{ route('user.forgot_password') }}" class="text-blue-400">Resetuj hasło!</a> </p>
             </form>
         </div>
         <div>Icons made by <a href="https://www.freepik.com" rel="nofollow" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" rel="nofollow" title="Flaticon">www.flaticon.com</a></div>

@@ -25,9 +25,12 @@ use App\Http\Controllers\PasswordController;
 //Only Guest
 Route::middleware(['only.guest'])->group(function () {
     Route::get('/', [Controller::class, 'init']);
-    Route::post('/login', [LoginController::class, 'authenticate']);
-    Route::get('/register', [UserController::class, 'register_form']);
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('user.login');
+    Route::get('/register', [UserController::class, 'register_form'])->name('user.register');
     Route::post('/register', [UserController::class, 'register']);
+    Route::get('/forgot_password', function(){
+        return view('remember_password');
+    })->name('user.forgot_password');
 });
 //Only Auth
 Route::middleware(['only.auth'])->group(function () {
@@ -66,9 +69,6 @@ Route::get('/get_notify_data', [NotificationController::class, 'check_messages']
 Route::post('/reset/{token}', [PasswordController::class, 'save_password']); //Store new pass in db 
 Route::post('/reset', [PasswordController::class, 'forgot_password']); //Sending email to user with token to reset pass
 Route::get('/reset/{token}', [PasswordController::class, 'reset']); //Return form to set new pass
-Route::get('/forgot_password', function(){
-    return view('remember_password');
-})->middleware('only.guest');
 
 Route::get('/.well-known/acme-challenge/nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o', function(){
     return 'nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o.U_4xLF8dgJ1k8O7LJc-iDhIvoxBMmlL84C3ANwg4VEw';
