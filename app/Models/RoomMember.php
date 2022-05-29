@@ -9,7 +9,24 @@ class RoomMember extends Model
 {
     use HasFactory;
 
+    public const ROOM_MEMBER_STATUS = [
+        'pendingInvite' => 0,
+        'acceptInvite' => 1,
+        'declineInvite' => 2,
+        'blockedRoom' => 2,
+        'outRoom' => 2
+    ];
+
     protected $table = 'room_members';
+
+    public $fillable = [
+        'room_id',
+        'user_id',
+        'status',
+        'last_msg_id',
+        'last_notify_id',
+        'nickname',
+    ];
 
     protected $attributes = [
         'room_id' => 0,
@@ -28,5 +45,10 @@ class RoomMember extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function scopeRoomID($query, int $room_id)
+    {
+        return $query->where('room_id', $room_id);
     }
 }

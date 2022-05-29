@@ -32,11 +32,16 @@ class Room extends Model
 
     public function owner()
     {
-        return $this->belongsTo(User::class, 'id', 'admin_id');
+        return $this->belongsTo(User::class, 'admin_id', 'id');
     }
 
     public function roomMembers()
     {
         return $this->hasMany(RoomMember::class);
+    }
+
+    public function scopeAdmin($query, $admin_id)
+    {
+        return $query->where('admin_id', $admin_id);
     }
 }

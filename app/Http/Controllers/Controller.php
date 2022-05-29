@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\RoomRepository;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -38,8 +39,9 @@ class Controller extends BaseController
 
     public function dashboard()
     {
+        $room_repo = new RoomRepository();
         $friendship = new FriendshipController();
-        $room = new RoomController();
+        $room = new RoomController($room_repo);
         $UserSettingsController = new UserSettingsController();
         
         $data['friends_data'] = $friendship->get_user_friends('array');

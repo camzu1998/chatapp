@@ -18,6 +18,7 @@ class User extends Authenticatable
         'nick',
         'email',
         'password',
+        'profile_img'
     ];
     protected $hidden = [
         'password',
@@ -44,7 +45,7 @@ class User extends Authenticatable
 
     public function roomMember()
     {
-        return $this->belongsToMany(RoomMember::class);
+        return $this->hasMany(RoomMember::class);
     }
 
     public function adminRoom() //TODO: isAdmin($user_id)
@@ -70,4 +71,8 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'friendship', 'user2_id', 'user_id');
     }
 
+    protected static function newFactory()
+    {
+        return UserFactory::new();
+    }
 }

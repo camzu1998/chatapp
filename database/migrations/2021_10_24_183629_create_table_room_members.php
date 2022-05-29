@@ -14,13 +14,14 @@ class CreateTableRoomMembers extends Migration
     public function up()
     {
         Schema::create('room_members', function (Blueprint $table) {
+            $table->id();
             $table->integer('room_id');
             $table->integer('user_id');
             $table->integer('status')->default('0');
             $table->integer('last_msg_id')->default('0');
             $table->integer('last_notify_id')->default('0');
             $table->string('nickname');
-            $table->dateTime('created_at', $precision = 0);
+            $table->timestamps();
         });
     }
 

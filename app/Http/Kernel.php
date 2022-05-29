@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'only.guest' => \App\Http\Middleware\RedirectToDashboard::class,
         'only.auth' => \App\Http\Middleware\RedirectToLogin::class,
+        'room.friends' => \App\Http\Middleware\EnsureRoomHasFriends::class,
     ];
 }

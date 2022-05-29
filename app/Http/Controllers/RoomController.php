@@ -2,33 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\RoomRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-
-use App\Http\Controllers\Interfaces\RoomInterface;
 
 use App\Models\Friendship;
 use App\Models\Room;
 use App\Models\User;
 use App\Models\Messages;
-use App\Models\UserRoom;
+use App\Models\RoomMember;
+
+use App\Http\Requests\SaveRoomRequest;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\UserSettingsController;
 
-class RoomController extends Controller implements RoomInterface
+class RoomController extends Controller
 {
     protected $profile_ext = array('png', 'jpeg', 'jpg');
+
+    public $repository;
+
+    public function __construct(RoomRepository $repository)
+    {
+        $this->repository = $repository;
+    }
 
     public function get_user_rooms(string $switch_response = 'json'): mixed
     {
         $user_id = Auth::id();
         $rooms_data = array();
 
-        $user_rooms = UserRoom::where('user_id', '=', $user_id)->orderBy('status', 'asc')->get();
+        $user_rooms = RoomMember::where('user_id', '=', $user_id)->orderBy('status', 'asc')->get();
         if(empty($user_rooms[0])){
             //User has no rooms
             if($switch_response == 'json'){
@@ -41,33 +50,40 @@ class RoomController extends Controller implements RoomInterface
         }
         foreach($user_rooms as $user_room){
             //Get info aboout room & save to array
-            $rooms_data[$user_room->room_id] = Room::find($user_room->room_id);
-            $user_data = User::find($rooms_data[$user_room->room_id]->admin_id);
-            $rooms_data[$user_room->room_id]->admin_img = $user_data->profile_img;
-            $rooms_data[$user_room->room_id]->status = $user_room->status;
-            $rooms_data[$user_room->room_id]->nickname = $user_room->nickname;
-            $rooms_data[$user_room->room_id]->unreaded = 0;
+            $room = $user_room->room;
+            $rooms_data[$room->id] = $room;
+
+            $user_data = User::find($room->admin_id);
+            $rooms_data[$room->id]->admin_img = $user_data->profile_img;
+
+            $rooms_data[$room->id]->status = $user_room->status;
+            $rooms_data[$room->id]->nickname = $user_room->nickname;
+            $rooms_data[$room->id]->unreaded = 0;
             //Unread messages
             if($user_room->status == 1){
                 $res = Messages::get_difference($user_room->room_id, $user_room->last_msg_id);
-                $rooms_data[$user_room->room_id]->unreaded = $res->unreaded;
-                $last_msg = Messages::Room($user_room->room_id)->latest()->first();
-                $rooms_data[$user_room->room_id]->last_msg_user = "Ty";
-                $rooms_data[$user_room->room_id]->last_msg_user_img = $user_data->profile_img;
-                if(!empty($last_msg->user_id))
-                {
-                    if($last_msg->user_id != Auth::id()){
-                        $last_user_data = User::find($last_msg->user_id);
-                        $rooms_data[$user_room->room_id]->last_msg_user = $last_user_data->nick;
-                        $rooms_data[$user_room->room_id]->last_msg_user_img = $last_user_data->profile_img;
-                    }
+                $rooms_data[$user_room->room_id]->unreaded = $res->unreaded ?: 0;
 
-                    $content = Str::limit($last_msg->content, 20);
-                    if($last_msg->file_id != 0){
-                        $content = "Wysłał załącznik";
+                if($res !== null)
+                {
+                    $last_msg = $room->messages()->latest()->first();
+                    $rooms_data[$room->id]->last_msg_user = "Ty";
+                    $rooms_data[$room->id]->last_msg_user_img = $user_room->user->profile_img;
+                    if(!empty($last_msg->user_id))
+                    {
+                        if($last_msg->user_id != Auth::id()){
+                            $last_user_data = User::find($last_msg->user_id);
+                            $rooms_data[$user_room->room_id]->last_msg_user = $last_user_data->nick;
+                            $rooms_data[$user_room->room_id]->last_msg_user_img = $last_user_data->profile_img;
+                        }
+
+                        $content = Str::limit($last_msg->content, 20);
+                        if($last_msg->file_id != 0){
+                            $content = "Wysłał załącznik";
+                        }
+
+                        $rooms_data[$user_room->room_id]->last_msg_content = $content;
                     }
-                    
-                    $rooms_data[$user_room->room_id]->last_msg_content = $content;
                 }
             }
         }
@@ -81,36 +97,13 @@ class RoomController extends Controller implements RoomInterface
         }
     }
 
-    public function save_room(Request $request): mixed
+    public function save_room(SaveRoomRequest $request)
     {
-        $user = Auth::user();
+        $data = $request->validated();
 
-        $room_name = $request->room_name;
-        if(empty($room_name)){
-            $room_name = $user->nick.'_room';
-        }
+        $room = $this->repository->create($data);
 
-        $room = Room::factory()->create([
-            'admin_id' => Auth::id(),
-            'room_name' => $room_name
-        ]);
-        UserRoom::factory()->create([
-            'room_id' => $room->id,
-            'user_id' => Auth::id(),
-            'status'  => 1
-        ]);
-
-        foreach($request->add_friend as $friend_id){
-            //Check friendship
-            $res = Friendship::check(Auth::id(), $friend_id);
-            if(empty($res[0])){
-                continue; 
-            }
-            UserRoom::factory()->create([
-                'room_id' => $room->id,
-                'user_id' => $friend_id,
-            ]);
-        }
+        $this->repository->inviteFriends($data, $room);
 
         return response()->json([
             'status' => 0,
@@ -121,7 +114,7 @@ class RoomController extends Controller implements RoomInterface
     public function update_room_status(Request $request, int $room_id): mixed
     {
         //Valid status
-        $user_room = UserRoom::where('user_id', Auth::id())->where('room_id', $room_id)->first();
+        $user_room = RoomMember::where('user_id', Auth::id())->where('room_id', $room_id)->first();
         if(empty($user_room->created_at)){
             return response()->json([
                 'status' => 2,
@@ -132,7 +125,7 @@ class RoomController extends Controller implements RoomInterface
             case 'acceptInvite':
                 $user_room->status = 1;
                 break;
-            case 'decelineInvite':
+            case 'declineInvite':
                 $user_room->status = 2;
                 break;
             case 'outRoom':
@@ -210,7 +203,7 @@ class RoomController extends Controller implements RoomInterface
         //Delete retrieved roommates
         if(!empty($request->roommate)){
             foreach($request->roommate as $roommate){
-                UserRoom::where('room_id', $room_id)->where('user_id', $roommate)->delete();
+                RoomMember::where('room_id', $room_id)->where('user_id', $roommate)->delete();
             }
         }
         //Update name
@@ -233,7 +226,7 @@ class RoomController extends Controller implements RoomInterface
         if(empty($room_id))
             return false;
 
-        $roommates = UserRoom::where('room_id', $room_id)->where('user_id', '!=', Auth::id())->get();
+        $roommates = RoomMember::where('room_id', $room_id)->where('user_id', '!=', Auth::id())->get();
         foreach($roommates as $roommate){
             //Retrieve user data
             $user = User::find($roommate->user_id);
@@ -292,7 +285,7 @@ class RoomController extends Controller implements RoomInterface
             if(empty($res[0])){
                 continue; 
             }
-            UserRoom::factory()->create([
+            RoomMember::factory()->create([
                 'room_id' => $room_id,
                 'user_id' => $friend_id
             ]);
@@ -309,7 +302,7 @@ class RoomController extends Controller implements RoomInterface
     public function get_room(int $room_id): mixed
     {        
         //Check if user is in room
-        $room = UserRoom::where('user_id', Auth::id())->where('room_id', $room_id)->where('status', 1)->first();
+        $room = RoomMember::where('user_id', Auth::id())->where('room_id', $room_id)->where('status', 1)->first();
         if(empty($room->created_at)){
             return false;
         }
@@ -320,35 +313,15 @@ class RoomController extends Controller implements RoomInterface
      */
     public function load_room(Request $request, int $room_id): mixed
     {
-        $friendship = new FriendshipController();
-        $messages = new MessagesController();
-        $UserSettingsController = new UserSettingsController();
+        $data = $this->repository->getRoomData($room_id);
 
-        $tmp = $messages->get_array($room_id);
-        if($tmp == false){
-            return redirect('/main');
+        if($request->expectsJson())
+        {
+            return response()->json($data);
         }
 
-        $user_room = UserRoom::Room($room_id)->User(Auth::id())->first();
-        if(empty($user_room->created_at))
-            return redirect('/main');
-        
-        $data['user_settings'] = $UserSettingsController->load_user_settings();
-        $data['friends_data'] = $friendship->get_user_friends('array');
-        $data['rooms_data'] = $this->get_user_rooms('array');
-        $data['room'] = $this->get_room($room_id);
-        $data['roommates_data'] = $this->get_roommates($room_id);
-        $data['messages'] = $tmp['messages'];
-        $data['msg_users'] = $tmp['msg_users'];
-        $data['files'] = $tmp['files'];
-        $data['newest_msg'] = $tmp['newest_msg'];
-        $data['room_id'] = $room_id;
-        $data['admin_room_id'] = $room_id;
-        $data['img_ext'] = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
-        $data['content'] = 'chat';
-
-        UserRoom::Room($room_id)->User(Auth::id())->update(['last_msg_id' => $tmp['newest_msg']]);
-
         return $this->load('chat', $data);
+
+//        RoomMember::Room($room_id)->User(Auth::id())->update(['last_msg_id' => $tmp['newest_msg']]); //Todo: events/jobs?
     }
 }

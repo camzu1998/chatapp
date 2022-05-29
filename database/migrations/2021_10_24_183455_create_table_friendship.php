@@ -16,7 +16,9 @@ class CreateTableFriendship extends Migration
         Schema::create('friendship', function (Blueprint $table) {
             $table->integer('user_id');
             $table->integer('user2_id');
-            $table->dateTime('created_at', $precision = 0);
+            $table->integer('status')->default('0');
+            $table->integer('by_who')->default('0');
+            $table->timestamps();
         });
     }
 

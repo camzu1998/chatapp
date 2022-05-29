@@ -44,7 +44,7 @@ Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_frie
 // Room
 Route::get('/room', [RoomController::class, 'get_user_rooms']); //JSON Response
 Route::get('/room/{room_id}', [RoomController::class, 'load_room']);
-Route::post('/room', [RoomController::class, 'save_room']);
+Route::post('/room', [RoomController::class, 'save_room'])->middleware('room.friends');
 Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);
 //Room settings
 Route::delete('/room/{room_id}', [RoomController::class, 'delete_room']);
