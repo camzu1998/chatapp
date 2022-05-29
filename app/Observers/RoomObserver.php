@@ -3,59 +3,36 @@
 namespace App\Observers;
 
 use App\Models\Room;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RoomObserver
 {
-    /**
-     * Handle the Room "created" event.
-     *
-     * @param  \App\Models\Room  $room
-     * @return void
-     */
     public function created(Room $room)
     {
-        //
+        //Todo: change to room member controller
+        $room_member = $room->roomMembers()->create([
+            'user_id' => $room->admin_id,
+            'status' => 1
+        ]);
+        Log::debug('Added room owner as member: '.$room->admin_id);
     }
 
-    /**
-     * Handle the Room "updated" event.
-     *
-     * @param  \App\Models\Room  $room
-     * @return void
-     */
     public function updated(Room $room)
     {
         //
     }
 
-    /**
-     * Handle the Room "deleted" event.
-     *
-     * @param  \App\Models\Room  $room
-     * @return void
-     */
     public function deleted(Room $room)
     {
         //
     }
 
-    /**
-     * Handle the Room "restored" event.
-     *
-     * @param  \App\Models\Room  $room
-     * @return void
-     */
     public function restored(Room $room)
     {
         //
     }
 
-    /**
-     * Handle the Room "force deleted" event.
-     *
-     * @param  \App\Models\Room  $room
-     * @return void
-     */
     public function forceDeleted(Room $room)
     {
         //

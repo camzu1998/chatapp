@@ -10,6 +10,7 @@ use App\Models\Friendship;
 use App\Models\Room;
 use App\Models\RoomMember;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RoomRepository
 {
@@ -24,14 +25,12 @@ class RoomRepository
     {
         $user = Auth::user();
 
-        $room_name = $data['room_name'];
-        if(empty($room_name)){
-            $room_name = $user->nick.'_room';
-        }
+        $room_name = !empty($data['room_name']) ? $data['room_name'] : $user->nick.'_room';
 
         $room = $user->adminRoom()->create([
             'room_name' => $room_name
         ]);
+        Log::debug('Added room owner as member: '.Auth::id());
 
         return $room;
     }
@@ -61,10 +60,10 @@ class RoomRepository
         $tmp = $messages->get_array($room_id);
 
         $room = $this->model->findOrFail($room_id);
-        $room_member = $room->roomMembers()->where('user_id', Auth::id())->first();
+        $room_member = RoomMember::userID(Auth::id())->roomID($room_id)->first();
         if(empty($room_member->created_at) || $room_member->status !== 1)
         {
-            return [$room, $room_member];
+            return [];
         }
 
         $data['user_settings'] = $UserSettingsController->load_user_settings(); //Todo: I think this should be higher

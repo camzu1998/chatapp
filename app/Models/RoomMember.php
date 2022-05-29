@@ -51,4 +51,9 @@ class RoomMember extends Model
     {
         return $query->where('room_id', $room_id);
     }
+
+    public function scopeUserID($query, int $user_id)
+    {
+        return $query->where('user_id', $user_id);
+    }
 }
