@@ -321,7 +321,5 @@ class RoomController extends Controller
         }
 
         return $data ? $this->load('chat', $data) : redirect('/main');
-
-//        RoomMember::Room($room_id)->User(Auth::id())->update(['last_msg_id' => $tmp['newest_msg']]); //Todo: events/jobs?
     }
 }

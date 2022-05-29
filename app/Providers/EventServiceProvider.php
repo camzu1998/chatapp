@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\RoomMemberProcessed;
+use App\Listeners\UpdateRoomMemberNewestMsg;
 use App\Models\Room;
 use App\Models\User;
 use App\Observers\RoomObserver;
@@ -17,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        RoomMemberProcessed::class => [
+            UpdateRoomMemberNewestMsg::class,
+        ]
     ];
 
     protected $observers = [

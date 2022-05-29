@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\RoomMemberProcessed;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\UserSettingsController;
@@ -79,6 +80,8 @@ class RoomRepository
         $data['admin_room_id'] = $room->owner->id;
         $data['img_ext'] = ['png', 'jpg', 'webp', 'gif', 'svg', 'jpeg'];
         $data['content'] = 'chat';
+
+        RoomMemberProcessed::dispatch($room_member, $tmp['newest_msg']);
 
         return $data;
     }
