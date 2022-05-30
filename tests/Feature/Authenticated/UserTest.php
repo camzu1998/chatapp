@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends AuthenticatedTestCase
 {
-    use RefreshDatabase;
+//    use RefreshDatabase;
     
     /** @test */
     public function check_user_main_access()

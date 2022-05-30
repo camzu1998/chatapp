@@ -24,7 +24,8 @@ class RoomTest extends AuthenticatedTestCase
             Friendship::factory()->create([
                 'user_id' => $this->user->id,
                 'user2_id' => $user->id,
-                'by_who' => $this->user->id
+                'by_who' => $this->user->id,
+                'status' => 1
             ]);
             $users_ids[] = $user->id;
         }
@@ -41,6 +42,7 @@ class RoomTest extends AuthenticatedTestCase
         $room = Room::Admin($this->user->id)->where('room_name', $this->user->nick.'_room')->first();
         $this->assertDatabaseHas('room_members', [
             'room_id' => $room->id,
+            'user_id' => $this->user->id
         ]);
         $response = $this->get('/room/'.$room->id);
         $response->assertStatus(200);

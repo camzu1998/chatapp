@@ -12,7 +12,7 @@ use App\Models\UserSettings;
 
 class UserTest extends TestCase
 {
-    use RefreshDatabase;
+//    use RefreshDatabase;
 
     public function test_creating_user()
     {
