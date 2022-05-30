@@ -42,10 +42,8 @@ class UserTest extends TestCase
         $this->assertModelMissing($user);
 
         //Check if user settings are deleted
-        foreach(UserSettings::SETTINGS_TYPES as $setting_name){
-            //Creating user settings
-            $userSettings = $user->userSettings()->Name($setting_name)->first();
-            $this->assertModelMissing($userSettings);
-        }
+        $this->assertDatabaseMissing('user_settings', [
+            'user_id' => $user->id,
+        ]);
     }
 }

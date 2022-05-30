@@ -37,7 +37,7 @@ class RoomTest extends TestCase
         $room->room_name = 'test';
         $room->save();
         //Check if changes affected
-        $this->assertDatabaseHas('room', [
+        $this->assertDatabaseHas('rooms', [
             'id' => $room->id,
             'room_name' => 'test',
         ]);

@@ -27,7 +27,7 @@ class MessagesTest extends TestCase
         $tmp = Messages::factory()->count(5)->create([
             'room_id' => 99,
         ]);
-        $msgs = Messages::Room(99)->delete();
+        $msgs = Messages::roomID(99)->delete();
         //Check if messages has been deleted
         $this->assertDatabaseMissing('messages', [
             'room_id' => 99,
