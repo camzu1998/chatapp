@@ -13,6 +13,9 @@ class UserTest extends TestCase
     
     public function test_user_register_form()
     {
+        $response = $this->get('/register');
+        $response->assertStatus(200)->assertSee('Załóż konto');
+
         $response = $this->post('/register', []);
         $response->assertSessionHasErrors(['email']);
 

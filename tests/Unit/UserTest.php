@@ -30,7 +30,7 @@ class UserTest extends TestCase
             $this->assertModelExists($userSettings);
         }
 
-        $this->assertTrue($userSettings->user()->id === $user->id);
+        $this->assertTrue($userSettings->user->id === $user->id);
     }
 
     public function test_deleting_user()
