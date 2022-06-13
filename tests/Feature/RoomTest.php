@@ -19,40 +19,50 @@ class RoomTest extends TestCase
     /** @test */
     public function check_unauthenticated_user_cant_create_room()
     {
-        $response = $this->post('/room', []);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post('/room', []);
 
-        $response->assertStatus(200)->assertJson(['status' => 9]);
+        $response->assertStatus(401)->assertJson(['status' => 9]);
     }
     
     /** @test */
     public function check_unauthenticated_user_cant_update_room_status()
     {
-        $response = $this->put('/room/1', []);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->put('/room/1', []);
 
-        $response->assertStatus(200)->assertJson(['status' => 9]);
+        $response->assertStatus(401)->assertJson(['status' => 9]);
     }
     
     /** @test */
     public function check_unauthenticated_user_cant_delete_room()
     {
-        $response = $this->delete('/room/1');
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->delete('/room/1');
 
-        $response->assertStatus(200)->assertJson(['status' => 9]);
+        $response->assertStatus(401)->assertJson(['status' => 9]);
     }
     
     /** @test */
     public function check_unauthenticated_user_cant_update_room()
     {
-        $response = $this->put('/room/1/update');
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->put('/room/1/update');
 
-        $response->assertStatus(200)->assertJson(['status' => 9]);
+        $response->assertStatus(401)->assertJson(['status' => 9]);
     }
     
     /** @test */
     public function check_unauthenticated_user_cant_invite_friends()
     {
-        $response = $this->post('/room/1/invite', []);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post('/room/1/invite', []);
 
-        $response->assertStatus(200)->assertJson(['status' => 9]);
+        $response->assertStatus(401)->assertJson(['status' => 9]);
     }
 }

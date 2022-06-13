@@ -30,7 +30,9 @@ class RoomTest extends AuthenticatedTestCase
             $users_ids[] = $user->id;
         }
         //Send create room request
-        $response = $this->post('/room', [
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post('/room', [
             'add_friend' => $users_ids
         ]);
         $response->assertStatus(200)->assertJson(['status' => 0]);
@@ -52,7 +54,9 @@ class RoomTest extends AuthenticatedTestCase
     public function check_auth_user_cant_create_room()
     {
         //Send create room request
-        $response = $this->post('/room', [
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post('/room', [
             'room_name' => 'test',
             'add_friend' => []
         ]);
@@ -100,7 +104,9 @@ class RoomTest extends AuthenticatedTestCase
         ]);
         $this->assertModelExists($room);
         //Delete room route
-        $response = $this->delete('/room/'.$room->id);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->delete('/room/'.$room->id);
         $response->assertStatus(200)->assertJson(['status' => 0]);
     }
 
@@ -114,7 +120,9 @@ class RoomTest extends AuthenticatedTestCase
         ]);
         $this->assertModelExists($room);
         //Delete room route
-        $response = $this->delete('/room/'.$room->id);
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->delete('/room/'.$room->id);
         $response->assertStatus(200)->assertJson(['status' => 2]);
     }
 
@@ -141,8 +149,15 @@ class RoomTest extends AuthenticatedTestCase
             'room_name' => 'test_invite_friends'
         ]);
         $this->assertModelExists($room);
+        $this->assertDatabaseHas('room_members', [
+            'room_id' => $room->id,
+            'user_id' => $this->user->id,
+            'status' => 1
+        ]);
         //Invite friends
-        $response = $this->post('/room/'.$room->id.'/invite', [
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post('/room/'.$room->id.'/invite', [
             'add_friend' => $users_ids
         ]);
         $response->assertStatus(200)->assertJson(['status' => 0]);
@@ -177,7 +192,9 @@ class RoomTest extends AuthenticatedTestCase
         ]);
         $this->assertModelExists($room);
         //Invite friends
-        $response = $this->post('/room/'.$room->id.'/invite', [
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->post('/room/'.$room->id.'/invite', [
             'add_friend' => $users_ids
         ]);
         $response->assertStatus(200)->assertJson(['status' => 2]);
@@ -203,12 +220,22 @@ class RoomTest extends AuthenticatedTestCase
             'admin_id'  => $admin->id
         ]);
         $this->assertModelExists($room);
+        //Invite friends
         $room_member = $this->user->roomMember()->create([
             'room_id' => $room->id,
         ]);
         $this->assertModelExists($room_member);
-        //Invite friends
-        $response = $this->put('/room/'.$room->id, [
+        //Send invalid btn
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->put('/room/'.$room->id, [
+            'button' => 'invalidBtn'
+        ]);
+        $response->assertStatus(200)->assertJson(['status' => 2]);
+        //Send valid btn
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->put('/room/'.$room->id, [
             'button' => 'acceptInvite'
         ]);
         $response->assertStatus(200)->assertJson(['status' => 0]);
@@ -235,7 +262,9 @@ class RoomTest extends AuthenticatedTestCase
         ]);
         $this->assertModelExists($room);
         //Invite friends
-        $response = $this->put('/room/'.$room->id, [
+        $response = $this->withHeaders([
+            'Accept' => 'application/json'
+        ])->put('/room/'.$room->id, [
             'button' => 'acceptInvite'
         ]);
         $response->assertStatus(200)->assertJson(['status' => 2]);

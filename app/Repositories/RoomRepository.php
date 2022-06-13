@@ -70,7 +70,7 @@ class RoomRepository
         $data['friends_data'] = $friendship->get_user_friends('array'); //Todo: I think this should be higher
         $data['rooms_data'] = $RoomController->get_user_rooms('array');
         $data['room'] = $RoomController->get_room($room_id);
-        $data['roommates_data'] = $RoomController->get_roommates($room_id);
+        $data['roommates_data'] = $RoomController->get_roommates($room);
         $data['messages'] = $tmp['messages'];
         $data['msg_users'] = $tmp['msg_users'];
         $data['files'] = $tmp['files'];

@@ -112,7 +112,7 @@ class RoomController extends Controller
 
         //check if request button is properly
         $operation = $request->button;
-        if(!in_array(RoomMember::ROOM_MEMBER_OPERATIONS, $operation))
+        if(!in_array($operation, RoomMember::ROOM_MEMBER_OPERATIONS, true))
         {
             return response()->json([
                 'status' => 2,
@@ -120,7 +120,7 @@ class RoomController extends Controller
             ]);
         }
 
-        $room_member = Auth::user()->roomMember()->with('room_members.rooms')->where('room_id', $room_id)->first();
+        $room_member = Auth::user()->roomMember()->with('room')->where('room_id', $room_id)->first();
         if(empty($room_member->created_at))
         {
             return response()->json([
