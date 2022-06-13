@@ -52,6 +52,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/room/{room_id}/upload', [RoomController::class, 'upload_room_profile'])->middleware('admin.room.guard');
     Route::get('/room/{room_id}/get_image', [RoomController::class, 'get_room_profile'])->middleware('admin.room.guard');
     Route::put('/room/{room_id}/revert', [RoomController::class, 'revert_room_profile'])->middleware('admin.room.guard');
+
+    // Messages
+    Route::post('/chat/message/{room_id}', [MessagesController::class, 'send'])->middleware('room.guard');
+    Route::post('/chat/file/{room_id}', [MessagesController::class, 'upload'])->middleware('room.guard');
+    Route::get('/get_msg/{room_id}', [MessagesController::class, 'get'])->middleware('room.guard');
+    Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_id'])->middleware('room.guard');
 });
 
 // Friendship
@@ -59,12 +65,6 @@ Route::get('/friendship', [FriendshipController::class, 'get_user_friends']);
 Route::post('/friendship', [FriendshipController::class, 'save_friendship']);
 Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
 
-
-// Messages
-Route::post('/chat/message/{room_id}', [MessagesController::class, 'send']);
-Route::post('/chat/file/{room_id}', [MessagesController::class, 'upload']);
-Route::get('/get_msg/{room_id}', [MessagesController::class, 'get']);
-Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_id']);
 //Notifications
 Route::get('/get_notify_data/{room_id}', [NotificationController::class, 'notify_room_message']);
 Route::get('/get_notify_data', [NotificationController::class, 'check_messages']);

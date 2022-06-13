@@ -14,6 +14,12 @@ class RoomGuard
         $roomMember = $request->user()->roomMember()->roomID($request->route('room_id'))->first();
 
         if (empty($roomMember) || $roomMember->status !== 1) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 2,
+                    'msg'    => __('app.user_inst_in_room')
+                ]);
+            }
             return redirect()->route('dashboard');
         }
 
