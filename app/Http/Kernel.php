@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'only.guest' => \App\Http\Middleware\RedirectToDashboard::class,
         'only.auth' => \App\Http\Middleware\RedirectToLogin::class,
         'room.friends' => \App\Http\Middleware\EnsureRoomHasFriends::class,
+        'room.guard' => \App\Http\Middleware\RoomGuard::class,
     ];
 }

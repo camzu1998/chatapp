@@ -31,7 +31,6 @@ class RoomRepository
         $room = $user->adminRoom()->create([
             'room_name' => $room_name
         ]);
-        Log::debug('Added room owner as member: '.Auth::id());
 
         return $room;
     }

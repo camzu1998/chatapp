@@ -9,6 +9,8 @@ class Room extends Model
 {
     use HasFactory;
 
+    public const ROOM_PROFILE_EXT = ['png', 'jpeg', 'jpg'];
+
     protected $fillable = [
         'admin_id',
         'room_name',

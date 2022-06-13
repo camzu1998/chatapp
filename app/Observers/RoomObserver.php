@@ -25,7 +25,7 @@ class RoomObserver
 
     public function deleted(Room $room)
     {
-        //
+//        $room->roomMembers()->delete();
     }
 
     public function restored(Room $room)

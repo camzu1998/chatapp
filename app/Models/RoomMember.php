@@ -17,6 +17,14 @@ class RoomMember extends Model
         'outRoom' => 2
     ];
 
+    public const ROOM_MEMBER_OPERATIONS = [
+        'pendingInvite',
+        'acceptInvite',
+        'declineInvite',
+        'blockedRoom',
+        'outRoom'
+    ];
+
     protected $table = 'room_members';
 
     public $fillable = [
@@ -29,8 +37,8 @@ class RoomMember extends Model
     ];
 
     protected $attributes = [
-        'room_id' => 0,
-        'user_id' => 0,
+        'room_id' => false,
+        'user_id' => false,
         'status' => 0,
         'last_msg_id' => 0,
         'last_notify_id' => 0,

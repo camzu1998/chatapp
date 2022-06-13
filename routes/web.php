@@ -34,7 +34,7 @@ Route::middleware(['only.guest'])->group(function () {
 });
 //Only Auth
 Route::middleware(['only.auth'])->group(function () {
-    Route::get('/main', [Controller::class, 'dashboard']);
+    Route::get('/main', [Controller::class, 'dashboard'])->name('dashboard');
     Route::get('/logout', [LoginController::class, 'logout']);
     Route::post('/user/set_profile/{user_id}', [UserSettingsController::class, 'set_user_profile']);
     Route::post('/user/set_settings', [UserSettingsController::class, 'save_user_settings']);
@@ -46,7 +46,7 @@ Route::post('/friendship', [FriendshipController::class, 'save_friendship']);
 Route::put('/friendship/{friend_id}', [FriendshipController::class, 'update_friendship_status']);
 // Room
 Route::get('/room', [RoomController::class, 'get_user_rooms']); //JSON Response
-Route::get('/room/{room_id}', [RoomController::class, 'load_room']);
+Route::get('/room/{room_id}', [RoomController::class, 'load_room'])->middleware('room.guard');
 Route::post('/room', [RoomController::class, 'save_room'])->middleware('room.friends');
 Route::put('/room/{room_id}', [RoomController::class, 'update_room_status']);
 //Room settings
