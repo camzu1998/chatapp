@@ -14,9 +14,10 @@ class UserSettingsController extends Controller
 {
     public function save_user_settings(Request $request)
     {
-        foreach(UserSettings::SETTINGS_TYPES as $name => $init_val){
+        foreach(UserSettings::SETTINGS_TYPES as $name)
+        {
             $user_setting = Auth::user()->userSettings()->name($name)->first();
-            switch($request->$name){
+            switch($request->name){
                 case 0:
                     $user_setting->value = 0;
                     break;
@@ -24,13 +25,14 @@ class UserSettingsController extends Controller
                     $user_setting->value = 1;
                     break;
                 default:
-                    $user_setting->value = $init_val;
+                    $user_setting->value = 0;
             }
             if($user_setting->isDirty())
             {
                 $user_setting->save();
             }
         }
+
         return response()->json([
             'status' => 0,
             'msg'    => 'Ustawienia zapisano'

@@ -25,7 +25,7 @@ class UserSettings extends Model
 
     protected $attributes = [
         'user_id' => false,
-        'name' => 'sounds',
+        'name' => false,
         'value' => 0,
     ];
 
