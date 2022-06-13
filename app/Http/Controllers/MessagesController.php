@@ -24,32 +24,35 @@ class MessagesController extends Controller
                 'status' => 9,
                 'msg'    => 'Brak autoryzacji'
             ]);
-        }      
+        }
         // Check if isset room_id
-        if(empty($room_id) || !is_numeric($room_id))
+        if (empty($room_id) || !is_numeric($room_id)) {
             return response()->json([
                 'status' => 1,
                 'msg'    => 'Błedny id pokoju'
             ]);
+        }
 
         //Check if user is in the room
         $room = Room::with('messages')->find($room_id);
         $room_status = Auth::user()->roomMember()->RoomID($room_id)->first();
-        if(empty($room_status->created_at) || $room_status->status != 1)
+        if (empty($room_status->created_at) || $room_status->status != 1) {
             return response()->json([
                 'status' => 2,
                 'msg'    => 'Brak użytkownika w pokoju'
             ]);
+        }
 
         $msgs = $room->messages()->latest()->first();
-        if(empty($msgs->id)){
+        if (empty($msgs->id)) {
             return 0;
         }
 
         return $msgs->id;
     }
 
-    public function send(int $room_id, Request $request){
+    public function send(int $room_id, Request $request)
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -59,24 +62,25 @@ class MessagesController extends Controller
         }
 
         $content = $request->input('content');
-        if(empty($content))
+        if (empty($content)) {
             return response()->json([
                 'status' => 1,
                 'msg'    => 'Pusta wiadomość'
             ]);
+        }
 
         // Check if isset room_id
-        if(!empty($room_id)){
+        if (!empty($room_id)) {
             //Check if user is in the room
             $room_status = RoomMember::User(Auth::id())->Room($room_id)->first();
-            if(empty($room_status->created_at) || $room_status->status != 1){
+            if (empty($room_status->created_at) || $room_status->status != 1) {
                 return response()->json([
                     'status' => 2,
                     'msg'    => 'Brak użytkownika w pokoju'
                 ]);
             }
         }
-        
+
         //Get messages
         $msg = Messages::create([
             'user_id' => Auth::id(),
@@ -90,7 +94,8 @@ class MessagesController extends Controller
 
         return $this->get($room_id);
     }
-    public function upload(int $room_id, Request $request){
+    public function upload(int $room_id, Request $request)
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -99,21 +104,23 @@ class MessagesController extends Controller
             ]);
         }
 
-        if(!$request->hasFile('file'))
+        if (!$request->hasFile('file')) {
             return response()->json([
                 'status' => false,
                 'step'   => 0
-            ]);;
+            ]);
+        };
 
         // Check if isset room_id
-        if(!empty($room_id)){
+        if (!empty($room_id)) {
             //Check if user is in the room
             $room_status = RoomMember::User(Auth::id())->Room($room_id)->first();
-            if(empty($room_status->created_at) || $room_status->status != 1){
+            if (empty($room_status->created_at) || $room_status->status != 1) {
                 return response()->json([
                     'status' => false,
                     'step'   => 1
-                ]);;
+                ]);
+                ;
             }
         }
         $files_con = new FilesController();
@@ -133,7 +140,8 @@ class MessagesController extends Controller
         return $this->get($room_id);
     }
 
-    public function get(int $room_id){
+    public function get(int $room_id)
+    {
         if (!Auth::check()) {
             // The user is not logged in...
             return response()->json([
@@ -144,19 +152,20 @@ class MessagesController extends Controller
 
         $users_array = array();
         $file_array = array();
-        
+
         $room_status = RoomMember::User(Auth::id())->Room($room_id)->first();
-        if(empty($room_status->created_at) || $room_status->status != 1)
+        if (empty($room_status->created_at) || $room_status->status != 1) {
             return response()->json([
                 'status' => false,
                 'step'   => 0,
                 'data' => $room_status
-            ]);;
+            ]);
+        };
 
         $msgs = Messages::Room($room_id)->take(10)->get();
-        foreach($msgs as $k => $msg){
+        foreach ($msgs as $k => $msg) {
             //Check file data
-            if($msg->file_id != 0){
+            if ($msg->file_id != 0) {
                 $file_array[$msg->file_id] = Files::find($msg->file_id);
             }
             //Check user data
@@ -182,20 +191,18 @@ class MessagesController extends Controller
     {
         $users_array = array();
         $file_array = array();
-                
+
         $room_status = Auth::user()->roomMember()->roomID($room_id)->first();
-        if(empty($room_status->created_at) || $room_status->status != 1)
-        {
+        if (empty($room_status->created_at) || $room_status->status != 1) {
             return false;
         }
 
         $room = Room::with('messages')->find($room_id);
         $msgs = $room->messages;
-        if($msgs)
-        {
-            foreach($msgs as $k => $msg){
+        if ($msgs) {
+            foreach ($msgs as $k => $msg) {
                 //Check file data
-                if($msg->file_id != 0){
+                if ($msg->file_id != 0) {
                     $file_array[$msg->file_id] = Files::find($msg->file_id);
                 }
                 //Check user data

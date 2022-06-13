@@ -28,13 +28,12 @@ Route::middleware(['only.guest'])->group(function () {
     Route::post('/login', [LoginController::class, 'authenticate'])->name('user.login');
     Route::get('/register', [UserController::class, 'register_form'])->name('user.register');
     Route::post('/register', [UserController::class, 'register']);
-    Route::get('/forgot_password', function(){
+    Route::get('/forgot_password', function () {
         return view('remember_password');
     })->name('user.forgot_password');
 });
 //Only Auth
-Route::middleware('auth')->group(function ()
-{
+Route::middleware('auth')->group(function () {
     Route::get('/main', [Controller::class, 'dashboard'])->name('dashboard');
     Route::get('/logout', [LoginController::class, 'logout']);
     Route::post('/user/set_profile/{user_id}', [UserSettingsController::class, 'set_user_profile']);
@@ -70,10 +69,10 @@ Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_i
 Route::get('/get_notify_data/{room_id}', [NotificationController::class, 'notify_room_message']);
 Route::get('/get_notify_data', [NotificationController::class, 'check_messages']);
 // Reset password
-Route::post('/reset/{token}', [PasswordController::class, 'save_password']); //Store new pass in db 
+Route::post('/reset/{token}', [PasswordController::class, 'save_password']); //Store new pass in db
 Route::post('/reset', [PasswordController::class, 'forgot_password']); //Sending email to user with token to reset pass
 Route::get('/reset/{token}', [PasswordController::class, 'reset']); //Return form to set new pass
 
-Route::get('/.well-known/acme-challenge/nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o', function(){
+Route::get('/.well-known/acme-challenge/nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o', function () {
     return 'nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o.U_4xLF8dgJ1k8O7LJc-iDhIvoxBMmlL84C3ANwg4VEw';
 });

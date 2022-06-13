@@ -11,7 +11,9 @@ use Database\Factories\UserFactory;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     protected $table = 'users';
     protected $fillable = [
@@ -62,7 +64,7 @@ class User extends Authenticatable
     {
         return $this->friends().$this->isFriendsWith();
     }
-    function friends()
+    public function friends()
     {
         return $this->belongsToMany(User::class, 'friendship', 'user_id', 'user2_id');
     }

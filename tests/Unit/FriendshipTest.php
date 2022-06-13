@@ -23,7 +23,7 @@ class FriendshipTest extends TestCase
         $friends = User::factory()->count(2)->create();
         $user = User::factory()->create();
         //Make friendship
-        foreach($friends as $friend){
+        foreach ($friends as $friend) {
             $friendship = Friendship::factory()->create([
                 'user_id' => $user->id,
                 'user2_id' => $friend->id,
@@ -31,7 +31,7 @@ class FriendshipTest extends TestCase
             ]);
             $this->assertModelExists($friendship);
         }
-        
+
         $friendships = Friendship::user($user->id)->get();
         //Check if number of friendships is the same as we make
         $this->assertEquals(count($friendships), 2);

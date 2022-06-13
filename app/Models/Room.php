@@ -17,7 +17,7 @@ class Room extends Model
         'room_img',
         'created_at'
     ];
-    
+
     protected $attributes = [
         'admin_id' => 0,
         'room_name' => 'default_room_name',

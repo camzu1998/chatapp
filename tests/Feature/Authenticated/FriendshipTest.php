@@ -18,7 +18,7 @@ class FriendshipTest extends AuthenticatedTestCase
         $response->assertStatus(200)->assertJson(['status' => 1]);
         //Need to make some friends
         $xusers = User::factory()->count(2)->create();
-        foreach($xusers as $xuser){
+        foreach ($xusers as $xuser) {
             $this->assertModelExists($xuser);
             $friendship = Friendship::factory()->create([
                 'user_id' => $this->user->id,
@@ -46,7 +46,7 @@ class FriendshipTest extends AuthenticatedTestCase
         ]);
         $response->assertStatus(200)->assertJson(['status' => 0]);
     }
-    
+
     /** @test */
     public function check_auth_user_can_accept_friendship_invite()
     {
@@ -69,7 +69,7 @@ class FriendshipTest extends AuthenticatedTestCase
             'status' => 1
         ]);
     }
-    
+
     /** @test */
     public function check_auth_user_can_deceline_friendship_invite()
     {

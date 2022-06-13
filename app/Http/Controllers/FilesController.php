@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class FilesController extends Controller
 {
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $file_data = array();
 
         $file_req = $request->file('file');

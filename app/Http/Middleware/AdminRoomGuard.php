@@ -9,13 +9,10 @@ class AdminRoomGuard
 {
     public function handle(Request $request, Closure $next)
     {
-
         $roomAdmin = $request->user()->adminRoom()->where('id', $request->route('room_id'))->first();
 
-        if(empty($roomAdmin))
-        {
-            if($request->expectsJson())
-            {
+        if (empty($roomAdmin)) {
+            if ($request->expectsJson()) {
                 return response()->json([
                     'status' => 2
                 ]);

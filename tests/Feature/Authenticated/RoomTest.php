@@ -11,7 +11,7 @@ use App\Models\Friendship;
 class RoomTest extends AuthenticatedTestCase
 {
     use RefreshDatabase;
-    
+
     /** @test */
     public function check_auth_user_can_create_room_and_access_for_it()
     {
@@ -20,7 +20,7 @@ class RoomTest extends AuthenticatedTestCase
         //Populate DB
         $users = User::factory()->count(2)->create();
         //Make friendship for roommates
-        foreach($users as $user) {
+        foreach ($users as $user) {
             Friendship::factory()->create([
                 'user_id' => $this->user->id,
                 'user2_id' => $user->id,
@@ -135,7 +135,7 @@ class RoomTest extends AuthenticatedTestCase
         $users = User::factory()->count(2)->create();
 
         //Make friendship for roommates
-        foreach($users as $user) {
+        foreach ($users as $user) {
             Friendship::factory()->create([
                 'user_id' => $this->user->id,
                 'user2_id' => $user->id,
@@ -176,7 +176,7 @@ class RoomTest extends AuthenticatedTestCase
         $users = User::factory()->count(2)->create();
 
         //Make friendship for roommates
-        foreach($users as $user){
+        foreach ($users as $user) {
             Friendship::factory()->create([
                 'user_id' => $this->user->id,
                 'user2_id' => $user->id,

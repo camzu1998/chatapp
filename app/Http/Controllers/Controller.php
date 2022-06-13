@@ -18,9 +18,11 @@ use Illuminate\Support\Facades\Mail;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
-    public function load($content = 'main' ,$data = array())
+    public function load($content = 'main', $data = array())
     {
         if (!Auth::check()) {
             // The user is not logged in...
@@ -43,7 +45,7 @@ class Controller extends BaseController
         $friendship = new FriendshipController();
         $room = new RoomController($room_repo);
         $UserSettingsController = new UserSettingsController();
-        
+
         $data['friends_data'] = $friendship->get_user_friends('array');
         $data['rooms_data'] = $room->get_user_rooms('array');
         $data['user_settings'] = $UserSettingsController->load_user_settings();

@@ -11,17 +11,18 @@ use Tests\TestCase;
 
 use App\Models\Messages;
 use App\Models\Room;
-use App\Models\UserRoom;
+use App\Models\RoomMember;
 
 class MessagesTest extends AuthenticatedTestCase
 {
     use RefreshDatabase;
 
-    public function test_if_auth_user_can_send_message(){
+    public function test_if_auth_user_can_send_message()
+    {
         $room = Room::factory()->create([
             'admin_id' => $this->user->id,
         ]);
-        $user_room = UserRoom::factory()->create([
+        $user_room = RoomMember::factory()->create([
             'room_id' => $room->id,
             'user_id' => $this->user->id,
             'status' => 1
@@ -31,11 +32,12 @@ class MessagesTest extends AuthenticatedTestCase
         ]);
         $response->assertStatus(200)->assertJson(['newest_msg' => true]);
     }
-    public function test_if_auth_user_can_upload_file(){
+    public function test_if_auth_user_can_upload_file()
+    {
         $room = Room::factory()->create([
             'admin_id' => $this->user->id,
         ]);
-        $user_room = UserRoom::factory()->create([
+        $user_room = RoomMember::factory()->create([
             'room_id' => $room->id,
             'user_id' => $this->user->id,
             'status' => 1
@@ -50,11 +52,12 @@ class MessagesTest extends AuthenticatedTestCase
 
         $response->assertStatus(200)->assertJson(['newest_msg' => true]);
     }
-    public function test_if_auth_user_can_get_messages(){
+    public function test_if_auth_user_can_get_messages()
+    {
         $room = Room::factory()->create([
             'admin_id' => $this->user->id,
         ]);
-        $user_room = UserRoom::factory()->create([
+        $user_room = RoomMember::factory()->create([
             'room_id' => $room->id,
             'user_id' => $this->user->id,
             'status' => 1
@@ -68,11 +71,12 @@ class MessagesTest extends AuthenticatedTestCase
 
         $response->assertStatus(200)->assertJson(['newest_msg' => true]);
     }
-    public function test_if_auth_user_can_get_newest_message_id(){
+    public function test_if_auth_user_can_get_newest_message_id()
+    {
         $room = Room::factory()->create([
             'admin_id' => $this->user->id,
         ]);
-        UserRoom::factory()->create([
+        RoomMember::factory()->create([
             'room_id' => $room->id,
             'user_id' => $this->user->id,
             'status' => 1

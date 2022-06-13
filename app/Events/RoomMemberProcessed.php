@@ -13,7 +13,9 @@ use Illuminate\Queue\SerializesModels;
 
 class RoomMemberProcessed
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable;
+    use InteractsWithSockets;
+    use SerializesModels;
 
     public $room_member;
     public $newest_msg_id;

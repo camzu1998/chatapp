@@ -9,7 +9,6 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\UserSettings;
 
-
 abstract class AuthenticatedTestCase extends TestCase
 {
     protected $user;

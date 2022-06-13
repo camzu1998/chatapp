@@ -11,11 +11,9 @@ class RoomGuard
 {
     public function handle(Request $request, Closure $next)
     {
-
         $roomMember = $request->user()->roomMember()->roomID($request->route('room_id'))->first();
 
-        if(empty($roomMember) || $roomMember->status !== 1)
-        {
+        if (empty($roomMember) || $roomMember->status !== 1) {
             return redirect()->route('dashboard');
         }
 

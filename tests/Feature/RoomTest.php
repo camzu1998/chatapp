@@ -13,7 +13,7 @@ class RoomTest extends TestCase
     {
         $response = $this->get('/room/1');
 
-        $response->assertRedirect('/'); 
+        $response->assertRedirect('/');
     }
 
     /** @test */
@@ -25,7 +25,7 @@ class RoomTest extends TestCase
 
         $response->assertStatus(401)->assertJson(['status' => 9]);
     }
-    
+
     /** @test */
     public function check_unauthenticated_user_cant_update_room_status()
     {
@@ -35,7 +35,7 @@ class RoomTest extends TestCase
 
         $response->assertStatus(401)->assertJson(['status' => 9]);
     }
-    
+
     /** @test */
     public function check_unauthenticated_user_cant_delete_room()
     {
@@ -45,7 +45,7 @@ class RoomTest extends TestCase
 
         $response->assertStatus(401)->assertJson(['status' => 9]);
     }
-    
+
     /** @test */
     public function check_unauthenticated_user_cant_update_room()
     {
@@ -55,7 +55,7 @@ class RoomTest extends TestCase
 
         $response->assertStatus(401)->assertJson(['status' => 9]);
     }
-    
+
     /** @test */
     public function check_unauthenticated_user_cant_invite_friends()
     {

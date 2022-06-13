@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
@@ -9,8 +10,8 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use App\Mail\ResetPassword;
 
-class UserRepository {
-
+class UserRepository
+{
     private $model;
 
     public function __construct()
@@ -29,20 +30,19 @@ class UserRepository {
                 'password' => $pass
             ]);
         }, 5);
-        
+
         return true;
     }
 
     public function create_reset_password(array $payload): bool
     {
         $user = $this->model->where('email', $payload['email'])->first();
-        if (!empty($user->created_at)){
+        if (!empty($user->created_at)) {
             $token = Str::random(40);
             $user->reset_token = $token;
             $user->save();
             //Send email
-            if (config('app.env') == 'production')
-            {
+            if (config('app.env') == 'production') {
                 Mail::to($user->email)->send(new ResetPassword($token));
             }
 
@@ -55,12 +55,11 @@ class UserRepository {
     public function store_new_password(array $payload, string $token): bool
     {
         $user = User::where('reset_token', $token)->first();
-        if(!empty($user->created_at)){
-
+        if (!empty($user->created_at)) {
             $pass = Hash::make($payload['pass']);
             $user->password = $pass;
             $user->save();
-            
+
             return true;
         }
 

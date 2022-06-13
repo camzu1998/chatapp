@@ -9,6 +9,7 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginUserRequest;
 
 use App\Repositories\UserRepository;
+
 class UserController extends Controller
 {
     public $repository;
@@ -23,9 +24,10 @@ class UserController extends Controller
         return view('register_form');
     }
 
-    public function register(CreateUserRequest $request){
+    public function register(CreateUserRequest $request)
+    {
         $data = $request->validated();
-        
+
         $this->repository->create($data);
 
         return redirect('/')->with(['register' => 'success']);

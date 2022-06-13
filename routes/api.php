@@ -18,7 +18,7 @@ use App\Http\Controllers\RoomController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/send_msg', function(Request $request){
+Route::get('/send_msg', function (Request $request) {
     $msg_con = new App\Http\Controllers\MessagesController();
     return $msg_con->save($request);
 });

@@ -9,7 +9,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 use App\Models\UserSettings;
 
-
 class UserTest extends TestCase
 {
 //    use RefreshDatabase;
@@ -22,7 +21,7 @@ class UserTest extends TestCase
         $this->assertIsObject($user);
         $this->assertModelExists($user);
 
-        foreach(UserSettings::SETTINGS_TYPES as $setting_name){
+        foreach (UserSettings::SETTINGS_TYPES as $setting_name) {
             //Creating user settings
             $userSettings = $user->userSettings()->Name($setting_name)->first();
             //Check if user settings exist

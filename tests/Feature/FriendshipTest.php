@@ -23,7 +23,7 @@ class FriendshipTest extends TestCase
 
         $response->assertStatus(200)->assertJson(['status' => 9]);
     }
-    
+
     /** @test */
     public function check_update_friendship_status_route()
     {

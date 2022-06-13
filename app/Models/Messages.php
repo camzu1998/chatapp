@@ -17,7 +17,7 @@ class Messages extends Model
     protected $attributes = [
         'user_id' => false,
         'room_id' => false,
-        'file_id' => NULL,
+        'file_id' => null,
         'content' => '',
         'created_at'  => '1998-07-14 14:00:00'
     ];
@@ -50,8 +50,8 @@ class Messages extends Model
         return $query->where('room_id', $room_id)->orderBy('id', 'desc');
     }
 
-    public static function get_difference(int $room_id, int $last_msg){
-
+    public static function get_difference(int $room_id, int $last_msg)
+    {
         return  DB::table('messages')->selectRaw('COUNT(id) as unreaded')->where('room_id', '=', $room_id)->where('id', '>', $last_msg)->first();
     }
 }

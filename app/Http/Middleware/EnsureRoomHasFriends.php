@@ -9,8 +9,7 @@ class EnsureRoomHasFriends
 {
     public function handle(Request $request, Closure $next)
     {
-        if(empty($request->add_friend))
-        {
+        if (empty($request->add_friend)) {
             return response()->json([
                 'status' => 1,
                 'msg'    => 'Please add some friends to room'

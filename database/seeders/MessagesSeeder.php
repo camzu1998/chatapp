@@ -15,7 +15,7 @@ class MessagesSeeder extends Seeder
      */
     public function run()
     {
-        for($x=0;$x<20;$x++){
+        for ($x=0;$x<20;$x++) {
             DB::table('messages')->insert([
                 'nick' => Str::random(10),
                 'content' => Str::random(10),

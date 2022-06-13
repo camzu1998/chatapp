@@ -37,10 +37,10 @@ class RoomRepository
 
     public function inviteFriends($data, Room $room): void
     {
-        foreach($data['add_friend'] as $friend_id){
+        foreach ($data['add_friend'] as $friend_id) {
             //Check friendship
             $res = Friendship::check(Auth::id(), $friend_id);
-            if(empty($res[0])){
+            if (empty($res[0])) {
                 continue;
             }
 
@@ -61,8 +61,7 @@ class RoomRepository
 
         $room = $this->model->findOrFail($room_id);
         $room_member = RoomMember::userID(Auth::id())->roomID($room_id)->first();
-        if(empty($room_member->created_at) || $room_member->status !== 1)
-        {
+        if (empty($room_member->created_at) || $room_member->status !== 1) {
             return [];
         }
 

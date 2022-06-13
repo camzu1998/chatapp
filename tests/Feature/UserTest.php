@@ -10,7 +10,7 @@ use App\Models\User;
 class UserTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function test_user_register_form()
     {
         $response = $this->get('/register');
@@ -38,7 +38,7 @@ class UserTest extends TestCase
             'email'    => $user->email,
             'password' => 'password'
         ]);
-        
+
         $response->assertRedirect('/main');
     }
 
