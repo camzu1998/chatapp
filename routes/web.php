@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\UserSettingsController;
 use App\Http\Controllers\FriendshipController;
 use App\Http\Controllers\PasswordController;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,10 @@ use App\Http\Controllers\PasswordController;
 //Only Guest
 Route::middleware(['only.guest'])->group(function () {
     Route::get('/', [Controller::class, 'init'])->name('login');
+
+    Route::get('/auth/{social}/redirect', [LoginController::class, 'socialLogin'])->middleware('social.exist');
+    Route::get('/auth/{social}/callback', [LoginController::class, 'socialCallback'])->middleware('social.exist');
+
     Route::post('/login', [LoginController::class, 'authenticate'])->name('user.login');
     Route::get('/register', [UserController::class, 'register_form'])->name('user.register');
     Route::post('/register', [UserController::class, 'register']);
