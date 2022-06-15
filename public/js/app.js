@@ -5594,27 +5594,22 @@ worker.onmessage = function (e) {
 
 notifyWorker.onmessage = function (e) {
   var res = e.data[0];
-  console.log(res);
 
-  if (e.data == 'notification') {
-    var notification = new Notification("Hi there :)");
+  if (e.data.sum_unreaded != 0) {
+    $('#roomsModalBtn').children('.btn-notify').html(e.data.sum_unreaded).fadeIn();
   } else {
-    if (e.data.sum_unreaded != 0) {
-      $('#roomsModalBtn').children('.btn-notify').html(e.data.sum_unreaded).fadeIn();
-    } else {
-      $('#roomsModalBtn').children('.btn-notify').html("").fadeOut();
+    $('#roomsModalBtn').children('.btn-notify').html("").fadeOut();
+  }
+
+  if (_typeof(res) !== undefined && res !== undefined && res.room_id != 0) {
+    var panel_room = $('#panel_room_' + res.room_id);
+
+    if (panel_room.length != 0) {
+      panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
+      panel_room.children('.room_info').children('.room_last_msg').html(res.user + ': ' + res.content);
     }
 
-    if (_typeof(res) !== undefined && res !== undefined && res.room_id != 0) {
-      var panel_room = $('#panel_room_' + res.room_id);
-
-      if (panel_room.length != 0) {
-        panel_room.children('.profile_container').children('.unreaded').html(res.unreaded);
-        panel_room.children('.room_info').children('.room_last_msg').html(res.user + ': ' + res.content);
-      }
-
-      var notification = new Notification("Użytkownik " + res.user + " wysłał wiadomość do pokoju " + res.room);
-    }
+    var notification = new Notification("Użytkownik " + res.user + " wysłał wiadomość do pokoju " + res.room); //Todo: move to NotificationController
   }
 };
 
@@ -5639,9 +5634,7 @@ setInterval(function () {
 Notification.requestPermission(function (permission) {
   // If the user accepts, let's create a notification
   if (permission === "granted") {
-    notifyWorker.postMessage({
-      name: "notification"
-    });
+    new Notification("Hi there :)");
   }
 });
 
