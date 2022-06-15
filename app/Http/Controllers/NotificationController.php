@@ -45,17 +45,17 @@ class NotificationController extends Controller
         if ($roomMember->last_msg_id == $msgs->id || $msgs->user_id == Auth::id() || $roomMember->last_notify_id == $msgs->id) {
             if ($response == "ARRAY") {
                 return [
-                    'status' => true,
+                    'status' => false,
                     'unreaded' => $unreaded
                 ];
             }
             return response()->json([
-                'status' => true,
+                'status' => false,
                 'unreaded' => $unreaded
             ]);
         }
         //Get user & room data
-        $user_room = RoomMember::Room($roomId)->User($msgs->user_id)->first();
+        $user_room = RoomMember::roomID($roomId)->userID($msgs->user_id)->first();
         $nickname = $user_room->nickname;
         if (empty($nickname)) {
             //Get user data by id
@@ -96,11 +96,12 @@ class NotificationController extends Controller
         $user_rooms = Auth::user()->roomMember()->get();
         foreach ($user_rooms as $roomMember) {
             $result = $this->notify_room_message($roomMember->room_id, "ARRAY");
+            $notify[] = $result;
+
             if ($result['status'] !== false) {
                 $notify['sum_unreaded'] += $result['unreaded'];
                 continue;
             }
-            $notify[] = $result;
         }
 
         return response()->json($notify);

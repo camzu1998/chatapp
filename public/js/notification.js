@@ -28,7 +28,7 @@ onmessage = function onmessage(e) {
       ajax.onload = function () {
         var res = ajax.response;
 
-        if (res.length != 0 && res.sum_unreaded != 0) {
+        if (res.sum_unreaded != 0) {
           postMessage(res);
         }
       };
