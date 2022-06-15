@@ -177,7 +177,7 @@ $('.room_menu').click(function(){
         url: '/room/'+room_id,
         data: 'button='+$(this).attr('id'),
     }).always(function(res){
-        window.location.reload(true);
+         window.location.reload(true);
     });
 });
 $('body').on('click', '.btn_invite', function(){
