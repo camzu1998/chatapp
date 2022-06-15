@@ -21,7 +21,6 @@
                         <div class="room_last_msg ml-2">{{ $room->last_msg_user }}: {{ $room->last_msg_content }}</div>
                     @endif
                 </div>
-                <div class="friend_name ml-2">{{ $room->room_name }}</div>
                 <i class="friend_name fas fa-ellipsis-v open_fast_menu ml-4 text-center" data="{{ $room_id }}"></i>
                 <div class="fast_menu absolute flex flex-col z-10" style="display: none;">
                     @if ($room->status == 0 && $room->admin_id != $user->id)
