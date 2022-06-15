@@ -254,7 +254,7 @@ $('#send').on( "click", function() {
             var user = res.msg_users;
             var content = '';
             if(msg.file_id != 0){
-                var file = res.files[msg.file_id][0];
+                var file = res.files[msg.file_id];
                 if($.inArray( file.ext, img_ext ) != -1){
                     content = '<img src="/storage/'+file.path+'" alt="'+file.filename+'" class="content-image">';
                 }else{
@@ -270,7 +270,9 @@ $('#send').on( "click", function() {
             }
             html += '<img src="/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+content+'</p><span class="msg-date"></span></div></div>';
         }
-        $('#messagesList').html(html);
+        $('#messagesList').html(html).animate(
+            { scrollTop: 1000000}
+        );
     });
 
     $('#content').val('');
@@ -294,7 +296,7 @@ function load_messages(){
             var user = res.msg_users;
             var content = '';
             if(msg.file_id != 0){
-                var file = res.files[msg.file_id][0];
+                var file = res.files[msg.file_id];
                 if($.inArray( file.ext, img_ext ) != -1){
                     content = '<img src="/storage/'+file.path+'" alt="'+file.filename+'" class="content-image">';
                 }else{
@@ -311,7 +313,9 @@ function load_messages(){
             }
             html += '<img src="/storage/profiles_miniatures/'+user[msg.user_id].profile_img+'" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">'+user[msg.user_id].nick+'</span><p class="msg-content-p" >'+content+'</p><span class="msg-date"></span></div></div>';
         }
-        $('#messagesList').html(html);
+        $('#messagesList').html(html).animate(
+            { scrollTop: 1000000}
+        );
 
         if($('#sounds').prop('checked'))
             $('#notifySound').get(0).play()

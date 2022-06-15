@@ -1,6 +1,6 @@
 <img id="image-full-screen" src="" style="display:none;"/>
 <!-- Messages -->
-<div id="messagesList" class="w-full flex flex-col-reverse text-gray-200 px-12 md:pt-8">
+<div id="messagesList" class="w-full flex flex-col text-gray-200 px-12 md:pt-8">
     @if(!empty($messages))
         @foreach ($messages as $msg)
             @if ($msg->user_id != $user->id)
@@ -14,10 +14,10 @@
                         <p class="msg-content-p" >
                             @if ($msg->content != '')
                                 {{ $msg->content }}
-                            @elseif ($msg->file_id != 0 && !in_array($files[$msg->file_id][0]->ext, $img_ext) )
-                                <a href="{{ asset('storage/'.$files[$msg->file_id][0]->path) }}"><i class="far fa-file"></i> {{ $files[$msg->file_id][0]->filename }} </a>
+                            @elseif ($msg->file_id != 0 && !in_array($files[$msg->file_id]->ext, $img_ext) )
+                                <a href="{{ asset('storage/'.$files[$msg->file_id]->path) }}"><i class="far fa-file"></i> {{ $files[$msg->file_id]->filename }} </a>
                             @else
-                                <img src="{{ asset('storage/'.$files[$msg->file_id][0]->path) }}" alt="{{ $files[$msg->file_id][0]->filename }}" class="content-image">
+                                <img src="{{ asset('storage/'.$files[$msg->file_id]->path) }}" alt="{{ $files[$msg->file_id]->filename }}" class="content-image">
                             @endif
                         </p>
                         @if ($msg->user_id != $user->id)
