@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Services\Auth\AuthInterface;
-use App\Services\Auth\GithubService;
+use App\Services\Auth\FacebookService;
 use App\Services\Auth\GoogleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,8 +63,8 @@ class LoginController
             case 'google':
                 return new GoogleService();
                 break;
-            case 'github':
-                return new GithubService();
+            case 'facebook':
+                return new FacebookService();
                 break;
         }
     }
