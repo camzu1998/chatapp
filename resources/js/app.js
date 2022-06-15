@@ -373,9 +373,11 @@ setInterval(function(){
     return false;
 }, 30000);
 
-Notification.requestPermission(function (permission) {
-    // If the user accepts, let's create a notification
-    if (permission === "granted") {
-        new Notification("Hi there :)");
-    }
-});
+if (Notification.permission === "default") {
+    Notification.requestPermission(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+            new Notification("Hi there :)"); //new Notification('To do list', { body: text, icon: img }); Todo:better notification
+        }
+    });
+}
