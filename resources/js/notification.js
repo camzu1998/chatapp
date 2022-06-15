@@ -22,9 +22,6 @@ onmessage = function(e) {
              };
             ajax.send('_token='+e.data.token);   
             break;
-        case "notification":
-            postMessage('notification');
-            break;
         default:
           console.error("Unknown message:", e.data.name);
     }
