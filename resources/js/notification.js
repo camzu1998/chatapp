@@ -16,7 +16,7 @@ onmessage = function(e) {
             ajax.open('GET', '/get_notify_data');
             ajax.onload  = function() {
                 var res = ajax.response;
-                if(res.length != 0 && res.sum_unreaded != 0){
+                if(res.sum_unreaded != 0){
                     postMessage(res);
                 }
              };
