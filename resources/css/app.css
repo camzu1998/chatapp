@@ -199,7 +199,6 @@ input:focus ~ .highlight {
   margin-right: 40px;
   text-align: right;
   color: #094A00;
-  padding-top: 10px
 }
 .msg-right > .msg-user_name {
   color: rgb(9, 74, 0, 0.50);
@@ -357,7 +356,6 @@ input:checked + .slider:before {
   border-radius: 8px;
   width: 160px;
   right: -170px;
-  bottom: 0;
 }
 .fast_menu_btn{
   font-family: Poppins;
@@ -574,7 +572,7 @@ input:checked + .slider:before {
   border: 2px solid #D00081;
   line-height: 35px;
   font-size: 15px;
-  background: linear-gradient(135deg, rgba(37,14,64,1) 25%, rgba(47,0,101,1) 50%, rgba(37,14,64,1) 75%); 
+  background: transparent;
   transition: box-shadow .5s ease-in-out;
 }
 
@@ -598,17 +596,25 @@ input:checked + .slider:before {
   overflow-y: auto;
 }
 .unreaded {
-  border-radius: 50%;
   width: 40px;
   height: 40px;
   line-height: 40px;
   text-align: center;
-  background-image: url(/storage/images/notification.png);
+  background-image: url(/storage/images/5.svg);
   background-repeat: no-repeat;
   background-origin: content-box;
   background-position: center;
   background-size: 40px 40px;
-  color: #ff5fff;
+  color: #f0e8f0;
+}
+.room_last_msg {
+  color: #767b95;
+}
+.profile-image-room{
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  opacity: .9;
 }
 .room > .open_fast_menu{
   width: 30px;
@@ -621,9 +627,6 @@ input:checked + .slider:before {
   color: rgb(34, 0, 89, 0.50);
   font-size: 11px;
 }
-.msg-date.left-1 {
-  color: rgb(34,0,89,.5);
-}
 .btn-notify{
   transform: translateY(-50%);
   background-image: url(/storage/images/5.svg);
@@ -634,15 +637,6 @@ input:checked + .slider:before {
   color: #f0e8f0;
   width: 40px;
   font-size: 18px;
-}
-#feedback_wrapper{
-  transform: translateX(-50%);
-  background: #4a58d7;
-  min-width: 200px;
-  text-align: center;
-}
-#feedback_wrapper.danger{
-  background: rgb(206, 29, 53);
 }
 @media(max-width: 768px){
   .user-panel{
