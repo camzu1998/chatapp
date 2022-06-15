@@ -76,3 +76,7 @@ Route::get('/reset/{token}', [PasswordController::class, 'reset']); //Return for
 Route::get('/.well-known/acme-challenge/nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o', function () {
     return 'nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yla1o.U_4xLF8dgJ1k8O7LJc-iDhIvoxBMmlL84C3ANwg4VEw';
 });
+
+Route::get('/privacy-policy', function () {
+    return view('sites.privacy_policy');
+});
