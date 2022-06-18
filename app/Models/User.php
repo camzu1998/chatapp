@@ -15,6 +15,8 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
 
+    public const PROFILE_PATH = 'profiles_miniatures';
+
     protected $table = 'users';
     protected $fillable = [
         'nick',
