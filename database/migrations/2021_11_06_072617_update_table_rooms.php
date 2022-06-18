@@ -15,7 +15,7 @@ class UpdateTableRooms extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->string('room_img')->after('room_name');
+            $table->string('profile_img')->after('room_name');
         });
     }//
 
