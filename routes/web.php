@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MessagesController;
@@ -36,7 +37,7 @@ Route::middleware(['only.guest'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/main', [Controller::class, 'dashboard'])->name('dashboard');
     Route::get('/logout', [LoginController::class, 'logout']);
-    Route::post('/user/set_profile/{user_id}', [UserSettingsController::class, 'set_user_profile']);
+    
     Route::post('/user/set_settings', [UserSettingsController::class, 'save_user_settings']);
 
     // Room
@@ -48,16 +49,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/room/{room_id}', [RoomController::class, 'delete_room'])->middleware('admin.room.guard');
     Route::put('/room/{room_id}/update', [RoomController::class, 'update'])->middleware('admin.room.guard');
     Route::post('/room/{room_id}/invite', [RoomController::class, 'invite'])->middleware('admin.room.guard');
-    //Room image
-    Route::post('/room/{room_id}/upload', [RoomController::class, 'upload_room_profile'])->middleware('admin.room.guard');
-    Route::get('/room/{room_id}/get_image', [RoomController::class, 'get_room_profile'])->middleware('admin.room.guard');
-    Route::put('/room/{room_id}/revert', [RoomController::class, 'revert_room_profile'])->middleware('admin.room.guard');
 
     // Messages
     Route::post('/chat/message/{room_id}', [MessagesController::class, 'send'])->middleware('room.guard');
     Route::post('/chat/file/{room_id}', [MessagesController::class, 'upload'])->middleware('room.guard');
     Route::get('/get_msg/{room_id}', [MessagesController::class, 'get'])->middleware('room.guard');
     Route::get('/get_newest_id/{room_id}', [MessagesController::class, 'get_newest_id'])->middleware('room.guard');
+
+    //Room & User Profile image
+    Route::middleware(['file.image', 'admin.room.guard'])->group(function () {
+        Route::post('/{type}/{type_id}/upload_profile', [ProfileController::class, 'upload']);
+        Route::put('/{type}/{type_id}/revert_profile', [ProfileController::class, 'revert']);
+    });
+    Route::get('/{type}/{type_id}/get_profile', [ProfileController::class, 'get']);
 });
 
 // Friendship

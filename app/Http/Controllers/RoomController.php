@@ -76,7 +76,7 @@ class RoomController extends Controller
                     $rooms_data[$user_room->room_id]->last_msg_content = $content;
                 } else {
                     $rooms_data[$room->id]->last_msg_user = __('app.empty');
-                    $rooms_data[$room->id]->last_msg_user_img = $room->room_img;
+                    $rooms_data[$room->id]->last_msg_user_img = $room->profile_img;
                     $rooms_data[$user_room->room_id]->last_msg_content = __('app.send_first_msg');
                 }
             }
@@ -150,49 +150,6 @@ class RoomController extends Controller
     }
 
     /**
-     * Todo: move to UploadProfile class or something [Models/User, Models/Room]
-     * Upload room profile image
-     */
-    public function upload_room_profile(Request $request, int $room_id): string
-    {
-        $file = $request->room_profile;
-        $filename = $file->getClientOriginalName();
-
-        //Compare user and admin ids
-        $room = Auth::user()->adminRoom()->where('id', $room_id)->first();
-        if (empty($room->created_at)) {
-            return response()->json([
-                'status' => 2,
-                'msg'    => __('auth.no_auth')
-            ]);
-        }
-        //Check extension & weight
-        if (!in_array($file->extension(), $this->profile_ext)) {
-            //Extension didn't pass
-            return response()->json([
-                'err' => '3',
-            ]);
-        }
-        if ($file->getSize() > (1024 * (1024 * 25))) {
-            //File is oversized
-            return response()->json([
-                'err' => '4',
-            ]);
-        }
-        //Check if need to delete previous image
-        $room->room_img = $filename;
-        if ($room->room_img != 'no_image.jpg' && $room->isDirty()) {
-            //Delete old profile image
-            Storage::delete('room_miniatures/'.$room->room_img);
-            //Store image
-            $path = $file->storeAs('room_miniatures', $filename);
-            //Change img in db
-            $room->save();
-        }
-        return $path;
-    }
-
-    /**
      *  Update room data
      */
     public function update(Request $request, int $room_id): \Illuminate\Http\JsonResponse
@@ -257,8 +214,8 @@ class RoomController extends Controller
             ]);
         }
 
-        if ($room->room_img != 'no_image.jpg') {
-            Storage::delete('room_miniatures/' . $room->room_img);
+        if ($room->profile_img != 'no_image.jpg') {
+            Storage::delete(Room::PROFILE_PATH .'/'. $room->profile_img);
         }
         //Delete room
         try {

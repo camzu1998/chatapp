@@ -9,20 +9,20 @@ class Room extends Model
 {
     use HasFactory;
 
-    public const ROOM_PROFILE_EXT = ['png', 'jpeg', 'jpg'];
+    public const PROFILE_PATH = 'room_miniatures';
 
     protected $fillable = [
         'admin_id',
         'room_name',
-        'room_img',
+        'profile_img',
         'created_at'
     ];
 
     protected $attributes = [
-        'admin_id' => 0,
+        'admin_id' => false,
         'room_name' => 'default_room_name',
-        'room_img' => 'no_image.jpg',
-        'created_at' => '1998-07-14 07:00:00'
+        'profile_img' => 'no_image.jpg',
+        'created_at' => false
     ];
 
     public $timestamps = false;

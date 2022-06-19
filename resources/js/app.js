@@ -4,54 +4,103 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 });
-FilePond.registerPlugin(
-    FilePondPluginImagePreview
-);
-$('.file_input').filepond({
-    allowMultiple: false,
-    stylePanelLayout: 'compact circle',
-    imagePreviewHeight: 170,
-    imageCropAspectRatio: '1:1',
-    styleLoadIndicatorPosition: 'center bottom',
-    styleProgressIndicatorPosition: 'right bottom',
-    styleButtonRemoveItemPosition: 'left bottom',
-    styleButtonProcessItemPosition: 'right bottom',
-    server: {
-        url: '/room/'+$('#room_id').val(),
-        process: '/upload',
-        revert: {
-            url: '/revert?id='+window.id,
-            method: 'POST',
-            withCredentials: false,
-            headers: {},
-            timeout: 7000,
-            onload: null,
-            onerror: null,
-            ondata: null
-        },
-        restore: '/get_image?name=',
-        load: '/get_image?name=',
-        fetch: '/',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    },
-});
-const chat_file = FilePond.create(document.getElementById('file'));
-chat_file.setOptions({
-    server: {
-        url: '/chat/file',
-        process: {
-            url: '/'+$('#room_id').val(),
-            onload: (response) => {
-                chat_file.removeFile();
+$( document ).ready(function() {
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview
+    );
+    $('.file_input').filepond({
+        allowMultiple: false,
+        stylePanelLayout: 'compact circle',
+        imagePreviewHeight: 170,
+        imageCropAspectRatio: '1:1',
+        styleLoadIndicatorPosition: 'center bottom',
+        styleProgressIndicatorPosition: 'right bottom',
+        styleButtonRemoveItemPosition: 'left bottom',
+        styleButtonProcessItemPosition: 'right bottom',
+        server: {
+            url: '/room/'+$('#room_id').val(),
+            process: '/upload_profile',
+            revert: {
+                url: '/revert_profile?id='+window.id,
+                method: 'POST',
+                withCredentials: false,
+                headers: {},
+                timeout: 7000,
+                onload: null,
+                onerror: null,
+                ondata: null
             },
+            restore: '/get_profile?name=',
+            load: '/get_profile?name=',
+            fetch: '/',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    },
+        files: [
+            {
+                source: $('#room_profile_img').val(),
+                options: {
+                    type: 'local',
+                },
+            },
+        ],
+    });
+    $('#user_profile_input').filepond({
+        allowMultiple: false,
+        stylePanelLayout: 'compact circle',
+        imagePreviewHeight: 170,
+        imageCropAspectRatio: '1:1',
+        styleLoadIndicatorPosition: 'center bottom',
+        styleProgressIndicatorPosition: 'right bottom',
+        styleButtonRemoveItemPosition: 'left bottom',
+        styleButtonProcessItemPosition: 'right bottom',
+        server: {
+            url: '/user/'+window.user.id,
+            process: '/upload_profile',
+            revert: {
+                url: '/revert_profile?id='+window.id,
+                method: 'POST',
+                withCredentials: false,
+                headers: {},
+                timeout: 7000,
+                onload: null,
+                onerror: null,
+                ondata: null
+            },
+            restore: '/get_profile?name=',
+            load: '/get_profile?name=',
+            fetch: '/',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        },
+        files: [
+            {
+                source: window.user.profile_img,
+                options: {
+                    type: 'local',
+                },
+            },
+        ],
+    });
+    const chat_file = FilePond.create(document.getElementById('file'));
+    chat_file.setOptions({
+        server: {
+            url: '/chat/file',
+            process: {
+                url: '/'+$('#room_id').val(),
+                onload: (response) => {
+                    chat_file.removeFile();
+                },
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        },
+    });
 });
+
 $('#toggle-menu').click(function(){
     $('#user-dashboard')
         .css("display", "flex")

@@ -6,9 +6,10 @@
     <div class="flex md:flex-row flex-col md:h-full h-4/5 overflow-y-hidden w-full">
         <!-- Left column -->
         <div class="flex flex-col md:border-r-2 md:pr-2 md:mr-2 md:h-5/6 flex-wrap" style="border-color: #4d5499;">
-            <input type="file" name="room_profile" class="file_input rounded-full mb-4" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
+            <input type="file" name="input_profile" class="file_input rounded-full mb-4" data-max-files="1" accept="image/png, image/jpeg, image/webp"/>
             <div class="input-group relative">
                 <input class="form-input" type="text" name="update_room_name" id="update_room_name" value="{{ $rooms_data[$room_id]->room_name }}" required/>
+                <input type="hidden" name="room_profile" value="{{ $rooms_data[$room_id]->profile_img }}" id="room_profile_img"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Nazwa pokoju</label>

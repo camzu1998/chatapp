@@ -22,7 +22,7 @@
         @foreach ($rooms_data as $room_id => $room)
             <div class="friend relative flex flex-row flex-wrap">
                 <div class="profile_container relative flex flex-row justify-center align-center items-center">
-                    <img src="{{ asset('storage/room_miniatures/'.$room->room_img) }}" class="profile-image"/>
+                    <img src="{{ asset('storage/room_miniatures/'.$room->profile_img) }}" class="profile-image"/>
                     @if ($room->status == 0)
                         <i class="fas fa-user-clock waiting_friend"></i>
                     @endif
