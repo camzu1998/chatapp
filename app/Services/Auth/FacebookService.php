@@ -21,7 +21,7 @@ class FacebookService implements AuthInterface
                 'fb_id' => $socialUser->id
             ]);
         }else{
-            $user->google_id = $socialUser->id;
+            $user->fb_id = $socialUser->id;
             $user->save();
         }
 
