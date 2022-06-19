@@ -22,5 +22,8 @@
     "background_color": "#00031E",
     "display": "standalone",
     "scope": "/",
-    "theme_color": "#0C113D"
+    "theme_color": "#0C113D",
+    "permissions": [
+        "notifications"
+    ]
 }

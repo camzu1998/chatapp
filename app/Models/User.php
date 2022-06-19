@@ -15,12 +15,16 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
 
+    public const PROFILE_PATH = 'profiles_miniatures';
+
     protected $table = 'users';
     protected $fillable = [
         'nick',
         'email',
         'password',
-        'profile_img'
+        'profile_img',
+        'google_id',
+        'fb_id'
     ];
     protected $hidden = [
         'password',
@@ -71,6 +75,21 @@ class User extends Authenticatable
     public function isFriendsWith()
     {
         return $this->belongsToMany(User::class, 'friendship', 'user2_id', 'user_id');
+    }
+
+    public function scopeGoogleID($query, $googleID)
+    {
+        return $query->where('google_id', $googleID);
+    }
+
+    public function scopeFacebookID($query, $fbID)
+    {
+        return $query->where('fb_id', $fbID);
+    }
+
+    public function scopeEmail($query, $email)
+    {
+        return $query->where('email', $email);
     }
 
     protected static function newFactory()

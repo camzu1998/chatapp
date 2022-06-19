@@ -43,8 +43,40 @@
                 <button class="w-36 cta-btn text-gray-800 my-4 px-4 py-2 rounded-md" id="send" type="submit">Wyślij <i class="far fa-paper-plane"></i></button>
                 <p class="form-text text-base mt-8 mb-4">Nie masz konta? </br> <a href="{{ route('user.register') }}" class="text-blue-400">Zarejestruj się!</a> </p>
                 <p class="form-text text-base mt-4 mb-4">Zapomniałeś hasła? </br> <a href="{{ route('user.forgot_password') }}" class="text-blue-400">Resetuj hasło!</a> </p>
+                <div class="flex items-center justify-end mt-4">
+                    <a href="{{ url('auth/google/redirect') }}">
+                        <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
+                    </a>
+                </div>
+                <div class="flex items-center justify-end mt-4">
+                    <a href="{{ url('auth/facebook/redirect') }}">
+                        <i class="fa-brands fa-facebook" style="color: #3B5499;"></i>
+                    </a>
+                </div>
             </form>
         </div>
         <div>Icons made by <a href="https://www.freepik.com" rel="nofollow" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" rel="nofollow" title="Flaticon">www.flaticon.com</a></div>
+
+        <script>
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId      : '494383099155021',
+                    cookie     : true,
+                    xfbml      : true,
+                    version    : 'v14.0'
+                });
+
+                FB.AppEvents.logPageView();
+
+            };
+
+            (function(d, s, id){
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
     </body>
 </html>

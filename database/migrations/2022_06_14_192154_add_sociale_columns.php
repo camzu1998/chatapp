@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableRooms extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateTableRooms extends Migration
      */
     public function up()
     {
-        Schema::create('rooms', function (Blueprint $table) {
-            $table->id();
-            $table->integer('admin_id');
-            $table->string('room_name');
-            $table->dateTime('created_at', $precision = 0)->nullable();
+        Schema::table('users', function ($table) {
+            $table->string('google_id')->nullable();
+            $table->string('fb_id')->nullable();
         });
     }
 
@@ -28,6 +26,9 @@ class CreateTableRooms extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rooms');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('google_id');
+            $table->dropColumn('fb_id');
+        });
     }
-}
+};

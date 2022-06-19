@@ -5270,51 +5270,95 @@ $.ajaxSetup({
     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
   }
 });
-FilePond.registerPlugin(FilePondPluginImagePreview);
-$('.file_input').filepond({
-  allowMultiple: false,
-  stylePanelLayout: 'compact circle',
-  imagePreviewHeight: 170,
-  imageCropAspectRatio: '1:1',
-  styleLoadIndicatorPosition: 'center bottom',
-  styleProgressIndicatorPosition: 'right bottom',
-  styleButtonRemoveItemPosition: 'left bottom',
-  styleButtonProcessItemPosition: 'right bottom',
-  server: {
-    url: '/room/' + $('#room_id').val(),
-    process: '/upload',
-    revert: {
-      url: '/revert?id=' + window.id,
-      method: 'POST',
-      withCredentials: false,
-      headers: {},
-      timeout: 7000,
-      onload: null,
-      onerror: null,
-      ondata: null
-    },
-    restore: '/get_image?name=',
-    load: '/get_image?name=',
-    fetch: '/',
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  }
-});
-var chat_file = FilePond.create(document.getElementById('file'));
-chat_file.setOptions({
-  server: {
-    url: '/chat/file',
-    process: {
-      url: '/' + $('#room_id').val(),
-      onload: function onload(response) {
-        chat_file.removeFile();
+$(document).ready(function () {
+  FilePond.registerPlugin(FilePondPluginImagePreview);
+  $('.file_input').filepond({
+    allowMultiple: false,
+    stylePanelLayout: 'compact circle',
+    imagePreviewHeight: 170,
+    imageCropAspectRatio: '1:1',
+    styleLoadIndicatorPosition: 'center bottom',
+    styleProgressIndicatorPosition: 'right bottom',
+    styleButtonRemoveItemPosition: 'left bottom',
+    styleButtonProcessItemPosition: 'right bottom',
+    server: {
+      url: '/room/' + $('#room_id').val(),
+      process: '/upload_profile',
+      revert: {
+        url: '/revert_profile?id=' + window.id,
+        method: 'POST',
+        withCredentials: false,
+        headers: {},
+        timeout: 7000,
+        onload: null,
+        onerror: null,
+        ondata: null
+      },
+      restore: '/get_profile?name=',
+      load: '/get_profile?name=',
+      fetch: '/',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     },
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    files: [{
+      source: $('#room_profile_img').val(),
+      options: {
+        type: 'local'
+      }
+    }]
+  });
+  $('#user_profile_input').filepond({
+    allowMultiple: false,
+    stylePanelLayout: 'compact circle',
+    imagePreviewHeight: 170,
+    imageCropAspectRatio: '1:1',
+    styleLoadIndicatorPosition: 'center bottom',
+    styleProgressIndicatorPosition: 'right bottom',
+    styleButtonRemoveItemPosition: 'left bottom',
+    styleButtonProcessItemPosition: 'right bottom',
+    server: {
+      url: '/user/' + window.user.id,
+      process: '/upload_profile',
+      revert: {
+        url: '/revert_profile?id=' + window.id,
+        method: 'POST',
+        withCredentials: false,
+        headers: {},
+        timeout: 7000,
+        onload: null,
+        onerror: null,
+        ondata: null
+      },
+      restore: '/get_profile?name=',
+      load: '/get_profile?name=',
+      fetch: '/',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    },
+    files: [{
+      source: window.user.profile_img,
+      options: {
+        type: 'local'
+      }
+    }]
+  });
+  var chat_file = FilePond.create(document.getElementById('file'));
+  chat_file.setOptions({
+    server: {
+      url: '/chat/file',
+      process: {
+        url: '/' + $('#room_id').val(),
+        onload: function onload(response) {
+          chat_file.removeFile();
+        }
+      },
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     }
-  }
+  });
 });
 $('#toggle-menu').click(function () {
   $('#user-dashboard').css("display", "flex").hide().fadeIn();
@@ -5500,7 +5544,7 @@ $('#send').on("click", function () {
       var content = '';
 
       if (msg.file_id != 0) {
-        var file = res.files[msg.file_id][0];
+        var file = res.files[msg.file_id];
 
         if ($.inArray(file.ext, img_ext) != -1) {
           content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" class="content-image">';
@@ -5520,7 +5564,9 @@ $('#send').on("click", function () {
       html += '<img src="/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
     }
 
-    $('#messagesList').html(html);
+    $('#messagesList').html(html).animate({
+      scrollTop: 1000000
+    });
   });
   $('#content').val('');
   return false;
@@ -5546,7 +5592,7 @@ function load_messages() {
       var content = '';
 
       if (msg.file_id != 0) {
-        var file = res.files[msg.file_id][0];
+        var file = res.files[msg.file_id];
 
         if ($.inArray(file.ext, img_ext) != -1) {
           content = '<img src="/storage/' + file.path + '" alt="' + file.filename + '" class="content-image">';
@@ -5566,7 +5612,9 @@ function load_messages() {
       html += '<img src="/storage/profiles_miniatures/' + user[msg.user_id].profile_img + '" class="msg-image absolute"/><div class="msg-content"><span class="msg-user_name">' + user[msg.user_id].nick + '</span><p class="msg-content-p" >' + content + '</p><span class="msg-date"></span></div></div>';
     }
 
-    $('#messagesList').html(html);
+    $('#messagesList').html(html).animate({
+      scrollTop: 1000000
+    });
     if ($('#sounds').prop('checked')) $('#notifySound').get(0).play();
   });
   return false;
@@ -5631,12 +5679,15 @@ setInterval(function () {
   });
   return false;
 }, 30000);
-Notification.requestPermission(function (permission) {
-  // If the user accepts, let's create a notification
-  if (permission === "granted") {
-    new Notification("Hi there :)");
-  }
-});
+
+if (Notification.permission === "default") {
+  Notification.requestPermission(function (permission) {
+    // If the user accepts, let's create a notification
+    if (permission === "granted") {
+      new Notification("Hi there :)"); //new Notification('To do list', { body: text, icon: img }); Todo:better notification
+    }
+  });
+}
 
 /***/ }),
 
