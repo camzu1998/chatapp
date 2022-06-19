@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\EnsureSocialExist;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'room.guard' => \App\Http\Middleware\RoomGuard::class,
         'admin.room.guard' => \App\Http\Middleware\AdminRoomGuard::class,
         'file.image' => \App\Http\Middleware\EnsureFileIsImage::class,
+        'social.exist' => \App\Http\Middleware\EnsureSocialExist::class,
     ];
 }

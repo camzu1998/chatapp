@@ -1,28 +1,31 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    laravel.test:
-        build:
-            context: ./docker/8.1
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-                XDEBUG: ${SAIL_DEBUG}
-        image: sail-8.1/app
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-
-        volumes:
-            - '.:/var/www/html'
-        networks:
-            - sail
-        depends_on:
-            - mysql
+#    laravel.test:
+#        build:
+#            context: ./vendor/laravel/sail/runtimes/8.1
+#            dockerfile: Dockerfile
+#            args:
+#                WWWGROUP: '${WWWGROUP}'
+#        image: sail-8.1/app
+#        extra_hosts:
+#            - 'host.docker.internal:${DOCKER_HOST_IP}'
+#        ports:
+#            - '${APP_PORT:-80}:80'
+#        environment:
+#            WWWUSER: '${WWWUSER}'
+#            LARAVEL_SAIL: 1
+#            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+#            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+#        volumes:
+#            - '.:/var/www/html'
+#        networks:
+#            - sail
+#        depends_on:
+#            - mysql
+#            - redis
+##            - meilisearch
+##            - selenium
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -35,16 +38,100 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - 'sail-mysql:/var/lib/mysql'
+            - '${DATA_PATH_HOST}/mysql:/var/lib/mysql'
+            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sail
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - '${DATA_PATH_HOST}/redis:/data'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            retries: 3
+            timeout: 5s
+    nginx:
+        build:
+            context: "./docker/nginx"
+        depends_on:
+            -   php-fpm
+        volumes:
+            - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+            - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+            - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+            - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+        ports:
+#            port mappings, host to docker
+            - "${NGINX_HOST_HTTPS_PORT}:443"
+            - "${NGINX_HOST_HTTP_PORT}:80"
+        networks:
+            - sail
+
+
+    php-fpm:
+        build:
+            context: "./docker/php-fpm"
+        volumes:
+            -   ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        networks:
+            - sail
+        expose:
+            - "9000"
+
+    laravel-horizon:
+        build:
+            context: ./docker/laravel-horizon
+        volumes:
+            - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+            - ./docker/laravel-horizon/supervisord.d:/etc/supervisord.d
+        depends_on:
+            - php-fpm
+        extra_hosts:
+            - "dockerhost:${DOCKER_HOST_IP}"
+        networks:
+            - sail
+
+
+#    meilisearch:
+#        image: 'getmeili/meilisearch:latest'
+#        ports:
+#            - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+#        volumes:
+#            - 'sail-meilisearch:/data.ms'
+#        networks:
+#            - sail
+#        healthcheck:
+#            test: ["CMD", "wget", "--no-verbose", "--spider",  "http://localhost:7700/health"]
+#            retries: 3
+#            timeout: 5s
+    # mailhog:
+    #     image: 'mailhog/mailhog:latest'
+    #     ports:
+    #         - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+    #         - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+    #     networks:
+    #         - sail
+#    selenium:
+#        image: 'selenium/standalone-chrome'
+#        volumes:
+#            - '/dev/shm:/dev/shm'
+#        networks:
+#            - sail
 networks:
     sail:
         driver: bridge
 volumes:
     sail-mysql:
+        driver: local
+    sail-redis:
+        driver: local
+    sail-meilisearch:
         driver: local
