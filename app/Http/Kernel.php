@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'room.friends' => \App\Http\Middleware\EnsureRoomHasFriends::class,
         'room.guard' => \App\Http\Middleware\RoomGuard::class,
         'admin.room.guard' => \App\Http\Middleware\AdminRoomGuard::class,
+        'file.image' => \App\Http\Middleware\EnsureFileIsImage::class,
     ];
 }

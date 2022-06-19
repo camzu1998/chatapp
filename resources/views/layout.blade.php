@@ -67,6 +67,9 @@
         <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
         <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
         <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+        <script>
+            var user = {!! auth()->user()->toJson() !!}
+        </script>
         <script src="{{ mix('/js/app.js') }}"></script>
     </body>
 </html>

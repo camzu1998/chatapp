@@ -29,7 +29,8 @@ class RoomRepository
         $room_name = !empty($data['room_name']) ? $data['room_name'] : $user->nick.'_room';
 
         $room = $user->adminRoom()->create([
-            'room_name' => $room_name
+            'room_name' => $room_name,
+            'created_at' => date('y-m-d H:i:s')
         ]);
 
         return $room;

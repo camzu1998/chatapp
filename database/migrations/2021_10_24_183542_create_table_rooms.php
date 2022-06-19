@@ -17,7 +17,7 @@ class CreateTableRooms extends Migration
             $table->id();
             $table->integer('admin_id');
             $table->string('room_name');
-            $table->dateTime('created_at', $precision = 0);
+            $table->dateTime('created_at', $precision = 0)->nullable();
         });
     }
 
