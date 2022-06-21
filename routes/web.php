@@ -89,3 +89,13 @@ Route::get('/.well-known/acme-challenge/nY4AcXJSv_Mrjqndf9rr7N53YLNsB2lsS3IbH4yl
 Route::get('/privacy-policy', function () {
     return view('sites.privacy_policy');
 });
+
+Route::get('/test-channel', function () {
+    broadcast(new \App\Events\TestEvent());
+
+    return true;
+});
+
+Route::post('/broadcasting/auth', function () {
+    return true;
+});

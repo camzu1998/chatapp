@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Room;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -13,6 +14,18 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('private-room.{room}', function ($user, Room $room) {
+    $room_member = $user->roomMember()->roomID($room->id)->first();
+    return $room_member->status == 1;
 });
+Broadcast::channel('private-room_member', function ($user) {
+    return true;
+});
+
+Broadcast::channel('channel-test', function () {
+    return true;
+});
+Broadcast::channel('presence-channel-test', function () {
+    return true;
+});
+
