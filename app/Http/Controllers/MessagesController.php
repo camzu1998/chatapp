@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewMessageEvent;
 use App\Http\Requests\SendMessageRequest;
 use App\Models\RoomMember;
 use Illuminate\Http\Request;
@@ -39,11 +40,13 @@ class MessagesController extends Controller
     {
         $data = $request->validated();
 
+        $user = User::find(Auth::id());
+        $room = Room::find($room_id);
         //Check if user is in the room
-        $room_member = Auth::user()->roomMember()->RoomID($room_id)->first();
+        $room_member = $user->roomMember()->RoomID($room_id)->first();
 
         //Get messages
-        DB::transaction(function () use ($room_member, $data, $room_id) {
+        $message = DB::transaction(function () use ($room_member, $data, $room_id) {
             $msg = Messages::create([
                 'user_id' => Auth::id(),
                 'room_id' => $room_id,
@@ -54,7 +57,11 @@ class MessagesController extends Controller
             //Set user message
             $room_member->last_msg_id = $msg->id;
             $room_member->save();
+
+            return $msg;
         }, 5);
+
+        broadcast(new NewMessageEvent($user, $room, $message));
 
         return $this->get($room_id);
     }

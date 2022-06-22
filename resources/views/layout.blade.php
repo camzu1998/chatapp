@@ -54,6 +54,9 @@
         @if( $room_id != 0 && $rooms_data[$room_id]->admin_id == $user->id )
             @include('modals.room_settings')
             @include('modals.room_friends_invite')
+            <script>
+                var room_id = {{ $room_id }};
+            </script>
         @endif
 
         <div id="feedback_wrapper" class="absolute bottom-2 left-1/2 py-2 px-4 rounded-xl" style="display: none;"></div>
@@ -71,5 +74,7 @@
             var user = {!! auth()->user()->toJson() !!}
         </script>
         <script src="{{ mix('/js/app.js') }}"></script>
+
+        <script src="//chatapp.loc:6001/socket.io/socket.io.js"></script>
     </body>
 </html>

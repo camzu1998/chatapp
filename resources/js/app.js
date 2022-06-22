@@ -373,21 +373,28 @@ function load_messages(){
     return false;
 }
 //Refresh room message
-var worker = new Worker('/js/worker.js');
+
+setTimeout(() => {
+    if($('#room_id').val() !== undefined) {
+        window.Echo.private('room.'+$('#room_id').val()).listen('.NewMessageEvent', event => {
+            console.log(event);
+            load_messages();
+        });
+    }
+    window.Echo.private('room_member').listen('.NewMessageEvent', event => {
+        console.log(event);
+        load_messages();
+    });
+
+
+    window.Echo.channel(`channel-test`)
+        .listen('.TestEvent', e => {
+            console.log(e)
+        })
+}, 1000);
+
 var notifyWorker = new Worker('/js/notification.js');
 
-worker.onmessage = function(e) {
-    var newest_id = e.data;
-    if(newest_id > $('#newest_id').val()){
-
-        notifyWorker.postMessage({name: "notify_room_message", token: $('#token').val(), room: $('#room_id').val()});
-
-        $('#newest_id').val(newest_id);
-
-        load_messages();
-    }
-    console.log('Data received from worker');
-}
 notifyWorker.onmessage = function(e) {
     var res = e.data[0];
 
@@ -406,19 +413,6 @@ notifyWorker.onmessage = function(e) {
     }
 }
 
-worker.addEventListener('error', function(e) {
-    alert('wystapil blad w linii: ' + e.lineno +
-        ' w pliku: ' + e.filename + '.' +
-        'Tresc bledu: ' + e.message);
-}, false);
-
-setInterval(function(){
-    if($('#room_id').val() !== undefined){
-        worker.postMessage([$('#token').val(), $('#room_id').val()]);
-    }
-
-    return false;
-}, 3000);
 //Check all room
 setInterval(function(){
     notifyWorker.postMessage({name: "check_messages", token: $('#token').val()});

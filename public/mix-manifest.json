@@ -3,5 +3,6 @@
     "/sw.js": "/sw.js",
     "/js/worker.js": "/js/worker.js",
     "/js/notification.js": "/js/notification.js",
+    "/js/laravel-echo-setup.js": "/js/laravel-echo-setup.js",
     "/css/app.css": "/css/app.css"
 }
