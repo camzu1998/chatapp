@@ -5465,31 +5465,6 @@ $('.full-shadow').click(function () {
   $('.modal').fadeOut();
   $('.fast_menu').fadeOut();
   $('#image-full-screen').fadeOut();
-});
-$('#save_settings').click(function () {
-  var fd = new FormData();
-  var files = $('#input_profile')[0].files; // Check file selected or not
-
-  if (files.length > 0) fd.append('input_profile', files[0]);
-  var sounds = 0;
-  if ($('#sounds').prop('checked')) sounds = 1;
-  var notifications = 0;
-  if ($('#notifications').prop('checked')) notifications = 1;
-  var press_on_enter = 0;
-  if ($('#press_on_enter').prop('checked')) press_on_enter = 1;
-  fd.append('_token', $('#token').val());
-  fd.append('sounds', sounds);
-  fd.append('notifications', notifications);
-  fd.append('press_on_enter', press_on_enter);
-  $.ajax({
-    method: 'post',
-    url: '/save_settings',
-    data: fd,
-    contentType: false,
-    processData: false
-  }).always(function (res) {
-    window.location.reload(true);
-  });
 }); // ROOMS
 
 $('#save_room').click(function () {
