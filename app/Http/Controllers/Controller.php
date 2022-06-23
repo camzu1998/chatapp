@@ -31,7 +31,7 @@ class Controller extends BaseController
         $data['user'] = Auth::user();
         $data['content'] = view($content, $data);
 
-        return view('layout', $data);
+        return view('layout_old', $data);
     }
 
     public function init()
@@ -41,18 +41,16 @@ class Controller extends BaseController
 
     public function dashboard()
     {
-        $room_repo = new RoomRepository();
         $friendship = new FriendshipController();
-        $room = new RoomController($room_repo);
+        $room = new RoomController(new RoomRepository());
         $UserSettingsController = new UserSettingsController();
 
         $data['friends_data'] = $friendship->get_user_friends('array');
-        $data['rooms_data'] = $room->get_user_rooms('array');
+        $data['rooms_data'] = $room->get_user_rooms();
         $data['user_settings'] = $UserSettingsController->load_user_settings();
         $data['roommates_data'] = [];
         $data['room_id'] = 0;
-        $data['content'] = 'main';
 
-        return $this->load('main', $data);
+        return view('main', $data);
     }
 }
