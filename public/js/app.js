@@ -5706,6 +5706,10 @@ setTimeout(function () {
     });
   }
 
+  window.Echo["private"]('room_member').listen('.NewMessageEvent', function (event) {
+    console.log(event);
+    load_messages();
+  });
   window.Echo.channel("channel-test").listen('.TestEvent', function (e) {
     console.log(e);
   });
