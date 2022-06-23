@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class AdminRoomGuard
+class  AdminRoomGuard
 {
     public function handle(Request $request, Closure $next)
     {
@@ -13,7 +13,9 @@ class AdminRoomGuard
             return $next($request);
         }
 
-        $roomAdmin = $request->user()->adminRoom()->find($request->route('type_id'));
+        $room_id = $request->route('type_id') ?: $request->route('room_id');
+
+        $roomAdmin = $request->user()->adminRoom()->find($room_id);
 
         if (empty($roomAdmin)) {
             if ($request->expectsJson()) {

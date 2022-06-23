@@ -11,7 +11,13 @@ class RoomGuard
 {
     public function handle(Request $request, Closure $next)
     {
-        $roomMember = $request->user()->roomMember()->roomID($request->route('room_id'))->first();
+        $room_id = null;
+        if( !empty( $request->route('room_id') ) ) {
+            $room_id = $request->route('room_id');
+        } else if ( !empty( $request->route('room') ) ) {
+            $room_id = $request->route('room');
+        }
+        $roomMember = $request->user()->roomMember()->roomID($room_id)->first();
 
         if (empty($roomMember) || $roomMember->status !== 1) {
             if ($request->expectsJson()) {
