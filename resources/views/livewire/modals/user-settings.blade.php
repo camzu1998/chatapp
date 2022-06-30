@@ -1,8 +1,5 @@
 <form class="md:w-6/12 md:items-start items-center flex flex-col mt-8" class="w-6/12 flex flex-col mt-8">
     @foreach (Auth::user()->userSettings as $userSetting)
-        @if (empty($userSetting->name))
-            {{ var_dump($userSetting) }}
-        @endif
         <div class="form-group flex flex-row mb-3 ml-3">
             <label class="switch">
                 <input type="checkbox" id="{{ $userSetting->name }}" wire:model.defer="userSettings.{{ $userSetting->name }}" value="1">
