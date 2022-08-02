@@ -50,7 +50,7 @@
         </div>
         <div class="full-shadow w-screen h-screen absolute top-0 left-0" style="display:none;"></div>
 {{--        {{ dd(Auth::user()->friends()) }}--}}
-        @include('modals.userSettings')
+        @include('modals.user-settings')
 {{--        @include('modals.friends')--}}
         @include('modals.rooms')
 
