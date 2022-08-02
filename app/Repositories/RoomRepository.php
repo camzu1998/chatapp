@@ -33,12 +33,14 @@ class RoomRepository
             'created_at' => date('y-m-d H:i:s')
         ]);
 
+        $this->inviteFriends($data, $room);
+
         return $room;
     }
 
     public function inviteFriends($data, Room $room): void
     {
-        foreach ($data['add_friend'] as $friend_id) {
+        foreach ($data['add_friend'] as $friend_id => $bool) {
             //Check friendship
             $res = Friendship::check(Auth::id(), $friend_id);
             if (empty($res[0])) {

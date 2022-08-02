@@ -13,25 +13,12 @@ class EnsureSocialExist
 {
     public function handle(Request $request, Closure $next)
     {
-        switch ($request->route('social')) {
-            case 'google':
-            case 'facebook':
-                return $next($request);
-                break;
-            default:
-                return redirect('/404');
+        $social = Str::ucfirst($request->route('social'));
+
+        if(!class_exists("App\Services\Auth\\".$social.'Service')){
+            return redirect('/404');
         }
 
-
-//        Todo: I think this solution is better but don't know why this doesn't work
-//        $social = Str::ucfirst($request->route('social'));
-//        $classNameWithNamespace = "App\\Services\\Auth\\".$social.'Service';
-//
-//        if(!class_exists($classNameWithNamespace, false)){
-//            dd($classNameWithNamespace);
-//            return redirect('/404');
-//        }
-//
-//        return $next($request);
+        return $next($request);
     }
 }

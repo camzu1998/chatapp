@@ -49,11 +49,12 @@
 
         </div>
         <div class="full-shadow w-screen h-screen absolute top-0 left-0" style="display:none;"></div>
-
+{{--        {{ dd(Auth::user()->friends()) }}--}}
         @include('modals.userSettings')
 {{--        @include('modals.friends')--}}
-{{--        @include('modals.rooms')--}}
-{{--        @include('modals.add_room')--}}
+        @include('modals.rooms')
+
+        @include('modals.create-room')
 
         @if( !empty($room) && $room->id != 0 && $room->admin_id == Auth::id() )
 {{--            @include('modals.room_settings')--}}

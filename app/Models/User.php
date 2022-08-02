@@ -64,17 +64,17 @@ class User extends Authenticatable
         return $this->belongsToMany(Messages::class);
     }
 
-    public function userFriends()
-    {
-        return $this->friends().$this->isFriendsWith();
-    }
     public function friends()
     {
-        return $this->belongsToMany(User::class, 'friendship', 'user_id', 'user2_id');
+        return $this->isFriendFor->merge($this->isFriendsWith);
+    }
+    public function isFriendFor()
+    {
+        return $this->belongsToMany(User::class, 'friendship', 'user_id', 'user2_id')->withPivot('status');
     }
     public function isFriendsWith()
     {
-        return $this->belongsToMany(User::class, 'friendship', 'user2_id', 'user_id');
+        return $this->belongsToMany(User::class, 'friendship', 'user2_id', 'user_id')->withPivot('status');
     }
 
     public function scopeGoogleID($query, $googleID)
